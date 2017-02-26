@@ -76,13 +76,13 @@
 
 \maketitle
 
-I am proposing a computationally efficient Bayesian tensor factorization. This is a special Tucker decomposition with factors fixed on empirically estimated/chosen values. The empirical estimates can be viewed as quick approximation to the ``ideal'' basis associated to a core tensor of lowest rank, highest sparsity or very simple structure (e.g. diagonal). With the slight imperfection, the core would differ from the optimal structure, but still remain sparse and low rank.
+I am proposing a computationally efficient Bayesian tensor factorization. This is a special Tucker decomposition with factors fixed on empirically estimated/chosen values. The empirical estimates can be viewed as quick approximation to the ``ideal'' basis associated to a core tensor of lowest rank, highest sparsity or very simple structure (e.g. diagonal). With the imperfection, the core would be less parsimonious, but still remain sparse and low rank.
 
-Although a constraint is applied on the factors, the flexibility of the tensor model is unscathed, when the core is parameterized in the same rank as the original tensor. Because of the sparsity, a multi-way Dirichlet shrinkage prior is assigned to the scales of the core parameters, effectively reducing the core to small size.
+Although a constraint is applied on the factors, the flexibility of the tensor model is unscathed, when the factors contain the basis of the original tensor. Taking advantage of the sparsity in the core, a multi-way Dirichlet shrinkage prior is assigned to the scales of the core parameters, effectively reducing the core to small size.
 
 To facilitate parallel computing and good posterior mixing, I choose empirical factors residing on Stiefel manifold. This induces conditional independence on the core parameters and allow efficient block sampling.
 
-This method has a potential wide range of applications. For example, one could pre-assign Fourier basis as an empirical factor for high-dimension multivariate spatial tensor. In this report, I focus on a dimension reduction application over a group of large binary adjacency matrices. I fix the empirical factor to be the bases from singular value decomposition (SVD) applied on the mean graph, inducing a low-rank and pseudo-diagonal plane in the 3-way core.
+This method has a potential wide range of applications. For example, one could pre-assign Fourier basis as an empirical factor for high-dimension multivariate spatial tensor, and treat the core tensor as a non-parameteric estimate of spectrum. In this report, I focus on a dimension reduction application over a group of large binary adjacency matrices. I fix the empirical factor to be the bases from singular value decomposition (SVD) applied on the mean graph, inducing a low-rank and near-diagonal plane in the 3-way core.
 
 \section{Motivating Application: Dimension Reduction of a Group of Large Adjacency Matrices}
 
@@ -96,19 +96,22 @@ A_{i,jk} \sim \Bern(\Phi( \psi_{i,jk})),\\
 \psi_{i,jk}=\sum_{r=1}^{\kappa} d_{i,r} u_{j,r} u_{k,r},\\
 \Psi_{i}= \{ u_{j}^T  D_{i} u_{k}\}_{j,k} = U^T D_iU
 \ee
-for $i=1,\ldots,m, \quad  j=2,\ldots n, \quad k=1,\ldots,(j-1)$ and $\psi_{i,jk}=\psi_{i,kj}$; $\Phi(.)$ is the standard normal cumulative probability, $u_{(.)}$, $\lambda_{(.)}$ and $d_{(.)}$ are scalars; $\kappa$ is the rank of of this decomposition; $D_{i}=\diag\{d_{i,1},\ldots d_{i,\kappa}\}$, $u_j = \{ u_{j,1},\ldots, u_{j,\kappa}\}'$ is a vector and $U=[ u_1 || \ldots || u_n ]$ is the corresponding $ \kappa \times n$ matrix. Since the diagonal element $A_{i,jj}$ is not defined on the graph, we treat $\psi_{i,jj}=\sum_{r=1}^{\kappa} d_{i,r} u_{j,r} u_{j,r}$ as a latent variable.
+for $i=1,\ldots,m, \quad  j=2,\ldots n, \quad k=1,\ldots,(j-1)$ and $\psi_{i,jk}=\psi_{i,kj}$; $\Phi(.)$ is the standard normal cumulative probability, $u_{(.)}$ and $d_{(.)}$ are scalars; $\kappa$ is the rank of of this decomposition; $D_{i}=\diag\{d_{i,1},\ldots d_{i,\kappa}\}$, $u_j = \{ u_{j,1},\ldots, u_{j,\kappa}\}'$ is a vector and $U=[ u_1 || \ldots || u_n ]$ is the corresponding $ \kappa \times n$ matrix. Since the diagonal element $A_{i,jj}$ is not defined on the graph, we treat $\psi_{i,jj}=\sum_{r=1}^{\kappa} d_{i,r} u_{j,r} u_{j,r}$ as a latent variable.
 
-The set of diagonal vectors in $\{D_i\}_{i=1,\ldots, m}$ can then be used to represent the full adjacency matrices. This model is in fact a reparameterization of a parallel factor analysis (PARAFAC) decomposition. Letting  $d_{i,r} = \lambda_r  d^*_{i,r}$,
+The set of diagonal vectors in $\{D_i\}_{i=1,\ldots, m}$ can then be used to represent the full adjacency matrices. This model is in fact a reparameterization of a parallel factor analysis (PARAFAC) decomposition. Letting  $d_{i,r} = \lambda_r  d^*_{i,r}$, a rank-$\kappa$ PARAFAC can be obtained:
 
 \be
 \psi_{i,jk}=\sum_{r=1}^{\kappa} \lambda_r  d^*_{i,r} u_{j,r} u_{k,r}.
 \ee
 
-Although this is an appealing idea, this model suffers from the computational bottleneck related to PARAFAC. Optimization of PARAFAC is non-convex. The factors are generally non-identifiable due to permutation, scaling and rotation. To ensure local convergence, one needs carefully control the scale, which is often difficult. The rank $\kappa$ is undetermined. Most importantly, for Bayesian modeling, the posterior estimation is expensive. Although it is possible to induce posterior closed-form in the full conditional distribution (e.g. with  normal prior prescribed for all parameters, each row of $U$ is conditionally normal given the others), updating one vector at a time quickly leads to slow mixing.
+Although this is a widely used model, it suffers from the computational bottleneck related to PARAFAC. Optimization of PARAFAC is non-convex. The factors are generally non-identifiable due to permutation, scaling and rotation. To ensure local convergence, one needs carefully control the scale, which is often difficult. The rank $\kappa$ is undetermined. Most importantly, for Bayesian modeling, the posterior estimation is expensive. Although it is possible to induce posterior closed-form in the full conditional distribution (e.g. with  normal prior prescribed for all parameters, each row of $U$ is conditionally normal given the others), updating one vector at a time quickly leads to slow mixing.
 
 \section{Proposed Model in Application}
 
-The Tucker decomposition enjoys more flexibility and often lower rank, compared to the PARAFAC. For the same three-way tensor, first consider a a Tucker decomposition:
+PARAFAC can be viewed as  a special Tucker decomposition with core with non-zero value on its super-diagonal. The general Tucker  without this constraint enjoys more flexibility and often lower rank (by rank, I meant the sum of modes in the core tensor).
+
+
+For the same three-way tensor, first consider a a Tucker decomposition:
 \be
 A_{i,jk} \sim \Bern(\Phi( \psi_{i,jk})),\\
 \psi_{i,jk}= \sum_{r_1=1}^{\kappa} \sum_{r_2=1}^{\kappa} \sum_{r_3=1}^{\gamma}\tilde d^*_{r_1,r_2, r_3}  u_{j,r_1} u_{k,r_2} v_{i, r_3},\\
@@ -147,7 +150,7 @@ The estimation of the factor $U$ is difficult. When $m=1$, $U$ follows a Bingham
 
 Instead of sampling $U$, I now set it to be a fixed $\hat U$ and empirically estimate this matrix before sampling.  I use the eigenvectors ($e.v.$) of the normal quantile of the mean adjacency matrix, $e.v.\big(\Phi^{-1}(\bar A)\big)$ with $\bar A = \frac{1}{m} \sum_i A_i$. As a basis to {\it diagonalize} the mean graph, empirically, it would make each slice of the core, $\tilde D_{i}$, in the neiborhood of a diagonal matrix, encouraging sparsity in $\tilde D_{i}$.
 
-One may be concerned that the flexibility is impacted by constraining $U$. However, when $\hat U$ is of full rank with $\kappa=n$, it forms a linear span for any $\Psi_i \in \bb R^{n\times n}$, allowing a fully flexible model for $\Psi_i$. Specifically, for any symmetric matrix, letting its singular value decomposition be $\ddot{U}^T \ddot{D}_i \ddot{U}$, it can be viewed as:
+One may be concerned that the flexibility is impacted by constraining $U$. However, when $\hat U$ is square with $\kappa=n$, it forms a linear span for any $\Psi_i \in \bb R^{n\times n}$, allowing a fully flexible model for $\Psi_i$. Specifically, for any symmetric matrix, letting its singular value decomposition be $\ddot{U}^T \ddot{D}_i \ddot{U}$, it can be viewed as:
 
 \be
 \Psi_i= \ddot{U}^T \ddot{D}_i \ddot{U} = \hat{U}^T R \ddot{D}_i R^T \hat{U}
@@ -163,13 +166,11 @@ where $R=\hat{U}\ddot{U}^T$ is a rotation matrix and we recover $\tilde{D}_i = R
 \label{demoD}
 \end{figure}
 
-As an illustration, I use $m=200$ adjacency matrices, each of size $70 \times 70$ and a weakly informative prior $\tau_{i,jk}=1000$ for all $\tilde D_{i,jk}$. In order to demonstrate that the empirical factor induces a low-rank and near-diagonal core, I set the core to be full rank and this prior to temporarily not enforcing any structure (e.g. sparsity, low rank, etc).
-
-The posterior of $\tilde D_i$ is plotted in Figure~\ref{demoD}. High sparsity can be observed and each $D_i$ seems to be very close to a low-rank diagonal matrix. This suggests some modeling structure can be assumed on $D_i$ by assigning priors on the scale $\tau_{i,jk}$.
+As an illustration, I use $m=200$ adjacency matrices, each of size $70 \times 70$ and a weakly informative prior $\tau_{i,jk}=1000$ for all $\tilde D_{i,jk}$. In order to demonstrate that the empirical factor induces a low-rank and near-diagonal core, I set the core to be full rank and this prior to temporarily not enforcing any structure (e.g. sparsity, low rank, etc) as a-priori. The posterior of $\tilde D_i$ is plotted in Figure~\ref{demoD}. High sparsity can be observed and each $D_i$ seems to be very close to a low-rank diagonal matrix.
 
 \subsection{Shrinkage on the Scale of $D_i$}
 
-The full rank on $\tilde D_{i,jk}$ ensures the flexibility of the model is retained, but it can be significantly simplified when the sparsity is present. Therefore, I assign a shrinkage prior on $\tau_{i,jk}$ to effectively reduce most of parameters in $\tilde D_{i,jk}$ to be close to $0$.
+Setting each factor to be square requires a full-rank parameterization of $\tilde D_{i,jk}$, but due to the sparsity, it can be significantly simplified. Therefore, I assign a shrinkage prior on $\tau_{i,jk}$ to effectively reduce most of parameters in $\tilde D_{i,jk}$ to be close to $0$.
 
 \be
 \tau_{i,jk}= \lambda^{(1)}_j \lambda^{(1)}_k \gamma_{jk}\tau_0 \quad i=1,\ldots,m,\\
@@ -177,7 +178,7 @@ The full rank on $\tilde D_{i,jk}$ ensures the flexibility of the model is retai
 (\lambda^{(1)}_1,\ldots, \lambda^{(1)}_n) \sim \text{Dirichlet} (\alpha_1, \ldots \alpha_1)
 \ee
 
-Since the aim of this application is to obtain an equal-dimension low dimensional array for each subject, I let $\tau_{i,jk}$ to be the same for all $i$; the product of $\lambda^{(1)}_j \lambda^{(1)}_k$ ensures the shrinkage is applied symmetrically in each $\tilde D_i$; $g$ is a heavy-tail distribution such as Laplace to allow the large signal (CITES Bhattacharya and Dunson 2014, Guhaniyogi, Qamar and Dunson 2015). When the tensor is of higher order $p$ and non-symmetric, the following can be used:
+Since the aim of this application is to obtain an equal-dimension low dimensional array for each subject, I let $\tau_{i,jk}$ to be the same for all $i$; the product of $\lambda^{(1)}_j \lambda^{(1)}_k$ ensures the shrinkage is applied symmetrically in each $\tilde D_i$; $g$ is a heavy-tail distribution such as Laplace to allow large signal (CITES Bhattacharya and Dunson 2014, Guhaniyogi, Qamar and Dunson 2015). When the tensor is of higher order $p$ and non-symmetric, the following can be used:
 
 \be
 \tau_{i,j_1\ldots j_p}= \lambda^{(1)}_{j_1} \lambda^{(2)}_{j_2}, \ldots \lambda^{(p)}_{j_p}\gamma_{j_1\ldots j_p} \tau_0\\
@@ -189,18 +190,15 @@ Since the aim of this application is to obtain an equal-dimension low dimensiona
 
 \subsection{Issues to address?}
 
-There are a couple of issues I want to get your opinions:
+There are a couple of issues:
 
 1. Computing burden on global-local shrinkage:
 
 Let the rank of the core tensor be equal to the original tensor theoretically justifies the use of the empirical factor. But with a global-local shrinkage, sampling the local scale $\gamma_{j_1\ldots j_p}$ would be horrendous. Maybe there is a more efficient parameterization?
 
-Or rephrasing the rank of the original tensor as something unknown but much smaller than $n$, then use a core with rank large enough (again $\ll n$) to approximate it?
-
-
 2. Alternative core structure:
 
-Another idea to describe the core structure, instead of using shrinkage via scale prior. Directly model the core as another PARAFAC decomposition and apply the multiway shrinkage to induce a sparse core?
+Another idea to describe the core structure, instead of using shrinkage via scale prior. Directly model the core as another PARAFAC decomposition and apply the multiway shrinkage to induce a sparse core? We might get away with the non-identifiability issue of PARAFAC since we only care about the tensor estimate of the core.
 
 
 
