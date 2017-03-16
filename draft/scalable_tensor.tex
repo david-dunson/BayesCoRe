@@ -178,7 +178,7 @@ Setting each factor to be square requires a full-rank parameterization of $\tild
 (\lambda^{(1)}_1,\ldots, \lambda^{(1)}_n) \sim \text{Dirichlet} (\alpha_1, \ldots \alpha_1)
 \ee
 
-Since the aim of this application is to obtain an equal-dimension low dimensional array for each subject, I let $\tau_{i,jk}$ to be the same for all $i$; the product of $\lambda^{(1)}_j \lambda^{(1)}_k$ ensures the shrinkage is applied symmetrically in each $\tilde D_i$; $g$ is a heavy-tail distribution such as Laplace to allow large signal (CITES Bhattacharya and Dunson 2014, Guhaniyogi, Qamar and Dunson 2015). When the tensor is of higher order $p$ and non-symmetric, the following can be used:
+Since the aim of this application is to obtain an equal-dimension low dimensional array for each subject, I let $\tau_{i,jk}$ to be the same for all $i$; the product of $\lambda^{(1)}_j \lambda^{(1)}_k$ ensures the shrinkage is applied symmetrically in each $\tilde D_i$; $g$ is a heavy-tail distribution such as Laplace to allow large signal. When the tensor is of higher order $p$ and non-symmetric, the following can be used:
 
 \be
 \tau_{i,j_1\ldots j_p}= \lambda^{(1)}_{j_1} \lambda^{(2)}_{j_2}, \ldots \lambda^{(p)}_{j_p}\gamma_{j_1\ldots j_p} \tau_0\\
@@ -188,17 +188,17 @@ Since the aim of this application is to obtain an equal-dimension low dimensiona
 (\lambda^{(p)}_1,\ldots, \lambda^{(p)}_{n_p}) \sim \text{Dirichlet} (\alpha_p, \ldots \alpha_p)
 \ee
 
-\subsection{Issues to address?}
+% \subsection{Issues to address?}
 
-There are a couple of issues:
+% There are a couple of issues:
 
-1. Computing burden on global-local shrinkage:
+% 1. Computing burden on global-local shrinkage:
 
-Let the rank of the core tensor be equal to the original tensor theoretically justifies the use of the empirical factor. But with a global-local shrinkage, sampling the local scale $\gamma_{j_1\ldots j_p}$ would be horrendous. Maybe there is a more efficient parameterization?
+% Let the rank of the core tensor be equal to the original tensor theoretically justifies the use of the empirical factor. But with a global-local shrinkage, sampling the local scale $\gamma_{j_1\ldots j_p}$ would be horrendous. Maybe there is a more efficient parameterization?
 
-2. Alternative core structure:
+% 2. Alternative core structure:
 
-Another idea to describe the core structure, instead of using shrinkage via scale prior. Directly model the core as another PARAFAC decomposition and apply the multiway shrinkage to induce a sparse core? We might get away with the non-identifiability issue of PARAFAC since we only care about the tensor estimate of the core.
+% Another idea to describe the core structure, instead of using shrinkage via scale prior. Directly model the core as another PARAFAC decomposition and apply the multiway shrinkage to induce a sparse core? We might get away with the non-identifiability issue of PARAFAC since we only care about the tensor estimate of the core.
 
 
 
