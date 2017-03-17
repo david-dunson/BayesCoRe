@@ -1,5 +1,6 @@
-class stiefelTensor
-{
+#include "tensorOps.hpp"
+
+class stiefelTensor {
 public:
   afarray A;
   int r, n, p;
@@ -9,8 +10,7 @@ public:
   afarray Z;
   afarray tau, tau_copy;
 
-  stiefelTensor(afarray _A, int _r)
-  {
+  stiefelTensor(afarray _A, int _r) {
     A = _A;
     n = A.dims(0);
     p = A.dims(2);
@@ -18,12 +18,10 @@ public:
     initialize();
   }
 
-  void initialize()
-  {
+  void initialize() {
     // make the diagonal 2 and upper matrix 3, so that they don't get updated
     afarray upper3 = upper(constant(3, dim4(n, n)));
-    for (int i = 0; i < p; i++)
-    {
+    for (int i = 0; i < p; i++) {
       // make upper matrix 3
       A.slice(i) += upper3;
       // make diagonal 2
@@ -55,26 +53,25 @@ public:
 
     Z = A - 0.5;
 
-    Z(posSet) = gpu_rtruncnorm(m(posSet), 1.0, zeros(posSet), true);
-    Z(zeroSet) = gpu_rtruncnorm(m(zeroSet), 1.0, zeros(zeroSet), false);
-    for (int i = 0; i < p; i++)
-    {
+    // Z(posSet) = gpu_rtruncnorm(m(posSet), 1.0, zeros(posSet), true);
+    // Z(zeroSet) = gpu_rtruncnorm(m(zeroSet), 1.0, zeros(zeroSet), false);
+
+    Z = gpu_rtruncnorm_zero(m, posSet, zeroSet);
+
+    for (int i = 0; i < p; i++) {
       Z.slice(i) = setDiag(Z.slice(i), randn(n) * sqrt(2));
     }
     Z = symmetrize(Z);
 
     updateD();
-    cout << "here" << endl;
     updateZ();
   }
 
   // symmetrize matrix in a tensor
-  afarray symmetrize(const afarray X)
-  {
+  afarray symmetrize(const afarray X) {
     afarray Y = X;
     // for (int i = 0; i < X.dims(2); i++) {
-    gfor(seq i, X.dims(2))
-    {
+    gfor(seq i, X.dims(2)) {
       afarray L = lower(X(span, span, i));
       afarray U = upper(X(span, span, i));
       Y(span, span, i) = X(span, span, i) - U + transpose(L);
@@ -83,36 +80,16 @@ public:
   }
 
   // set diagonal value to matrix (matrix only)
-  afarray
-  setDiag(const afarray X, const afarray diagvec)
-  {
+  afarray setDiag(const afarray X, const afarray diagvec) {
     afarray Y = X;
     afarray diag_adjust = -diag(X) + diagvec;
     Y = X + diag(diag_adjust, 0, false);
     return Y;
   }
 
-  void updateD()
-  {
+  void updateD() {
 
-    afarray UZU = moddims(Z, dim4(n, n * p));
-    UZU = matmul(transpose(U), UZU);
-    UZU = moddims(UZU, dim4(r, n, p));
-
-    {
-      afarray temp = constant(0, dim4(n, r, p));
-      gfor(seq i, p)
-      {
-        temp(span, span, i) = transpose(UZU(span, span, i));
-      }
-      UZU = temp;
-    }
-
-    UZU = moddims(UZU, dim4(n, r * p));
-    UZU = matmul(transpose(U), UZU);
-    UZU = moddims(UZU, dim4(r, r, p));
-
-    // afarray UZU = constant(0, dim4(r, r, p));
+    afarray UZU = tensorMulAtBA(U, Z);
 
     // for (int i = 0; i < p; i++)
     // {
@@ -124,8 +101,7 @@ public:
     afarray m = v * (UZU / 2.0);
 
     // diagonal part
-    for (int i = 0; i < p; i++)
-    {
+    for (int i = 0; i < p; i++) {
 
       afarray uzu_d = diag(UZU.slice(i));
       afarray v_d = 1.0 / (1.0 + 1.0 / diag(tau));
@@ -139,14 +115,23 @@ public:
     D = symmetrize(D);
   }
 
-  void updateZ()
-  {
+  void updateZ() {
     afarray zeros = constant(0, dim4(n, n));
 
-    cout << "wha" << endl;
+    // ver 1: large memory
+    /*
+    afarray UDU = tensorMulAtBA(transpose(U), D);
 
-    for (int i = 0; i < p; i++)
-    {
+    Z = gpu_rtruncnorm_zero(UDU, posSet, zeroSet);
+
+    for (int i = 0; i < p; i++) {
+      Z.slice(i) = setDiag(Z.slice(i), randn(n) * sqrt(2));
+    }
+    Z = symmetrize(Z);
+    */
+
+    // ver2 memory efficient
+    for (int i = 0; i < p; i++) {
 
       afarray Z_local = Z.slice(i);
       afarray UDU = matmul(U, D.slice(i), transpose(U));
@@ -154,25 +139,22 @@ public:
       afarray posSetLocal = posSet.slice(i);
       afarray zeroSetLocal = zeroSet.slice(i);
 
-      cout << "wha1" << endl;
-
-      Z_local(posSetLocal) = gpu_rtruncnorm(UDU(posSetLocal), 1.0, zeros(posSetLocal), true);
-      Z_local(zeroSetLocal) = gpu_rtruncnorm(UDU(zeroSetLocal), 1.0, zeros(zeroSetLocal), false);
-
-      Z_local.eval();
-      cout << "wha2" << endl;
+      Z_local = gpu_rtruncnorm_zero(UDU, posSetLocal, zeroSetLocal);
+      // Z_local(posSetLocal) =
+      //     gpu_rtruncnorm(UDU(posSetLocal), 1.0, zeros(posSetLocal), true);
+      // Z_local(zeroSetLocal) =
+      //     gpu_rtruncnorm(UDU(zeroSetLocal), 1.0, zeros(zeroSetLocal),
+      // false);
+      // Z_local.eval();
 
       Z_local = setDiag(Z_local, randn(n) * sqrt(2) + diag(UDU));
       Z.slice(i) = Z_local;
     }
-    cout << "wha" << endl;
     Z = symmetrize(Z);
   }
 
-  void Run(int steps)
-  {
-    for (int j = 0; j < steps; j++)
-    {
+  void Run(int steps) {
+    for (int j = 0; j < steps; j++) {
       updateD();
       updateZ();
 
