@@ -1,5 +1,4 @@
 afarray qnorm(afarray p, afarray mu, afarray sigma) {
-
   bool lower_tail = true;
   bool log_p = false;
 
@@ -58,10 +57,8 @@ afarray qnorm(afarray p, afarray mu, afarray sigma) {
     afarray pL = p(!fabsq425);
     /* r = min(p, 1-p) < 0.075 */
     r = q;
-    if (anyTrue<bool>(q > 0))
-      r(q > 0) = 1 - pL(q > 0); /* 1-p */
-    if (anyTrue<bool>(q < 0))
-      r(q < 0) = pL(q < 0); /* = R_DT_Iv(p) ^=  p */
+    if (anyTrue<bool>(q > 0)) r(q > 0) = 1 - pL(q > 0); /* 1-p */
+    if (anyTrue<bool>(q < 0)) r(q < 0) = pL(q < 0);     /* = R_DT_Iv(p) ^=  p */
 
     r = sqrt(-log(r));
 
@@ -135,8 +132,7 @@ afarray qnorm(afarray p, afarray mu, afarray sigma) {
            1.);
     }
 
-    if (anyTrue<bool>(q < 0))
-      valNOTfabsq425(q < 0) *= -1;
+    if (anyTrue<bool>(q < 0)) valNOTfabsq425(q < 0) *= -1;
 
     val(!fabsq425) = valNOTfabsq425;
 
@@ -149,4 +145,8 @@ afarray qnorm(afarray p, afarray mu, afarray sigma) {
 
 afarray qnorm(afarray p, afarray mu) {
   return qnorm(p, mu, constant(1, p.dims()));
+}
+
+afarray qnorm(afarray p) {
+  return qnorm(p, constant(0, p.dims()), constant(1, p.dims()));
 }

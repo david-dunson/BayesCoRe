@@ -21,6 +21,12 @@ int main(int argc, char *argv[]) {
     af::setDevice(device);
     af::info();
 
+    int fastMode = argc > 2 ? atoi(argv[2]) : 0;
+
+    int r = argc > 3 ? atoi(argv[3]) : 20;
+
+    int steps = argc > 4 ? atoi(argv[4]) : 10;
+
     // afarray mu = constant(0, dim4(100, 100));
     // afarray sigma = constant(1, dim4(100, 100));
 
@@ -32,16 +38,25 @@ int main(int argc, char *argv[]) {
     afarray A = af::readArray("../../data/A.af", "A");
 
     A = A.slices(0, 20);
-    A = A.rows(0, 99);
-    A = A.cols(0, 99);
-    cout << "here" << endl;
+    // A = A.rows(0, 99);
+    // A = A.cols(0, 99);
+    // cout << "here" << endl;
 
-    stiefelTensor stTsr(A, 50);
-    cout << "here" << endl;
+    stiefelTensor stTsr(A, r, fastMode);
+    // cout << "here" << endl;
 
-    stTsr.Run(1000);
+    timer start1 = timer::start();
+    stTsr.Run(steps);
+    printf("elapsed seconds: %g\n", timer::stop(start1));
+
+    writeCSV(conv_to_std_vector<float>(stTsr.U), "test/U.csv");
     writeCSV(conv_to_std_vector<float>(stTsr.D), "test/D.csv");
-    writeCSV(conv_to_std_vector<float>(stTsr.Z), "test/Z.csv");
+    // writeCSV(conv_to_std_vector<float>(stTsr.Z), "test/Z.csv");
+
+    afarray avgA = sum(A, 2) / (float)A.dims(2);
+    writeCSV(conv_to_std_vector<float>(avgA), "test/avgA.csv");
+
+    writeCSV(stTsr.trace_D, "test/trace_D.csv");
 
     // const int n1 = 1105;
     // const int n2 = 1105;

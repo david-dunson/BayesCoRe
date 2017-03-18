@@ -1,66 +1,41 @@
 setwd("C:/Users/leo/git/empiricalTensor/network_data_gpu/")
 
-Z<- read.csv("./test/z.csv",header = F)$V1
+U<- read.csv("./test/U.csv",header = F)$V1
 D<- read.csv("./test/D.csv",header = F)$V1
+avgA<- read.csv("./test/avgA.csv",header = F)$V1
 
-A<- read.csv("./test/A.csv",header = F)$V1
+n = 1105
+r = 30
+p = 44
 
+U<- array(U,dim = c(n,r))
+D<- array(D,dim = c(r,r,p))
+avgA<- array(avgA, dim=c(n,n))
 
-i =1
-d= matrix(D[((i*100)+1):((i+1)*100)],10)
-range(d-t(d))
-z = matrix(Z[((i*1E4)+1):((i+1)*1E4)],100)
-range(z-t(z))
-
-
-n=10
-r=3
-p=5
-
-U = matrix(rnorm(n*r),r)
-
-D_list=list()
-
-for(i in 1:p){
-D = matrix(rnorm(n^2),n)
-D = D+t(D)
-D_list[[i]]=D
-}
-
-UDU_list =list()
-for(i in 1:p){
-  UDU_list[[i]] = U%*% D_list[[i]]%*%t(U)
-}
-
-UDU_list
-
-
-UD = U%*% matrix(unlist(D_list),n)
-
-UD<-array(UD,dim = c(r,n,p))
-
-for(i in 1:p){
-  UD[,,i]<- t(UD[,,i])
-}
-
-UDU <- U%*% array(UD,dim=c(n,r*p))
-
-UDU <- array(UDU,dim=c(r,r,p))
-
-
-for(i in 1:p){
-  print( max(abs(UDU[,,i] - UDU_list[[i]])))
+plotHugeMat<-function(img){
+  img=(img -min(img))/(max(img)-min(img))
+  plot(NA,xlim=c(0,nrow(img)),ylim=c(0,ncol(img)))
+  rasterImage(img,0,0,nrow(img),ncol(img))
 }
 
 
+UDU = U%*%D[,,2]%*%t(U)
 
-z<- read.csv("./test/z.csv",header = F)$V1
-p<- read.csv("./test/p.csv",header = F)$V1
+plotHugeMat(avgA)
+plotHugeMat(pnorm(UDU))
 
-set1 = (0.075 <= p) & (p <= 0.925)
-hist(pnorm(z[set1])-(p[set1]))
+UDU = U%*%D[,,2]%*%t(U)
 
-set1 = (0.075 > p) | (p > 0.925)
 
-  
-hist(pnorm(z[set1])-p[set1])
+plotHugeMat(D[,,1])
+
+D[,,1]
+
+
+
+trace_D<- read.csv("./test/trace_D.csv",header = F)$V1
+trace_D = t(matrix(trace_D,ncol=1000))
+acf(trace_D[400:1000,100],lag.max = 100)
+
+hist(pnorm(UDU),breaks = 1000)
+

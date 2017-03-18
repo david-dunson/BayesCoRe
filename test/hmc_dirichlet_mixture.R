@@ -1,5 +1,5 @@
 # setwd("~/work/git/empiricalTensor/test/")
-setwd("D:/work/git/empiricalTensor/test/")
+setwd("C:/Users/leo/git/empiricalTensor/test/")
 
 
 
@@ -43,8 +43,9 @@ ss_fit <- sampling(ss_model, data = toy_dat,init=init, iter = 20000, chains = 1)
 
 
 post_p<- extractPosterior("p", d,"ss_fit")
-ts.plot(post_p[,c(3,4)])
+ts.plot(post_p)
 
+colMeans(post_p)
 
 save(ss_fit,file="hmc_dp.RDa")
 

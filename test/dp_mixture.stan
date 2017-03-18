@@ -7,7 +7,7 @@ data {
 }
 
 parameters {
-  real<lower=0,upper=1> p[d];
+  simplex[d] p;
   real mu[d];
   real<lower=0> sigma;
 }
@@ -29,5 +29,5 @@ model {
   target += normal_lpdf(mu | 0, 1000);
 
   //simplex constraint
-  target += - lambda* (sum(p) -1)* (sum(p)-1);
+  // target += - lambda* (sum(p) -1)* (sum(p)-1);
 }

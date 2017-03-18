@@ -1,4 +1,5 @@
-template <class T> afarray gpu_rexp(dim4 dim, T alpha) {
+template <class T>
+afarray gpu_rexp(dim4 dim, T alpha) {
   return -log(randu(dim)) / alpha;
 }
 
@@ -35,8 +36,7 @@ afarray gpu_multinomial2(afarray prob, int n1, int n2) {
   afarray C = constant(NaN, n1, n2);
   for (int kappa = 0; kappa < n; ++kappa) {
     afarray select = (accu_prob(span, span, kappa) && isNaN(C));
-    if (anyTrue<bool>(select))
-      C(select) = kappa;
+    if (anyTrue<bool>(select)) C(select) = kappa;
   }
 
   return C.as(u32);
@@ -50,8 +50,7 @@ afarray gpu_multinomial3(afarray prob, int n1, int n2, int p) {
   afarray C = constant(NaN, n1, n2, p);
   for (int kappa = 0; kappa < n; ++kappa) {
     afarray select = (accu_prob(span, span, span, kappa) && isNaN(C));
-    if (anyTrue<bool>(select))
-      C(select) = kappa;
+    if (anyTrue<bool>(select)) C(select) = kappa;
   }
 
   return C.as(u32);
@@ -84,53 +83,53 @@ afarray gpu_rtruncnorm_zero(afarray mu, afarray posSet, afarray zeroSet) {
   return Z;
 }
 
-/*
 afarray gpu_rtruncated_std_lb_aux(dim4 n, afarray alpha, afarray lb) {
-        afarray z = gpu_rexp(n, alpha) + lb;
-        afarray condition = (lb < alpha);
-        afarray delta = condition.as(f32) * exp(-(alpha - z) * (alpha - z) /
-2.0) + (!condition).as(f32) * exp(
-                                                        -(alpha - z) * (alpha -
-z) / 2.0 + (lb - alpha) * (lb - alpha) / 2.0);
-//	delta.eval();
-        afarray u = randu(n);
-//	u.eval();
-        afarray not_satisfied = u > delta;
-        int n1 = sum<int>(not_satisfied);
-        if (n1 > 0) {
-                z(not_satisfied) = gpu_rtruncated_std_lb_aux(n1,
-alpha(not_satisfied), lb(not_satisfied));
-        }
-        return z;
+  afarray z = gpu_rexp(n, alpha) + lb;
+  afarray condition = (lb < alpha);
+  afarray delta = condition.as(f32) * exp(-(alpha - z) * (alpha - z) / 2.0) +
+                  (!condition).as(f32) * exp(-(alpha - z) * (alpha - z) / 2.0 +
+                                             (lb - alpha) * (lb - alpha) / 2.0);
+  //  delta.eval();
+  afarray u = randu(n);
+  //  u.eval();
+  afarray not_satisfied = u > delta;
+  int n1 = sum<int>(not_satisfied);
+  if (n1 > 0) {
+    z(not_satisfied) =
+        gpu_rtruncated_std_lb_aux(n1, alpha(not_satisfied), lb(not_satisfied));
+  }
+  return z;
 }
 
 afarray gpu_rtruncnorm_std_lb(dim4 dim, afarray lb) {
-        afarray alpha = (lb + sqrt(lb * lb + 4)) / 2.0;
-        afarray delta = constant(1, dim);
-        afarray u = constant(1.5, dim);
-        afarray z = constant(0, dim);
-        afarray not_satisfied = u > delta;
-//	int n = sum<int>(not_satisfied);
-        z = gpu_rtruncated_std_lb_aux(dim, alpha, lb);
-        return z;
+  afarray alpha = (lb + sqrt(lb * lb + 4)) / 2.0;
+  afarray delta = constant(1, dim);
+  afarray u = constant(1.5, dim);
+  afarray z = constant(0, dim);
+  afarray not_satisfied = u > delta;
+  //  int n = sum<int>(not_satisfied);
+  z = gpu_rtruncated_std_lb_aux(dim, alpha, lb);
+  return z;
 }
 
 afarray gpu_rtruncnorm_std_ub(dim4 dim, afarray ub) {
-        return -gpu_rtruncnorm_std_lb(dim, -ub);
+  return -gpu_rtruncnorm_std_lb(dim, -ub);
 }
 
-afarray gpu_rtruncnorm(afarray mean, float sigma, afarray bound, bool
-lower_bound) { afarray bound1 = (bound - mean) / sigma; afarray choice1 = bound1
-> 6; if (anyTrue<bool>(choice1)) bound1(choice1) = 6; afarray choice2 = bound1 <
--6; if (anyTrue<bool>(choice2)) bound1(choice2) = -6; dim4 n = mean.dims();
-        afarray r(n);
-        if (lower_bound) {
-                r = gpu_rtruncnorm_std_lb(n, bound1);
-        } else {
-                r = gpu_rtruncnorm_std_ub(n, bound1);
-        }
-        assert(anyTrue<bool>(!isNaN(r)));
-        return r * sigma + mean;
-
+afarray gpu_rtruncnorm(afarray mean, float sigma, afarray bound,
+                       bool lower_bound) {
+  afarray bound1 = (bound - mean) / sigma;
+  afarray choice1 = bound1 > 6;
+  if (anyTrue<bool>(choice1)) bound1(choice1) = 6;
+  afarray choice2 = bound1 < -6;
+  if (anyTrue<bool>(choice2)) bound1(choice2) = -6;
+  dim4 n = mean.dims();
+  afarray r(n);
+  if (lower_bound) {
+    r = gpu_rtruncnorm_std_lb(n, bound1);
+  } else {
+    r = gpu_rtruncnorm_std_ub(n, bound1);
+  }
+  assert(anyTrue<bool>(!isNaN(r)));
+  return r * sigma + mean;
 }
-*/
