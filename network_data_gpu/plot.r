@@ -14,22 +14,46 @@ avgA<- array(avgA, dim=c(n,n))
 
 plotHugeMat<-function(img){
   img=(img -min(img))/(max(img)-min(img))
-  plot(NA,xlim=c(0,nrow(img)),ylim=c(0,ncol(img)))
+  plot(NA,xlim=c(0,nrow(img)),ylim=c(0,ncol(img)),xlab="",ylab="")
   rasterImage(img,0,0,nrow(img),ncol(img))
 }
 
 
 UDU = U%*%D[,,2]%*%t(U)
 
-plotHugeMat(avgA)
+setwd("c:/Users/leo/Desktop/ARI_Slides_032017/figures/")
+
+png("large_network1.png",800,800)
+plotHugeMat( U%*%D[,,3]%*%t(U))
+dev.off()
+
+
+png("large_network2.png",800,800)
+plotHugeMat( U%*%D[,,4]%*%t(U))
+dev.off()
+
+png("large_network3.png",800,800)
+plotHugeMat( U%*%D[,,5]%*%t(U))
+dev.off()
+
+png("large_network_core.png",800,800)
+plotHugeMat(D[,,1])
+dev.off()
+
+D[1,1,1]=D[2,2,1]
+
+png("large_network_core.png",800,800)
+plotHugeMat(U[,1:10])
+dev.off()
+
+
+
 plotHugeMat(pnorm(UDU))
 
 UDU = U%*%D[,,2]%*%t(U)
 
 
-plotHugeMat(D[,,1])
 
-D[,,1]
 
 
 
