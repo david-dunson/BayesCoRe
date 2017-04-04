@@ -20,7 +20,7 @@ extractPosterior<-function(varname, dimen, stan_fit){
 
 ##### Data ###
 N = 100
-d=5;
+d = 5
 p = c(0.1,0.3,0.6)
 mu<- c(2,5,7)
 sigma=0.5
