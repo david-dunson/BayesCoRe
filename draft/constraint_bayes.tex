@@ -69,31 +69,48 @@
 \thispagestyle{empty}
 \baselineskip=28pt
 
-\title{\textbf{Extrinsic Prior \\for Simple and Efficient Bayesian Modeling \\Under Constraint}}
+\title{\textbf{Extrinsic Prior for Simple and Efficient\\ Bayesian Modeling with Parameter Constraints}}
 %\author{Leo Duan, David Dunson}
 \date{}
 \begin{document}
 
 \maketitle
 
+
+{\bf Abstract:} Models
+\vskip 12pt
+
+%\baselineskip=12pt
+%\par\vfill\noindent
+{\noindent  KEY WORDS:  Bayesian probit; Bayesian logit; Big $n$; Data Augmentation; Maximal Correlation; Polya-Gamma.}
+%\par\medskip\noindent
+%\clearpage\pagebreak\newpage
+\pagenumbering{arabic}
+
 \section{Introduction}
 
-Literature review:
-\begin{itemize}
-\item History: Hoffman 1993, Gelfand, Smith and Lee 1992, Danaher et al 2012 -- limited to linear constraint
-\item Manifold literature: Gibbs/ rejection sampling -- slow mixing; HMC geodesics method -- difficult and computationally intensive
-\item Lagrange/ KKT multiplier, Constraint Bayesian optimization -- point estimate only, no uncertainty
-\end{itemize}
+Constraints are very common in statistical modeling. In applied domain, modeling assumptions often require some constraint. For example, in functional data analysis related to degenerative disease, it is common to assume the curve need to satisfy certain shape constraint such as monotonicty \citep{lin2014monogp}. In stastical optimization, constraints such as orthonormality are also routinely used to ensure identifiability of the model \citep{uschmajew2010well}. In manifold modeling, a large class of manifolds can be viewed as sub-manifolds of a more conventional space (e.g. Euchlean space), embedded via different constraints.
 
-Summary of proposed method:
-Replacing the inequality and equality constraints with strongly informative prior, allowing carrying out efficient Monte Carlo in a convenient space (e.g. Euchledian space). Obtain posterior,  then use projection to correct the imperfection if needed.
+These constraints can cause substantial modeling difficulty. When constraints are applied on the data, they could generate an intractable integral with the parameter in the likelihood, leading to a ``doubly intractable'' problem. Several successful solutions have been proposed to address this issue \citep{murray2012mcmc,rao2016data}.
+On the other hand, there is a clear lack of general and simple solution, when the constraints are applied on the parameters. In frequentist optimization literature, the use of Lagrange and Karush-Kuhn-Tucker multipliers provides a means to obtain point estimate under the equality and inequality constraints \citep{boyd2004convex}. But due to the space constraint, the standard asympotic approximation for variance estimation usually do not hold. Therefore, a Bayesian approach would be more approriate to quantify the uncertainty. Ideally, one would assign prior on a constraint support, then utilize standard toolbox such as Markov chain Monte carlo (MCMC) to obtain posterior sample on this space. However, this turns out to be very challenging.
 
-Strength: Large support near the constraint space. Simple and efficient computation. Extremely easy to play, encouraging the community to plug-and-play more constraints in the model.
+To assign prior on the constraint space, the available families of distribution are often quite limited. For example, for othornormal matrices on the Stiefel manifold, the matrix von Mises-Fisher distribution \citep{khatri1977mises} is one of the only few choices. For regression under linear inequality constraints, only until recently a tractable prior is proposed for the polyhedral region set by the inequailities \citep{danaher2012minkowski}. Alternatively, \cite{gelfand1992bayesian} proposed a truncation strategy by first considering common unrestricted distribution, then assigning zero support outside the constraint region. Accordingly, the posterior estimation proceeds in first generating unrestricted proposals using Gibbs sampling, then only accepting those inside the constraint space. Although this approach allows using a more general class of prior distribution, the drawback is that the unrestricted proposal can have significant mass outside the constraint region, resulting in a high rejection rate.
+
+To meet the constraints, efficient computation is elusive and often demands substantial efforts to develop. And often it can be disrupted by slight complication such as hierarchical structure or additional constraint. For example, stick-breaking parameterization is commonly used in probability simplex modeling, in order to circumvent the constraint of vertices summing to $1$. However, its computational efficency can be broken by additional structure constraint, such as the ordering of the simplex, which is useful in reducing the label switching problem in mixture modeling \citep{diebolt1994estimation}. As another example, in multiway tensor factorization, orthonormality is useful to induce good posterior mixing in estimating factor matrices. This largely relies on the sampler of Bingham-von Mises-Fisher distribution \citep{hoff2016equivariant}. However, when there is symmetry in the slices of tensor (commonly in population of undirected networks), at least two factors would be the same. This disrupts the closed form of the posterior, demanding new rejection sampling algorithm to be developed. The Bayesian manifold modeling also faces the same quadmire. Hamiltonian Monte Carlo accomodating the geometric structure of the manifold have been developed \citep{girolami2011riemann,byrne2013geodesic}, but the computation is intensive and mixing is suboptimal. These challenges prohibit a good utilization of constraints in statistics.
+
+We propose to solve this problem by viewing the constrigent constraints as a limiting case of a strongly informative prior, referred as extrisic prior. We then relax the effective support of the prior to the neighbor of the constraint space, allowing approximate posterior to be collected efficiently via Hamiltonian Monte Carlo directly in Euchledean space. The imperfection of approximation can be corrected by an efficient reconstruction of an exact Markov chain after projection. The proposed approach is simple to implement and can be automatically carried out via software such as STAN. Theoretic studies are conducted and substantial improvement is shown in simulations and data application.
+
+
 
 
 \section{Method}
 
+ unless the likelihood involve 
 
+ intractable problem. 
+
+
+can usually be considered as assigning a prior in a 
 
 The task under consideration involves a $p$-dimensional parameter $\theta$ in a constrained space $\mc D$. Without loss of generality, the space $\mc D$ is assumed to be embedded in another space $\mc R$ (e.g. Euchledean space $\mathbb R^p$) via $m$ equalities and $l$ inequalities, $\mc D = \{ \theta \in \mc R: E_k(\theta)=0$ \text{ for } $k=1,\ldots,m, \quad G_{k'}(\theta)\le 0  \text{ for } k'=1,\ldots,l \}$, where $E_k(.)$ and $G_{k'}(.)$ are functions that map from $\mc R$ to real line $\mathbb R$. These functions are differentiable with respect to $\theta$ and not necessarily linear.
 
@@ -136,6 +153,12 @@ So far we have taken an element-wise approach for specifying the kernel $K_{.}$'
 
 \leo{more work is to be done on assessing the effects on mixing}
 
+{\bf Example 1: Ordered Simplex}
+
+{\bf Example 2: Monotone Spline} 
+
+{\bf Example 3: Orthonormal Gaussian Processes} 
+
 \subsection{Posterior Sampling}
 
 \subsection{Correcting Projection}
@@ -148,5 +171,7 @@ So far we have taken an element-wise approach for specifying the kernel $K_{.}$'
 
 
 
+\bibliography{reference}
+\bibliographystyle{chicago}
 
 \end{document}

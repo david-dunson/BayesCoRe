@@ -78,7 +78,7 @@ source("./gplvm_hmc.r")
 #   deri_x[i] = (computeU(x=x1)-computeU(x=x))/1E-8
 # }
 
-x1<- runif(n)
+x1<- -runif(n)
 x1[1]=0
 # plot(x1,Y[,1])
 # plot(x1,Y[,2])

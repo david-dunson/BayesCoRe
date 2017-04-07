@@ -1,6 +1,6 @@
 options(max.print=100)
 
-# setwd("C:/Users/leo/git/empiricalTensor/gplvm/")
+setwd("~/git/empiricalTensor/gplvm/")
 
 require("rstan")
 rstan_options(auto_write = TRUE)

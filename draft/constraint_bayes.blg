@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: constraint_bayes.aux
+The style file: chicago.bst
+Database file #1: reference.bib
+Warning--no number and no volume in diebolt1994estimation
+Warning--no number and no volume in khatri1977mises
+Warning--no number and no volume in lin2014monogp
+Warning--page numbers missing in lin2014monogp
+Warning--no number and no volume in murray2012mcmc
+Warning--page numbers missing in murray2012mcmc
+You've used 12 entries,
+            2861 wiz_defined-function locations,
+            692 strings with 6934 characters,
+and the built_in function-call counts, 8693 in all, are:
+= -- 745
+> -- 668
+< -- 0
++ -- 204
+- -- 234
+* -- 799
+:= -- 1583
+add.period$ -- 36
+call.type$ -- 12
+change.case$ -- 87
+chr.to.int$ -- 12
+cite$ -- 18
+duplicate$ -- 210
+empty$ -- 500
+format.name$ -- 274
+if$ -- 1602
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 13
+newline$ -- 63
+num.names$ -- 120
+pop$ -- 56
+preamble$ -- 1
+purify$ -- 160
+quote$ -- 0
+skip$ -- 242
+stack$ -- 0
+substring$ -- 470
+swap$ -- 67
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 230
+warning$ -- 6
+while$ -- 122
+width$ -- 0
+write$ -- 158
+(There were 6 warnings)

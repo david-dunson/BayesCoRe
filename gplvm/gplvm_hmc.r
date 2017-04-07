@@ -69,13 +69,13 @@ updateX <-function(x,eps = 1E-5, L =10,steps = 1000,tuning = T, ideal_AR =0.234,
       p_0[1] = 0
       q_x = x
       p_x = p_0
-      p_x = p_x - eps/2 * computeDeriX(x)
+      p_x = p_x - eps/2 * computeDeriX(q_x)
       for(i in 1:L){
         q_x = q_x + eps* p_x/m_x
-        p_x = p_x - eps * computeDeriX(x)
+        p_x = p_x - eps * computeDeriX(q_x)
       }
       q_x = q_x + eps* p_x/m_x
-      p_x = p_x - eps/2 * computeDeriX(x)
+      p_x = p_x - eps/2 * computeDeriX(q_x)
       
       cur_H = computeU(x, theta=theta,Sigma = Sigma )+ sum(p_0^2/m_x/2)
       new_H = computeU(q_x, theta=theta,Sigma = Sigma) + sum(p_x^2/m_x/2)

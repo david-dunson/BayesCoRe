@@ -54,23 +54,36 @@ input_dat <- list(N=N, p=p,d=d, Bd= Bd, x=x, Y=Y, B=B ,lambda=lambda)
 
 ss_fit <- sampling(ss_model, data = input_dat, iter = 20000, chains = 1, algorithm = "NUTS")
 
+save(ss_fit,file="fpca.RDa")
+
+load(file="fpca.RDa")
+
 sampling_idx<- c(10001:20000)
 
+post_sample = do.call("cbind",ss_fit@sim$samples[[1]])
 
-post_p<- extractPosterior("p", d,"ss_fit")
-ts.plot(post_p[sampling_idx,])
+post_sample = post_sample[sampling_idx,] 
 
-colMeans(post_p)
+post_F = post_sample[, substr( colnames(post_sample), 1, 1) =="F"]
+post_F_tensor = array(post_F, dim=c(10000,N,d))
 
-save(ss_fit,file="hmc_dp.RDa")
+F_sample = post_F_tensor[2,,]
 
-rowSums(post_p)  
+t(F_sample) %*% F_sample
 
-post_mu<- extractPosterior("mu", d,"ss_fit")
-ts.plot(post_mu[sampling_idx,c(1:3)])
+plot(x,F_sample[,1])
+plot(x,F_sample[,2])
+plot(x,F_sample[,3])
+plot(x,F_sample[,4])
 
-post_sigma<- extractPosterior("sigma", 1,"ss_fit")
-ts.plot(post_sigma)
+acf(post_F_tensor[,1,3],lag.max=40)
+
+
+post_L = post_sample[, substr( colnames(post_sample), 1, 1) =="L"]
+post_L_tensor = array(post_L, dim=c(10000,d,p))
+
+image(post_L_tensor[4,,])
+
 
 
 
