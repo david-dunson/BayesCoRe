@@ -3,33 +3,49 @@
 \citation{uschmajew2010well}
 \citation{murray2012mcmc,rao2016data}
 \citation{boyd2004convex}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
 \citation{khatri1977mises}
 \citation{danaher2012minkowski}
 \citation{gelfand1992bayesian}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
 \citation{diebolt1994estimation}
 \citation{hoff2016equivariant}
 \citation{girolami2011riemann,byrne2013geodesic}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Method}{2}}
-\newlabel{extrinsic_prior}{{3}{3}}
+\citation{gelfand1992bayesian}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Method}{3}}
+\newlabel{exact_posterior}{{2}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Extrinsic Prior for Constraints}{3}}
+\newlabel{extrinsic_prior}{{3}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Kernel Specification}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Unnormalized densities for truncated normal $\No  _{(1,2)}(0,1)$, under exact and approximating densities. The exact density abruptly drops to $0$ on the two boundaries, while the approximating ones drop continuously. In the approximation, larger $\lambda $ is associated with lower tolerance for constraint violation ($( 1-\theta )_+$ and $( \theta - 2)_+$) in the posterior. All densities inside $(1,2)$ are the same up to a constant difference.\relax }}{5}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{truncated_normal}{{1}{5}}
+\citation{zhang2012continuous}
+\citation{neal2011mcmc,hoffman2014no}
+\citation{livingstone2016geometric}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Posterior Sampling Under Extrinsic Prior}{6}}
+\newlabel{hamiltonian}{{5}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Sampling posterior from a von Mises--Fisher distribution on a unit circle, using HMC with extrinc prior under $\lambda =10^3,10^4,10^5$. Row $1$ shows the posterior distribution of the constraint violation $|\theta '\theta -1|$; Row $2$ shows the sampling path of the Markov chain; Row $3$ shows the autocorrelation plot (ACF). Large $\lambda $ results in small constraint violation, but suffers from slow mixing due to inefficient local update; smaller $\lambda $ increases the approximation error but results in excellent mixing.\relax }}{8}}
+\newlabel{unit_circle}{{2}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Correcting Projection to Constraint Space}{9}}
 \bibdata{reference}
 \bibcite{boyd2004convex}{{1}{2004}{{Boyd and Vandenberghe}}{{Boyd and Vandenberghe}}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Prior Specification}{4}}
 \bibcite{byrne2013geodesic}{{2}{2013}{{Byrne and Girolami}}{{Byrne and Girolami}}}
 \bibcite{danaher2012minkowski}{{3}{2012}{{Danaher et~al.}}{{Danaher, Roy, Chen, Mumford, and Schisterman}}}
 \bibcite{diebolt1994estimation}{{4}{1994}{{Diebolt and Robert}}{{Diebolt and Robert}}}
 \bibcite{gelfand1992bayesian}{{5}{1992}{{Gelfand et~al.}}{{Gelfand, Smith, and Lee}}}
 \bibcite{girolami2011riemann}{{6}{2011}{{Girolami and Calderhead}}{{Girolami and Calderhead}}}
 \bibcite{hoff2016equivariant}{{7}{2016}{{Hoff et~al.}}{{Hoff et~al.}}}
-\bibcite{khatri1977mises}{{8}{1977}{{Khatri and Mardia}}{{Khatri and Mardia}}}
-\bibcite{lin2014monogp}{{9}{2014}{{Lin and Dunson}}{{Lin and Dunson}}}
-\bibcite{murray2012mcmc}{{10}{2012}{{Murray et~al.}}{{Murray, Ghahramani, and MacKay}}}
-\bibcite{rao2016data}{{11}{2016}{{Rao et~al.}}{{Rao, Lin, and Dunson}}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Posterior Sampling}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Correcting Projection}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Illustration: Ordered Simplex}{5}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Theory}{5}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Application}{5}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Discussion}{5}}
-\bibcite{uschmajew2010well}{{12}{2010}{{Uschmajew}}{{Uschmajew}}}
+\bibcite{hoffman2014no}{{8}{2014}{{Hoffman and Gelman}}{{Hoffman and Gelman}}}
+\bibcite{khatri1977mises}{{9}{1977}{{Khatri and Mardia}}{{Khatri and Mardia}}}
+\bibcite{lin2014monogp}{{10}{2014}{{Lin and Dunson}}{{Lin and Dunson}}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Illustration}{10}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Theory}{10}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Application}{10}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion}{10}}
+\bibcite{livingstone2016geometric}{{11}{2016}{{Livingstone et~al.}}{{Livingstone, Betancourt, Byrne, and Girolami}}}
+\bibcite{murray2012mcmc}{{12}{2012}{{Murray et~al.}}{{Murray, Ghahramani, and MacKay}}}
+\bibcite{neal2011mcmc}{{13}{2011}{{Neal et~al.}}{{Neal et~al.}}}
+\bibcite{rao2016data}{{14}{2016}{{Rao et~al.}}{{Rao, Lin, and Dunson}}}
+\bibcite{uschmajew2010well}{{15}{2010}{{Uschmajew}}{{Uschmajew}}}
+\bibcite{zhang2012continuous}{{16}{2012}{{Zhang et~al.}}{{Zhang, Ghahramani, Storkey, and Sutton}}}
 \bibstyle{chicago}

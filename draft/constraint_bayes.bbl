@@ -48,6 +48,14 @@ Hoff, P.~D. et~al. (2016).
 \newblock Equivariant and scale-free tucker decomposition models.
 \newblock {\em Bayesian Analysis\/}~{\em 11\/}(3), 627--648.
 
+\bibitem[\protect\citeauthoryear{Hoffman and Gelman}{Hoffman and
+  Gelman}{2014}]{hoffman2014no}
+Hoffman, M.~D. and A.~Gelman (2014).
+\newblock The no-u-turn sampler: adaptively setting path lengths in hamiltonian
+  monte carlo.
+\newblock {\em Journal of Machine Learning Research\/}~{\em 15\/}(1),
+  1593--1623.
+
 \bibitem[\protect\citeauthoryear{Khatri and Mardia}{Khatri and
   Mardia}{1977}]{khatri1977mises}
 Khatri, C. and K.~Mardia (1977).
@@ -61,11 +69,22 @@ Lin, L. and D.~B. Dunson (2014).
 \newblock Bayesian monotone regression using gaussian process projection.
 \newblock {\em Biometrika\/}.
 
+\bibitem[\protect\citeauthoryear{Livingstone, Betancourt, Byrne, and
+  Girolami}{Livingstone et~al.}{2016}]{livingstone2016geometric}
+Livingstone, S., M.~Betancourt, S.~Byrne, and M.~Girolami (2016).
+\newblock On the geometric ergodicity of hamiltonian monte carlo.
+\newblock {\em arXiv preprint arXiv:1601.08057\/}.
+
 \bibitem[\protect\citeauthoryear{Murray, Ghahramani, and MacKay}{Murray
   et~al.}{2012}]{murray2012mcmc}
 Murray, I., Z.~Ghahramani, and D.~MacKay (2012).
 \newblock Mcmc for doubly-intractable distributions.
 \newblock {\em arXiv preprint arXiv:1206.6848\/}.
+
+\bibitem[\protect\citeauthoryear{Neal et~al.}{Neal et~al.}{2011}]{neal2011mcmc}
+Neal, R.~M. et~al. (2011).
+\newblock Mcmc using hamiltonian dynamics.
+\newblock {\em Handbook of Markov Chain Monte Carlo\/}~{\em 2}, 113--162.
 
 \bibitem[\protect\citeauthoryear{Rao, Lin, and Dunson}{Rao
   et~al.}{2016}]{rao2016data}
@@ -78,5 +97,12 @@ Uschmajew, A. (2010).
 \newblock Well-posedness of convex maximization problems on stiefel manifolds
   and orthogonal tensor product approximations.
 \newblock {\em Numerische Mathematik\/}~{\em 115\/}(2), 309--331.
+
+\bibitem[\protect\citeauthoryear{Zhang, Ghahramani, Storkey, and Sutton}{Zhang
+  et~al.}{2012}]{zhang2012continuous}
+Zhang, Y., Z.~Ghahramani, A.~J. Storkey, and C.~A. Sutton (2012).
+\newblock Continuous relaxations for discrete hamiltonian monte carlo.
+\newblock In {\em Advances in Neural Information Processing Systems}, pp.\
+  3194--3202.
 
 \end{thebibliography}

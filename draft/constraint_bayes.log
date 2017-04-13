@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.3.30)  6 APR 2017 18:38
+This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.3.30)  13 APR 2017 12:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -111,6 +111,13 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \float@box=\box27
 \@float@everytoks=\toks17
 \@floatcapt=\box28
+)
+(/usr/share/texlive/texmf-dist/tex/latex/bbm-macros/bbm.sty
+Package: bbm 1999/03/15 V 1.2 provides fonts for set symbols - TH
+LaTeX Font Info:    Overwriting math alphabet `\mathbbm' in version `bold'
+(Font)                  U/bbm/m/n --> U/bbm/bx/n on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathbbmss' in version `bold'
+(Font)                  U/bbmss/m/n --> U/bbmss/bx/n on input line 35.
 )
 (/usr/share/texlive/texmf-dist/tex/latex/amscls/amsthm.sty
 Package: amsthm 2015/03/04 v2.20.2
@@ -262,21 +269,36 @@ LaTeX Warning: No \author given.
 
 [1
 
-] [2] [3] (/home/leo/git/empiricalTensor/draft/constraint_bayes.bbl [4]
-[5])
+] [2]
+LaTeX Font Info:    Try loading font information for U+bbm on input line 115.
+ (/usr/share/texlive/texmf-dist/tex/latex/bbm-macros/ubbm.fd
+File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
+) [3]
+[4]
+File: density_truncated_normal.pdf Graphic file (type QTm)
+ <use  "density_truncated_normal.pdf" > [5] [6]
+File: unit_circle_violation.pdf Graphic file (type QTm)
+
+<use  "unit_circle_violation.pdf" >
+File: unit_circle_path.pdf Graphic file (type QTm)
+ <use  "unit_circle_path.pdf" >
+File: unit_circle_acf.pdf Graphic file (type QTm)
+
+<use  "unit_circle_acf.pdf" > [7] [8] [9]
+(/home/leo/git/empiricalTensor/draft/constraint_bayes.bbl [10])
 
 Package caption Warning: Unused \captionsetup[sub] on input line 34.
 See the caption package documentation for explanation.
 
-[6] (/home/leo/git/empiricalTensor/draft/constraint_bayes.aux) ) 
+[11] (/home/leo/git/empiricalTensor/draft/constraint_bayes.aux) ) 
 Here is how much of TeX's memory you used:
- 3999 strings out of 493638
- 56847 string characters out of 6146796
- 117964 words of memory out of 5000000
- 7359 multiletter control sequences out of 15000+600000
- 12156 words of font info for 47 fonts, out of 8000000 for 9000
+ 4070 strings out of 493638
+ 58397 string characters out of 6146796
+ 118417 words of memory out of 5000000
+ 7415 multiletter control sequences out of 15000+600000
+ 12551 words of font info for 50 fonts, out of 8000000 for 9000
  1328 hyphenation exceptions out of 8191
- 42i,11n,40p,1495b,236s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,12n,40p,1495b,302s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on /home/leo/git/empiricalTensor/draft/constraint_bayes.pdf (6 p
-ages).
+Output written on /home/leo/git/empiricalTensor/draft/constraint_bayes.pdf (11 
+pages).
