@@ -3,53 +3,57 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: constraint_bayes.aux
 The style file: chicago.bst
 Database file #1: reference.bib
-Warning--no number and no volume in diebolt1994estimation
+Warning--no number and no volume in kelly1990monotone
 Warning--no number and no volume in khatri1977mises
 Warning--no number and no volume in lin2014monogp
 Warning--page numbers missing in lin2014monogp
+Warning--no number and no volume in lin2016bayesstiefel
+Warning--page numbers missing in lin2016bayesstiefel
+Warning--no volume for lin2016extrinsic
+Warning--page numbers missing in lin2016extrinsic
 Warning--no number and no volume in livingstone2016geometric
 Warning--page numbers missing in livingstone2016geometric
 Warning--no number and no volume in murray2012mcmc
 Warning--page numbers missing in murray2012mcmc
-You've used 16 entries,
+You've used 18 entries,
             2861 wiz_defined-function locations,
-            712 strings with 7631 characters,
-and the built_in function-call counts, 11938 in all, are:
-= -- 1024
-> -- 928
+            722 strings with 7924 characters,
+and the built_in function-call counts, 13018 in all, are:
+= -- 1114
+> -- 998
 < -- 1
-+ -- 286
-- -- 322
-* -- 1090
-:= -- 2156
-add.period$ -- 48
-call.type$ -- 16
-change.case$ -- 118
-chr.to.int$ -- 16
-cite$ -- 24
-duplicate$ -- 295
-empty$ -- 683
-format.name$ -- 374
-if$ -- 2224
++ -- 304
+- -- 344
+* -- 1181
+:= -- 2360
+add.period$ -- 54
+call.type$ -- 18
+change.case$ -- 131
+chr.to.int$ -- 18
+cite$ -- 30
+duplicate$ -- 327
+empty$ -- 751
+format.name$ -- 400
+if$ -- 2420
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 17
-newline$ -- 83
-num.names$ -- 160
-pop$ -- 81
+missing$ -- 19
+newline$ -- 93
+num.names$ -- 180
+pop$ -- 88
 preamble$ -- 1
-purify$ -- 215
+purify$ -- 240
 quote$ -- 0
-skip$ -- 337
+skip$ -- 371
 stack$ -- 0
-substring$ -- 648
-swap$ -- 99
+substring$ -- 688
+swap$ -- 109
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 310
-warning$ -- 8
-while$ -- 161
+type$ -- 350
+warning$ -- 12
+while$ -- 177
 width$ -- 0
-write$ -- 211
-(There were 8 warnings)
+write$ -- 237
+(There were 12 warnings)

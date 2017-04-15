@@ -93,11 +93,11 @@ plot(runX$trace_x[1:1000,],type="l")
 # runX$trace_x = runX$trace_x[shuffled,]
 
 # runX$trace_x= runX$trace_x[c(1:1000)*10,]
-rowSums(runX$trace_x^2)
+rowSums(runX1$trace_x^2)
 
-X_D = runX$trace_x / sqrt(rowSums(runX$trace_x^2))
+X_D = runX1$trace_x / sqrt(rowSums(runX1$trace_x^2))
 
-H_x = apply(runX$trace_x,1,loss)
+H_x = apply(runX1$trace_x,1,loss)
 H_xd = apply(X_D,1,loss)
 
 
@@ -118,7 +118,7 @@ for(i in 2:nrow(X_D)){
   trace_X_D = rbind(trace_X_D, X_D0)
 }
 
-acf(runX$trace_x)
+acf(runX1$trace_x)
 acf(trace_X_D)
 accept/10000
 
@@ -137,6 +137,9 @@ runX = updateX(q_0=x0, L = 100,eps= 0.05,steps = 10000, tuning = T,ideal_AR = 0.
 runX1 = updateX(q_0=runX$x,L = 100, eps=runX$eps,steps = 10000, tuning = FALSE,ideal_AR = 0.6, microsteps = 100, burnin = F)
 
 plot(runX1$trace_x[1:1000,],type="l")
+
+
+
 
 
 lambda = 1E4
