@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.3.30)  14 APR 2017 21:00
+This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.3.30)  14 APR 2017 22:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -307,7 +307,7 @@ Here is how much of TeX's memory you used:
  7439 multiletter control sequences out of 15000+600000
  13540 words of font info for 56 fonts, out of 8000000 for 9000
  1328 hyphenation exceptions out of 8191
- 42i,11n,40p,1524b,302s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,11n,40p,1546b,302s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on /home/leo/git/empiricalTensor/draft/constraint_bayes.pdf (11 
 pages).

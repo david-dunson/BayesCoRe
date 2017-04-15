@@ -1,7 +1,7 @@
 # Fdb version 3
-["bibtex constraint_bayes"] 1492218016 "constraint_bayes.aux" "constraint_bayes.bbl" "constraint_bayes" 1492218035
+["bibtex constraint_bayes"] 1492221375 "constraint_bayes.aux" "constraint_bayes.bbl" "constraint_bayes" 1492221916
   "/usr/share/texlive/texmf-dist/bibtex/bst/chicago/chicago.bst" 1198629289 37416 2ae04276c51f11eda70770f4081293b7 ""
-  "constraint_bayes.aux" 1492218035 4338 c0735c7277307d2936be61c101a4c2dd ""
+  "constraint_bayes.aux" 1492221915 4350 eadc2542d5a7e0066681d3fcaf902472 ""
   "constraint_bayes.bcf" 0 -1 0 ""
   "reference.bib" 1492189658 6052 b95beaad6f5d002b26699fad822a2fd3 ""
   (generated)
@@ -76,14 +76,14 @@
   "constraint_bayes.bbl" 1491836118 3559 becf177fbba637cfd920e119d3f050c3 "bibtex constraint_bayes"
   "constraint_bayes.tex" 1491841684 15412 ee0980fc46686164940d917f364d7fec ""
   (generated)
-  "/home/leo/git/empiricalTensor/draft/constraint_bayes.dvi"
   "constraint_bayes.dvi"
-  "constraint_bayes.log"
-  "/home/leo/git/empiricalTensor/draft/constraint_bayes.log"
   "constraint_bayes.aux"
-["pdflatex"] 1492218035 "constraint_bayes.tex" "/home/leo/git/empiricalTensor/draft/constraint_bayes.pdf" "constraint_bayes" 1492218035
+  "/home/leo/git/empiricalTensor/draft/constraint_bayes.log"
+  "constraint_bayes.log"
+  "/home/leo/git/empiricalTensor/draft/constraint_bayes.dvi"
+["pdflatex"] 1492221915 "constraint_bayes.tex" "/home/leo/git/empiricalTensor/draft/constraint_bayes.pdf" "constraint_bayes" 1492221916
   "/etc/texmf/web2c/texmf.cnf" 1490907249 1101 af7716885e081ab43982cab7b4672c1a ""
-  "/home/leo/git/empiricalTensor/draft/constraint_bayes.aux" 1492218035 4338 c0735c7277307d2936be61c101a4c2dd ""
+  "/home/leo/git/empiricalTensor/draft/constraint_bayes.aux" 1492221915 4350 eadc2542d5a7e0066681d3fcaf902472 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -153,15 +153,15 @@
   "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1458942643 31351 b32c45dce4a01cb7b53ed90c546614ca ""
   "/usr/share/texmf/web2c/texmf.cnf" 1458942643 31351 b32c45dce4a01cb7b53ed90c546614ca ""
   "/var/lib/texmf/web2c/xetex/xelatex.fmt" 1490907490 3471275 8fd772a3c82f7b51919609d4eb03142f ""
-  "constraint_bayes.aux" 1492218035 4338 c0735c7277307d2936be61c101a4c2dd ""
-  "constraint_bayes.bbl" 1492218016 5172 1007681a1976ce9f4a59e177c6dd4c68 "bibtex constraint_bayes"
-  "constraint_bayes.tex" 1492218034 30326 75ad852bcc936c2359b6c6df576073a5 ""
+  "constraint_bayes.aux" 1492221915 4350 eadc2542d5a7e0066681d3fcaf902472 ""
+  "constraint_bayes.bbl" 1492221375 5172 1007681a1976ce9f4a59e177c6dd4c68 "bibtex constraint_bayes"
+  "constraint_bayes.tex" 1492221905 30872 e76ae5ab84b7071801e5673a3118bc49 ""
   "density_truncated_normal.pdf" 1491856297 12457 70d6d1a7b658e0f64b04fadaee608d4a ""
   "unit_circle_acf.pdf" 1492023723 6006 8267fbd0ae8c2cced775f458a8b20e21 ""
   "unit_circle_path.pdf" 1492023723 20519 672b779b0529e7feb5eaafcc6ad53f8b ""
   "unit_circle_violation.pdf" 1492024431 6643 7817e451ba0575280da397f493d3c86b ""
   (generated)
-  "constraint_bayes.aux"
-  "/home/leo/git/empiricalTensor/draft/constraint_bayes.pdf"
-  "/home/leo/git/empiricalTensor/draft/constraint_bayes.log"
   "constraint_bayes.log"
+  "/home/leo/git/empiricalTensor/draft/constraint_bayes.log"
+  "/home/leo/git/empiricalTensor/draft/constraint_bayes.pdf"
+  "constraint_bayes.aux"
