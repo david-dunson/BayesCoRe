@@ -127,7 +127,7 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/bbm/bbm5.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /home/leo/git/empiricalTensor/draft/density_truncated_normal.pdf
 INPUT /home/leo/git/empiricalTensor/draft/unit_circle_violation.pdf
-INPUT /home/leo/git/empiricalTensor/draft/unit_circle_path.pdf
+INPUT /home/leo/git/empiricalTensor/draft/unit_circle_100steps.pdf
 INPUT /home/leo/git/empiricalTensor/draft/unit_circle_acf.pdf
 INPUT /home/leo/git/empiricalTensor/draft/constraint_bayes.bbl
 INPUT /home/leo/git/empiricalTensor/draft/constraint_bayes.bbl

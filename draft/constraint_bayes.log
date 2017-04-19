@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.3.30)  14 APR 2017 22:05
+This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.3.30)  18 APR 2017 18:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -289,8 +289,8 @@ File: density_truncated_normal.pdf Graphic file (type QTm)
 File: unit_circle_violation.pdf Graphic file (type QTm)
 
 <use  "unit_circle_violation.pdf" >
-File: unit_circle_path.pdf Graphic file (type QTm)
- <use  "unit_circle_path.pdf" >
+File: unit_circle_100steps.pdf Graphic file (type QTm)
+ <use  "unit_circle_100steps.pdf" >
 File: unit_circle_acf.pdf Graphic file (type QTm)
 
 <use  "unit_circle_acf.pdf" > [7] [8] [9]
@@ -302,7 +302,7 @@ See the caption package documentation for explanation.
 [11] (/home/leo/git/empiricalTensor/draft/constraint_bayes.aux) ) 
 Here is how much of TeX's memory you used:
  4104 strings out of 493638
- 59112 string characters out of 6146796
+ 59120 string characters out of 6146796
  117557 words of memory out of 5000000
  7439 multiletter control sequences out of 15000+600000
  13540 words of font info for 56 fonts, out of 8000000 for 9000

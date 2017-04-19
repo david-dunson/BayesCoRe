@@ -75,14 +75,17 @@ updateX <-function(q_0,eps = 0.1, L =10,steps = 1000,tuning = T, ideal_AR =0.234
 lambda = 1E3
 x0 = matrix( c(0,1),N,d)
 
-runX = updateX(q_0=x0, L = 10,eps= 0.1,steps = 10000, tuning = TRUE,ideal_AR = 0.6, microsteps = 100)
+L= 100
 
-runX = updateX(q_0=runX$x,L = 10, eps=runX$eps,steps = 10000, tuning = FALSE,ideal_AR = 0.6, microsteps = 100, burnin = T)
+runX = updateX(q_0=x0, L = L,eps= 0.1,steps = 10000, tuning = TRUE,ideal_AR = 0.6, microsteps = 100)
 
-runX = updateX(q_0=runX$x,L = 10, eps=runX$eps,steps = 10000, tuning = FALSE,ideal_AR = 0.6, microsteps = 100, burnin = F)
+runX = updateX(q_0=runX$x,L = L, eps=runX$eps,steps = 10000, tuning = FALSE,ideal_AR = 0.6, microsteps = 100, burnin = T)
+
+runX = updateX(q_0=runX$x,L = L, eps=runX$eps,steps = 10000, tuning = FALSE,ideal_AR = 0.6, microsteps = 100, burnin = F)
 
 
-ts.plot(runX$trace_x[,1])
+
+# ts.plot(runX$trace_x[,1])
 acf(runX$trace_x)
 
 
@@ -203,3 +206,67 @@ sqrt(1/(10^3)*2)/4
 runX1$eps
 runX2$eps
 runX3$eps
+
+
+
+contourX = seq(0,1,length.out=100)
+contourY = sqrt(1- contourX^2)
+
+eps = 0.02
+lambda=1E3
+runX1 = updateX(q_0=c(sqrt(2)/2,sqrt(2)/2),L = 1, eps=eps,steps = 10000, tuning = FALSE,ideal_AR = 0.6, microsteps = 100, burnin = F)
+
+
+
+eps = 0.003
+lambda=1E4
+runX2 = updateX(q_0=c(sqrt(2)/2,sqrt(2)/2),L = 1, eps=eps,steps = 10000, tuning = FALSE,ideal_AR = 0.6, microsteps = 100, burnin = F)
+
+
+
+eps = 0.0002
+lambda=1E5
+runX3 = updateX(q_0=c(sqrt(2)/2,sqrt(2)/2),L = 1, eps=eps,steps = 20000, tuning = FALSE,ideal_AR = 0.6, microsteps = 100, burnin = F)
+
+
+
+
+
+plot(runX1$trace_x[1:1000,],type="l",xlim=c(0.4,0.9),ylim=c(0.4,0.9), col="red")
+lines(contourX, sqrt(0.92- contourX^2),col="blue")
+lines(contourX, sqrt(1.08- contourX^2),col="blue")
+
+plot(runX2$trace_x[1:1000,],type="l",xlim=c(0.4,0.9),ylim=c(0.4,0.9), col="red")
+lines(contourX, sqrt(0.97- contourX^2),col="blue")
+lines(contourX, sqrt(1.03- contourX^2),col="blue")
+
+plot(runX3$trace_x[1:1000,],type="l",xlim=c(0.4,0.9),ylim=c(0.4,0.9), col="red")
+lines(contourX, sqrt(0.995- contourX^2),col="blue")
+lines(contourX, sqrt(1.005- contourX^2),col="blue")
+
+
+steps = 100
+
+idx = c(1:steps)*10
+
+traceX = rbind( runX1$trace_x[idx,], runX2$trace_x[idx,], runX3$trace_x[idx,])
+
+d1 = data.frame( "x1" = traceX[,1], "x2"= traceX[,2], "lambda"= as.factor(rep(c("1,000","10,000","100,000"),each=steps )))
+
+
+contourX = seq(0,1,length.out=steps)
+d2 = data.frame("x"= contourX, "lb"= c(sqrt(0.92- contourX^2) ,sqrt(0.97- contourX^2), sqrt(0.995- contourX^2)) , "ub"=c(sqrt(1.08- contourX^2) ,sqrt(1.03- contourX^2), sqrt(1.005- contourX^2))  )
+
+df = data.frame(d1,d2)
+
+
+
+pdf("../draft/unit_circle_100steps.pdf",8,3)
+ggplot(data=df)+ geom_path( aes(x=x1, y= x2),size=0.5,col="red") + 
+ geom_line( aes(x=x, y= lb), size=0.5,linetype=2,alpha=0.2)+ 
+ geom_line( aes(x=x, y= ub), size=0.5,linetype=2,alpha=0.2)+ theme_bw()+facet_grid(~lambda)
+dev.off()
+
+
+
+

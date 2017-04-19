@@ -218,10 +218,11 @@ To illustrate the latter case, consider generating a random variable $\theta=(x_
 
 \begin{figure}[H]
  \centering
-  \includegraphics[width=0.8\textwidth]{unit_circle_violation}
- \includegraphics[width=0.8\textwidth]{unit_circle_path}
+    \includegraphics[width=0.8\textwidth]{unit_circle_violation}
+  \includegraphics[width=0.8\textwidth]{unit_circle_100steps}
+ % \includegraphics[width=0.8\textwidth]{unit_circle_path}
  \includegraphics[width=0.8\textwidth]{unit_circle_acf}
-\caption{Sampling posterior from a von Mises--Fisher distribution on a unit circle, using HMC with extrinc prior under $\lambda=10^3,10^4,10^5$. Row $1$ shows the posterior distribution of the constraint violation $|\theta'\theta -1|$; Row $2$ shows the sampling path of the Markov chain; Row $3$ shows the autocorrelation plot (ACF). Large $\lambda$ results in small constraint violation, but suffers from slow mixing due to inefficient local update; smaller $\lambda$ increases the approximation error but results in excellent mixing.}
+\caption{Sampling posterior from a von Mises--Fisher distribution on a unit circle, using HMC with extrinc prior under $\lambda=10^3,10^4,10^5$. Row $1$ shows the posterior distribution of the constraint violation $|\theta'\theta -1|$; Row $2$ shows the path of $1,000$ leap-frog steps; Row $3$ shows the autocorrelation plot (ACF). Large $\lambda$ results in small constraint violation, but suffers from slow mixing due to inefficient local update; smaller $\lambda$ increases the approximation error but results in excellent mixing.}
 \label{unit_circle}
 \end{figure}
 
