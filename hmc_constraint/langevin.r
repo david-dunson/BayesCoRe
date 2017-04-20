@@ -141,7 +141,7 @@ runX1 = updateX(q_0=runX$x,L = 100, eps=runX$eps,steps = 10000, tuning = FALSE,i
 
 plot(runX1$trace_x[1:1000,],type="l")
 
-
+mean(1E3* (rowSums(runX1$trace_x^2) -1 ))
 
 
 
@@ -151,6 +151,8 @@ runX2 = updateX(q_0=runX$x,L = 100, eps=runX$eps,steps = 10000, tuning = FALSE,i
 
 plot(runX2$trace_x[1:1000,],type="l")
 
+mean(1E4* (rowSums(runX2$trace_x^2) -1 ))
+
 
 lambda = 1E5
 runX = updateX(q_0=x0, L = 100,eps= 0.05,steps = 10000, tuning = T,ideal_AR = 0.6, microsteps = 100,  burnin = F)
@@ -158,6 +160,7 @@ runX3 = updateX(q_0=runX$x,L = 100, eps=runX$eps,steps = 10000, tuning = FALSE,i
 
 plot(runX3$trace_x[1:1000,],type="l")
 
+mean(1E5* (rowSums(runX2$trace_x^2) -1 ))
 
 require("ggplot2")
 
@@ -182,10 +185,10 @@ pdf("../draft/unit_circle_acf.pdf",8,3)
 ggplot(data=df, aes(x=Lag, y= ACF))+ geom_path(size=.75)+ theme_bw()+facet_grid(~lambda)
 dev.off()
 
-df = data.frame( "violation" = c(abs(rowSums(runX1$trace_x^2)-1), abs(rowSums(runX2$trace_x^2)-1),abs(rowSums(runX3$trace_x^2)-1)), "lambda"= as.factor(rep(c("1,000","10,000","100,000"),each=10000 )))
+df = data.frame( "relaxation" = c(abs(rowSums(runX1$trace_x^2)-1), abs(rowSums(runX2$trace_x^2)-1),abs(rowSums(runX3$trace_x^2)-1)), "lambda"= as.factor(rep(c("1,000","10,000","100,000"),each=10000 )))
 
 pdf("../draft/unit_circle_violation.pdf",8,3)
-ggplot(data=df, aes(violation))+ geom_histogram(binwidth = 0.001)+ theme_bw()+facet_grid(~lambda)
+ggplot(data=df, aes(relaxation))+ geom_histogram(binwidth = 0.001)+ theme_bw()+facet_grid(~lambda)
 dev.off()
 
 
@@ -270,3 +273,4 @@ dev.off()
 
 
 
+plot(rt(1000,df=1),rnorm(1000,0,10000))

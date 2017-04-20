@@ -11,7 +11,7 @@ require("gtools")
 require("rgl")
 require("coda")
 
-F0 = c(0.1,0.1,0.1)
+F0 = c(2,2,2)
 
 y = rdirichlet(m,F0)
 
@@ -24,14 +24,27 @@ loss = function(X, F=F0, lam =lambda){
 	if(sum(X<0)>0 | sum(X>1)>0 ){
 		l= Inf
 	}else{
-		l = sum( -(F-1)*log(X) ) +  lam * (sum(X)-1)^2
+		l = sum( -(F-1)*log(X) ) +  lam * (sum(X)-1)^2 #+  lam * (sum(X[1:2])-0.9)^2
 	}
 	l
 }
 
 computeDeri = function(X, F=F0,lam =lambda){
-  	-(F-1)/X + 2* lam * (sum(X)-1)*rep(1,length(X))
+  	-(F-1)/X + 2* lam * (sum(X)-1)*rep(1,length(X)) #+  2* lam * (sum(X[1:2])-0.9)*c(1,1,0)
+
+  }
+
+
+F1 = c(2,2,2)
+
+computeDeriP = function(X,lam =lambda){
+    X    #*c(1,1,0) + 2* lam * (sum(X)-1)*rep(1,length(X))
 }
+
+computeKeneticP = function(X,lam =lambda){
+    sum(X^2)/2 #sum((X*c(1,1,0))^2)/2   +  lam * (sum(X)-1)^2
+}
+
 
 
 x0 = c(0.3,0.5,0.2)
@@ -41,34 +54,33 @@ x0 = c(0.3,0.5,0.2)
 computeDeri(x0)
 
 
-updateX <-function(q_0,eps = 0.1, L =10,steps = 1000,tuning = T, ideal_AR =0.234, burnin =T, microsteps = 100, useSigmaP = FALSE,SigmaP = 0){
+updateX <-function(q_0,eps = 0.1, L =10,steps = 1000,tuning = T, ideal_AR =0.234, burnin =T, microsteps = 100){
   #update x
   trace_x<- numeric()
 
-  if(!useSigmaP){
-  	SigmaP =diag( 1, length(q_0))
-  }
-
-  invSigmaP = solve(SigmaP)
-  cholSigmaP = t(chol(SigmaP))
-  
+ 
   for(j in 1:(floor(steps/microsteps))){
   	accept = 0
   	for(i in 1:microsteps){
 
-  		p_0 = matrix( cholSigmaP %*% rnorm(N*d) , N, d)
+      # p_0 = matrix(rdirichlet(1,F1))
+      # p_0 = matrix( rnorm(N*d))
+      # p_0[3] = 1- p_0[1]- p_0[2]
+      # p_0 = abs(p_0)/sum(abs(p_0))
+      p_0 = matrix(rnorm(N*d))
+
   		q_x = q_0
   		p_x = p_0
   		p_x = p_x - eps/2 * computeDeri(q_x)
   		for(i in 1:L){
-  			q_x = q_x + eps* invSigmaP %*% p_x
+  			q_x = q_x + eps * computeDeriP(p_x)
   			p_x = p_x - eps * computeDeri(q_x)
   		}
-  		q_x = q_x + eps* invSigmaP %*% p_x
+  		q_x = q_x + eps * computeDeriP(p_x)
   		p_x = p_x - eps/2 * computeDeri(q_x)
 
-  		cur_H = loss(q_0) + c( t(p_0) %*%invSigmaP  %*% p_0/2) #sum(p_0^2/m_x/2)
-  		new_H = loss(q_x) + c( t(p_x) %*%invSigmaP  %*% p_x/2)#sum(p_x^2/m_x/2)
+  		cur_H = loss(q_0) + computeKeneticP(p_0) # c( t(p_0) %*%invSigmaP  %*% p_0/2) #sum(p_0^2/m_x/2)
+  		new_H = loss(q_x) + computeKeneticP(p_x) # c( t(p_x) %*%invSigmaP  %*% p_x/2)#sum(p_x^2/m_x/2)
 
       diff_H = cur_H-new_H
       if(is.finite(diff_H)){
@@ -83,7 +95,7 @@ updateX <-function(q_0,eps = 0.1, L =10,steps = 1000,tuning = T, ideal_AR =0.234
     AR = accept / microsteps
     #reduce eps if AR too low, else increase eps
     if(tuning)  {
-    	eps = eps* exp(AR-ideal_AR)
+    	eps = eps* exp((AR-ideal_AR)/10)
     }
     print(c("step: ",j, ", -log-L: ", loss(q_0), " AR:",   AR))
   }
@@ -95,22 +107,29 @@ x0 = rep(1/length(F0),length(F0))
 
 # F0 = c(100,20,2)
 
-L = 100
+L = 10
 
 
-F0 = c(20,10,10)
+F0 = c(20,1,1)
 
-
-
-x0 = c(0.1,0.1,0.1)
+x0 = c(0.99,0.005,0.005)
 runX = updateX(q_0=x0, L = L,eps= 1E-1,steps = 10000, tuning = T,ideal_AR = 0.6, microsteps = 100)
+runX$eps
+
 
 runX = updateX(q_0=runX$x,L = L, eps=runX$eps,steps = 10000, tuning = FALSE,ideal_AR = 0.6, microsteps = 100, burnin = F)
 
+# runX = updateX(q_0=runX$x,L = L, eps=1E-5,steps = 10000, tuning = FALSE,ideal_AR = 0.6, microsteps = 100, burnin = F)
+
+
+plot3d(runX$trace_x,xlim=c(0,1),ylim=c(0,1),zlim=c(0,1))
 
 acf(runX$trace_x[,1:3])
 
-plot3d(runX$trace_x,xlim=c(0,1),ylim=c(0,1),zlim=c(0,1))
+
+y = rdirichlet(m,F0)
+
+plot3d(y,xlim=c(0,1),ylim=c(0,1),zlim=c(0,1))
 
 
 
@@ -119,20 +138,20 @@ plot3d(runX$trace_x,xlim=c(0,1),ylim=c(0,1),zlim=c(0,1))
 # ts.plot(runX$trace_x[,1])
 
 
-# thin = 10 
+thin = 10 
 
-# runX$trace_x = runX$trace_x[ c(1:(10000/thin))*thin,]
+runX$trace_x = runX$trace_x[ c(1:(100000/thin))*thin,]
 
 
-y = rdirichlet(m,F0)
-
-plot3d(y,xlim=c(0,1),ylim=c(0,1),zlim=c(0,1))
 
 
 # shuffled = sample(1:10000,replace=T)
 # runX$trace_x = runX$trace_x[shuffled,]
 
 rowSums(runX$trace_x)
+rowSums(runX$trace_x[,1:2])
+
+
 X_D=runX$trace_x /rowSums(runX$trace_x)
 
 H_x = apply(runX$trace_x,1,loss)
@@ -158,7 +177,7 @@ for(i in 2:nrow(X_D)){
 
 acf(runX$trace_x)
 acf(trace_X_D)
-accept/10000
+accept/1000
 
 acf(trace_X_D)
 

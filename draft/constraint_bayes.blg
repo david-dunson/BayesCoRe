@@ -17,15 +17,15 @@ Warning--no number and no volume in murray2012mcmc
 Warning--page numbers missing in murray2012mcmc
 You've used 18 entries,
             2861 wiz_defined-function locations,
-            722 strings with 7924 characters,
-and the built_in function-call counts, 13018 in all, are:
-= -- 1114
-> -- 998
+            722 strings with 7913 characters,
+and the built_in function-call counts, 12871 in all, are:
+= -- 1098
+> -- 972
 < -- 1
-+ -- 304
-- -- 344
-* -- 1181
-:= -- 2360
++ -- 294
+- -- 334
+* -- 1170
+:= -- 2334
 add.period$ -- 54
 call.type$ -- 18
 change.case$ -- 131
@@ -33,8 +33,8 @@ chr.to.int$ -- 18
 cite$ -- 30
 duplicate$ -- 327
 empty$ -- 751
-format.name$ -- 400
-if$ -- 2420
+format.name$ -- 390
+if$ -- 2388
 int.to.chr$ -- 1
 int.to.str$ -- 0
 missing$ -- 19
@@ -44,7 +44,7 @@ pop$ -- 88
 preamble$ -- 1
 purify$ -- 240
 quote$ -- 0
-skip$ -- 371
+skip$ -- 365
 stack$ -- 0
 substring$ -- 688
 swap$ -- 109

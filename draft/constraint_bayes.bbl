@@ -93,8 +93,8 @@ Murray, I., Z.~Ghahramani, and D.~MacKay (2012).
 \newblock Mcmc for doubly-intractable distributions.
 \newblock {\em arXiv preprint arXiv:1206.6848\/}.
 
-\bibitem[\protect\citeauthoryear{Neal et~al.}{Neal et~al.}{2011}]{neal2011mcmc}
-Neal, R.~M. et~al. (2011).
+\bibitem[\protect\citeauthoryear{Neal}{Neal}{2011}]{neal2011mcmc}
+Neal, R.~M. (2011).
 \newblock Mcmc using hamiltonian dynamics.
 \newblock {\em Handbook of Markov Chain Monte Carlo\/}~{\em 2}, 113--162.
 
