@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.3.30)  20 APR 2017 17:16
+This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.3.30)  20 APR 2017 20:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -285,7 +285,7 @@ File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
 ) [3]
 [4]
 File: density_truncated_normal.pdf Graphic file (type QTm)
- <use  "density_truncated_normal.pdf" > [5] [6]
+ <use  "density_truncated_normal.pdf" > [5] [6] [7]
 File: unit_circle_violation.pdf Graphic file (type QTm)
 
 <use  "unit_circle_violation.pdf" >
@@ -293,7 +293,7 @@ File: unit_circle_100steps.pdf Graphic file (type QTm)
  <use  "unit_circle_100steps.pdf" >
 File: unit_circle_acf.pdf Graphic file (type QTm)
 
-<use  "unit_circle_acf.pdf" > [7] [8] [9]
+<use  "unit_circle_acf.pdf" > [8] [9]
 (/home/leo/git/empiricalTensor/draft/constraint_bayes.bbl [10])
 
 Package caption Warning: Unused \captionsetup[sub] on input line 35.
@@ -301,13 +301,13 @@ See the caption package documentation for explanation.
 
 [11] (/home/leo/git/empiricalTensor/draft/constraint_bayes.aux) ) 
 Here is how much of TeX's memory you used:
- 4104 strings out of 493638
- 59120 string characters out of 6146796
- 118543 words of memory out of 5000000
- 7439 multiletter control sequences out of 15000+600000
+ 4107 strings out of 493638
+ 59189 string characters out of 6146796
+ 118601 words of memory out of 5000000
+ 7442 multiletter control sequences out of 15000+600000
  13540 words of font info for 56 fonts, out of 8000000 for 9000
  1328 hyphenation exceptions out of 8191
- 42i,11n,40p,1546b,302s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,11n,40p,1637b,302s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on /home/leo/git/empiricalTensor/draft/constraint_bayes.pdf (11 
 pages).

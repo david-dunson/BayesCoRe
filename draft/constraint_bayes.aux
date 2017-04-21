@@ -10,6 +10,8 @@
 \citation{gelfand1992bayesian}
 \citation{lin2014monogp}
 \citation{lin2016extrinsic}
+\citation{neal2011mcmc}
+\citation{pakman2014exact}
 \citation{girolami2011riemann,byrne2013geodesic}
 \citation{gelfand1992bayesian}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Method}{3}}
@@ -17,21 +19,20 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Extrinsic Prior for Constraints}{3}}
 \newlabel{extrinsic_prior}{{3}{4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Control of Constraint Relaxation}{4}}
-\citation{hoffman2014no}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Unnormalized densities for truncated normal $\No  _{(1,2)}(0,1)$, under exact and approximating densities. The exact density abruptly drops to $0$ on the two boundaries, while the approximating ones drop continuously. In the approximation, larger $\lambda $ is associated with lower tolerance for constraint relaxation ($( 1-\theta )_+$ and $( \theta - 2)_+$). All densities inside $(1,2)$ are the same up to a constant difference.\relax }}{5}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{truncated_normal}{{1}{5}}
+\citation{hoffman2014no}
 \citation{zhang2012continuous}
 \citation{neal2011mcmc}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Posterior Sampling for Extrinsic Posterior}{6}}
 \newlabel{hamiltonian}{{5}{6}}
-\newlabel{leap-frog}{{6}{6}}
 \citation{neal2011mcmc}
+\newlabel{leap-frog}{{6}{7}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Sampling posterior from a von Mises--Fisher distribution on a unit circle, using HMC with extrinc prior under $\lambda =10^3,10^4,10^5$. Row $1$ shows the posterior distribution of the constraint relaxation $|\theta '\theta -1|$; Row $2$ shows the path of $100$ leap-frog steps; Row $3$ shows the autocorrelation plot (ACF). Large $\lambda $ gives very small constraint relaxation, but suffers from slow mixing due to inefficient local update; smaller $\lambda $ increases the relaxation but results in excellent mixing.\relax }}{8}}
 \newlabel{unit_circle}{{2}{8}}
 \citation{livingstone2016geometric}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Correcting Projection to Constraint Space}{9}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Illustration}{9}}
 \bibdata{reference}
 \bibcite{boyd2004convex}{{1}{2004}{{Boyd and Vandenberghe}}{{Boyd and Vandenberghe}}}
 \bibcite{byrne2013geodesic}{{2}{2013}{{Byrne and Girolami}}{{Byrne and Girolami}}}
@@ -42,16 +43,18 @@
 \bibcite{hoffman2014no}{{7}{2014}{{Hoffman and Gelman}}{{Hoffman and Gelman}}}
 \bibcite{kelly1990monotone}{{8}{1990}{{Kelly and Rice}}{{Kelly and Rice}}}
 \bibcite{khatri1977mises}{{9}{1977}{{Khatri and Mardia}}{{Khatri and Mardia}}}
-\bibcite{lin2014monogp}{{10}{2014}{{Lin and Dunson}}{{Lin and Dunson}}}
-\bibcite{lin2016bayesstiefel}{{11}{2016}{{Lin et~al.}}{{Lin, Rao, and Dunson}}}
-\bibcite{lin2016extrinsic}{{12}{2016}{{Lin et~al.}}{{Lin, St~Thomas, Zhu, and Dunson}}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Illustration}{10}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Theory}{10}}
 \@writefile{toc}{\contentsline {section}{\numberline {5}Application}{10}}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Discussion}{10}}
+\bibcite{lin2014monogp}{{10}{2014}{{Lin and Dunson}}{{Lin and Dunson}}}
+\bibcite{lin2016bayesstiefel}{{11}{2016}{{Lin et~al.}}{{Lin, Rao, and Dunson}}}
+\bibcite{lin2016extrinsic}{{12}{2016}{{Lin et~al.}}{{Lin, St~Thomas, Zhu, and Dunson}}}
 \bibcite{livingstone2016geometric}{{13}{2016}{{Livingstone et~al.}}{{Livingstone, Betancourt, Byrne, and Girolami}}}
 \bibcite{murray2012mcmc}{{14}{2012}{{Murray et~al.}}{{Murray, Ghahramani, and MacKay}}}
 \bibcite{neal2011mcmc}{{15}{2011}{{Neal}}{{Neal}}}
-\bibcite{rao2016data}{{16}{2016}{{Rao et~al.}}{{Rao, Lin, and Dunson}}}
-\bibcite{uschmajew2010well}{{17}{2010}{{Uschmajew}}{{Uschmajew}}}
-\bibcite{zhang2012continuous}{{18}{2012}{{Zhang et~al.}}{{Zhang, Ghahramani, Storkey, and Sutton}}}
+\bibcite{pakman2014exact}{{16}{2014}{{Pakman and Paninski}}{{Pakman and Paninski}}}
+\bibcite{rao2016data}{{17}{2016}{{Rao et~al.}}{{Rao, Lin, and Dunson}}}
+\bibcite{uschmajew2010well}{{18}{2010}{{Uschmajew}}{{Uschmajew}}}
+\bibcite{zhang2012continuous}{{19}{2012}{{Zhang et~al.}}{{Zhang, Ghahramani, Storkey, and Sutton}}}
 \bibstyle{chicago}

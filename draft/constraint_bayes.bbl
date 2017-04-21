@@ -98,6 +98,13 @@ Neal, R.~M. (2011).
 \newblock Mcmc using hamiltonian dynamics.
 \newblock {\em Handbook of Markov Chain Monte Carlo\/}~{\em 2}, 113--162.
 
+\bibitem[\protect\citeauthoryear{Pakman and Paninski}{Pakman and
+  Paninski}{2014}]{pakman2014exact}
+Pakman, A. and L.~Paninski (2014).
+\newblock Exact hamiltonian monte carlo for truncated multivariate gaussians.
+\newblock {\em Journal of Computational and Graphical Statistics\/}~{\em
+  23\/}(2), 518--542.
+
 \bibitem[\protect\citeauthoryear{Rao, Lin, and Dunson}{Rao
   et~al.}{2016}]{rao2016data}
 Rao, V., L.~Lin, and D.~B. Dunson (2016).
