@@ -8,7 +8,6 @@ options(mc.cores = parallel::detectCores())
 
 
 #######################################################
-ss_model = stan_model(file= "dp_mixture.stan")
 
 extractPosterior<-function(varname, dimen, stan_fit){
   if(dimen==1){
@@ -18,58 +17,124 @@ extractPosterior<-function(varname, dimen, stan_fit){
   }
 }
 
+#model
+ss_model = stan_model(file= "dp_mixture.stan")
+
 ##### Data ###
 N = 100
-d = 5
-p = c(0.1,0.3,0.6)
-mu<- c(2,5,7)
-sigma=0.5
-y<- numeric(N)
-alpha =0.5
+d = 3
+p = c(0.6,0.3,0.1)
+mu1<- c(1,3,3)
+mu2<- c(5,3,5)
+
+sigma=1
+y1<- numeric(N)
+y2<- numeric(N)
 
 for(i in 1:N){
-  y[i] = rnorm(1, sum(rmultinom(1,1,p)*mu),sigma)
+	c_i = rmultinom(1,1,p)
+  y1[i] = rnorm(1, sum(c_i*mu1),sigma)
+  y2[i] = rnorm(1, sum(c_i*mu2),sigma)
 }
 
-
-lambda=1E3
-
-hist(y,breaks=50)
+alpha =2
 
 
-toy_dat <- list(N=N, d=d,y=y, alpha=alpha, lambda=lambda)
-init<- list(list(p= rep(1/d,d), mu=rnorm(d),sigma=1))
+lambda1=1E6
+lambda2=1E3
 
-ss_fit <- sampling(ss_model, data = toy_dat,init=init, iter = 20000, chains = 1, algorithm = "NUTS")
+# hist(y1,breaks = 100)
 
-sampling_idx<- c(10001:20000)
+
+input_dat <- list(N=N, d=d,y1=y1,y2=y2, alpha=alpha, lambda1=lambda1, lambda2=lambda2)
+init<- list(list(p= rep(1/d,d), mu1=abs(rnorm(d)),mu2=abs(rnorm(d)),sigma=0.1))
+
+ss_fit <- sampling(ss_model, data = input_dat,init=init, iter = 10000, chains = 1, algorithm = "NUTS")
+
+sampling_idx<- c(5001:10000)
 
 
 post_p<- extractPosterior("p", d,"ss_fit")
-ts.plot(post_p[sampling_idx,])
+post_mu1<- extractPosterior("mu1", d,"ss_fit")
+post_mu2<- extractPosterior("mu2", d,"ss_fit")
 
-colMeans(post_p)
+# post_mu[post_p<0.05]<- NA
 
-save(ss_fit,file="hmc_dp.RDa")
-
-rowSums(post_p)  
-
-post_mu<- extractPosterior("mu", d,"ss_fit")
-ts.plot(post_mu[sampling_idx,c(1:3)])
-
-post_sigma<- extractPosterior("sigma", 1,"ss_fit")
-ts.plot(post_sigma)
+# save(ss_fit,file="hmc_dp.RDa")
+# save(ss_fit,file="hmc_dp2.RDa")
 
 
-
-post_p = post_p[sampling_idx,]
-
-
-for(i in 1:(d-1)){
-	print(sum(post_p[,i] > post_p[,i+1]))
-}
-
-rowSums(post_p)
+pdf("../draft/fmm_mu1_hmc.pdf",6,3)
+df = data.frame( step =c(1:5000), mu1=c(post_mu1[sampling_idx,]), component =as.factor(rep(c(1:3), each=5000)))
+ggplot(data=df) + geom_path( aes(x=step, y=mu1, col=component),alpha =0.8,size=.8) + theme_bw() +ylim(0,6)
+dev.off()
 
 
-acf(post_p[9000:10000,1:3],lag.max=100)
+
+
+pdf("../draft/fmm_mu2_hmc.pdf",6,3)
+df = data.frame( step =c(1:5000), mu2=c(post_mu2[sampling_idx,]),component =as.factor(rep(c(1:3), each=5000)))
+ggplot(data=df) + geom_path( aes(x=step, y=mu2, col=component),alpha =0.8,size=.8) + theme_bw()+ylim(0,6)
+dev.off()
+
+pdf("../draft/fmm_w_hmc.pdf",6,3)
+
+post_p = post_p/rowSums(post_p)
+
+sum(post_p[,2]<post_p[,3])
+
+df = data.frame( step =c(1:5000), w=c(post_p[sampling_idx,]), component =as.factor(rep(c(1:3), each=5000)))
+
+ggplot(data=df) + geom_path( aes(x=step, y=w, col=component),alpha =0.8,size=.8) + theme_bw() +ylim(0,0.8)
+dev.off()
+
+
+
+
+###### no ordering
+
+lambda1=0
+lambda2=1E3
+
+# hist(y)
+
+
+input_dat <- list(N=N, d=d,y1=y1,y2=y2, alpha=alpha, lambda1=lambda1, lambda2=lambda2)
+init<- list(list(p= rep(1/d,d), mu1=abs(rnorm(d)),mu2=abs(rnorm(d)),sigma=0.1))
+
+
+ss_fit2 <- sampling(ss_model, data = input_dat,init=init, iter = 10000, chains = 1, algorithm = "NUTS")
+
+
+post_p<- extractPosterior("p", d,"ss_fit2")
+post_mu1<- extractPosterior("mu1", d,"ss_fit2")
+post_mu2<- extractPosterior("mu2", d,"ss_fit2")
+
+# post_mu[post_p<0.05]<- NA
+
+
+
+pdf("../draft/fmm_mu1_hmc_unordered.pdf",6,3)
+df = data.frame( step =c(1:5000), mu1=c(post_mu1[sampling_idx,]), component =as.factor(rep(c(1:3), each=5000)))
+ggplot(data=df) + geom_path( aes(x=step, y=mu1, col=component),alpha =0.8,size=.8) + theme_bw() +ylim(0,6)
+dev.off()
+
+
+
+
+pdf("../draft/fmm_mu2_hmc_unordered.pdf",6,3)
+df = data.frame( step =c(1:5000), mu2=c(post_mu2[sampling_idx,]),component =as.factor(rep(c(1:3), each=5000)))
+ggplot(data=df) + geom_path( aes(x=step, y=mu2, col=component),alpha =0.8,size=.8) + theme_bw()+ylim(0,6)
+dev.off()
+
+pdf("../draft/fmm_w_hmc_unordered.pdf",6,3)
+
+post_p = post_p/rowSums(post_p)
+
+sum(post_p[,2]<post_p[,3])
+
+df = data.frame( step =c(1:5000), w=c(post_p[sampling_idx,]), component =as.factor(rep(c(1:3), each=5000)))
+
+ggplot(data=df) + geom_path( aes(x=step, y=w, col=component),alpha =0.8,size=.8) + theme_bw() +ylim(0,0.8)
+dev.off()
+

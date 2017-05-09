@@ -1,8 +1,10 @@
-This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+This is BibTeX, Version 0.99d (TeX Live 2016/Arch Linux)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: constraint_bayes.aux
 The style file: chicago.bst
 Database file #1: reference.bib
+Warning--no number and no volume in diebolt1994estimation
+Warning--no number and no volume in jasra2005markov
 Warning--no number and no volume in kelly1990monotone
 Warning--no number and no volume in khatri1977mises
 Warning--no number and no volume in lin2014monogp
@@ -15,45 +17,45 @@ Warning--no number and no volume in livingstone2016geometric
 Warning--page numbers missing in livingstone2016geometric
 Warning--no number and no volume in murray2012mcmc
 Warning--page numbers missing in murray2012mcmc
-You've used 19 entries,
+You've used 22 entries,
             2861 wiz_defined-function locations,
-            727 strings with 8034 characters,
-and the built_in function-call counts, 13613 in all, are:
-= -- 1166
-> -- 1024
+            744 strings with 8458 characters,
+and the built_in function-call counts, 15662 in all, are:
+= -- 1347
+> -- 1163
 < -- 1
-+ -- 310
-- -- 354
-* -- 1237
-:= -- 2466
-add.period$ -- 57
-call.type$ -- 19
-change.case$ -- 138
-chr.to.int$ -- 19
-cite$ -- 31
-duplicate$ -- 345
-empty$ -- 795
-format.name$ -- 414
-if$ -- 2525
++ -- 350
+- -- 402
+* -- 1419
+:= -- 2836
+add.period$ -- 66
+call.type$ -- 22
+change.case$ -- 159
+chr.to.int$ -- 22
+cite$ -- 36
+duplicate$ -- 397
+empty$ -- 923
+format.name$ -- 470
+if$ -- 2904
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 20
-newline$ -- 98
-num.names$ -- 190
-pop$ -- 92
+missing$ -- 23
+newline$ -- 113
+num.names$ -- 220
+pop$ -- 104
 preamble$ -- 1
-purify$ -- 253
+purify$ -- 292
 quote$ -- 0
-skip$ -- 387
+skip$ -- 443
 stack$ -- 0
-substring$ -- 733
-swap$ -- 115
+substring$ -- 862
+swap$ -- 131
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 370
-warning$ -- 12
-while$ -- 189
+type$ -- 430
+warning$ -- 14
+while$ -- 221
 width$ -- 0
-write$ -- 250
-(There were 12 warnings)
+write$ -- 289
+(There were 14 warnings)

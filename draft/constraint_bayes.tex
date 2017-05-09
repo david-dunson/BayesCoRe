@@ -63,6 +63,9 @@
 \DeclareMathOperator{\Diag}{Diag}
 \newcommand{\KL}[2]{\textnormal{KL}\left(#1 \parallel #2\right)}
 
+\DeclareMathOperator{\1}{\mathbbm{1}}
+
+
 \DeclareMathOperator{\bigO}{\mc O}
 
 
@@ -234,7 +237,7 @@ We tested three different values of $\lambda = 10^3,10^4,10^5$. For each $\lambd
 We set $\Sigma= \diag(1,1)$ in generating velocity $p$. During the initial $2,000$ iterations, the leap-frog step size $\varepsilon$ is tuned for an acceptance rate close to $0.8$, then it is fixed during the remaining part of Markov chain. The last $5,000$ iterations are used as posterior samples. Figure~\ref{unit_circle} plots the posterior distribution of constraint relaxation $|\theta'\theta -1|$, the sampling path and the autocorrelation function (ACF) for each Markov chain. Very large $\lambda=10^5$ has much less constraint relaxation; however, due to the small ring width, the Hamiltonian dynamics has to use small $\varepsilon$ and can only explore local space for each $100$ steps. This results in a very slow mixing (large autocorrelation even at 40 lags). On the other hand, smaller $\lambda=10^3$ has slightly larger constraint relaxation, but allows much more efficient exploration of the space and excellent mixing performance. We find that $\lambda=10^3$ is a good emipirical value for all the equality constraints in this paper.
 
 
-\subsection{Correcting Projection to Constraint Space}
+\subsection{Correcting Projection to Constrained Space}
  
 The Markov chain produced by HMC is geometrically ergodic under very general conditions \citep{livingstone2016geometric}. With the extrinsic posterior $\pi_K(\theta \mid y)$ as approximation to \eqref{exact_posterior}, one may be interested in further obtaining exact posterior in $\mc D$, likely for two reasons:  (i) to strictly uphold the constraints; (ii) to ease the strict relaxation control on extrisinc prior.
 
@@ -258,19 +261,120 @@ it is sensible choose $\theta_{\mc D}\in \mc D$ to minimize the difference $Q(\t
 
 Continuing the unit circle example, we first obtained posterior sample from $\pi_K(\theta\mid y)$ with $\lambda =10^3$. The almost immediate drop to $0$ in ACF indicates a rapid convergence to the target posterior $\pi_K(\theta\mid y)$. We then obtain $\hat\theta_{\mc D} =  \underset{\theta_{\mc D}:\theta_{\mc D}'\theta_{\mc D}=1 }{\text{argmin}}|  F'\theta_{\mc D}  - \{ F'\theta  - \lambda (\theta'\theta -1)^2 \}|$ and construct the exact Markov chain. The acceptance rate is $97.9\%$.
 
-
-
-\section{Illustration}
-
-{\bf Example 1: Ordered Simplex}
-
-{\bf Example 2: Monotone Spline} 
-
-{\bf Example 3: Orthonormal Gaussian Processes} 
-
 \section{Theory}
 
-Posterior properiety of $\pi_{0,\mc R}(\theta) \mc E(\theta)$,  when $\pi_{0,\mc D}(\theta)$ is proper but $\pi_{0,\mc R}(\theta)$ is improper. 
+In this section, we establish the conditions for extrinsic posterior to achieve a good and efficient approximation to the true posterior. First it is important to ensure the posterior under constraint relaxation remains proper. Assuming the original constrained prior is proper, $\int_{\mc D}  \pi_{0,\mc R}(\theta) d\theta < \infty$, one sufficient condition for the relaxed prior to be proper in $\pi_K(\theta)$ is obviously $\int_{\mc R \setminus \mc D}  \pi_{0,\mc R}(\theta)\mc E(\theta) d\theta < \infty$. In the following, we show several general scenarios that is achieved.
+
+
+\begin{lemma}
+Assuming the constrained prior $\pi_{0,\mc D}(\theta)$ is proper, let $g_k(\theta)$ be the relaxation for each constraint with $g_k(\theta)\in[0,\varepsilon_k) \quad a.s.$ for $k=1,\ldots, l$ and $l<\infty$. If $\pi_{0,\mc R}(\theta)$ is Lipschitz continuous with respect to every $g_k(\theta)$, then the posterior is proper.
+%$\int \pi_{0,\mc R}(\theta)\mc E(\theta) \mathbbm{1}_{\theta\not\in \mc D} d\theta <\infty$, the approximate extrinsic posterior $\pi_K(\theta | y)$ is proper.
+\end{lemma}
+
+\begin{proof}
+
+Since $\pi_{0,\mc D}(\theta)$ is proper, ${ \int_{\mc D}  \pi_{0,\mc R}(\theta)d\theta } \le M_1$ with $M_1<\infty$. Let $\mc E(\theta)= C K(\theta)$ where $C$ is a finite constant and $K(\theta)$ is the kernel function such that $K(\theta)=1$ when $\theta\in\mc D$, and $K(\theta)<1$ when $\theta\not\in\mc D$.
+
+\begin{equation*}
+\begin{aligned}
+\int \pi_{0,\mc R}(\theta) \mc E(\theta) d\theta 
+&=C\int  \pi_{0,\mc R}(\theta)K(\theta) \mathbbm{1}_{\theta\in \mc D} d\theta
++ \int  \pi_{0,\mc R}(\theta)\mc E(\theta) \mathbbm{1}_{\theta\not\in \mc D} d\theta \\
+&\le CM_1 + \int \pi_{0,\mc R}(\theta)\mc E(\theta) \mathbbm{1}_{\theta\not\in \mc D} d\theta
+\end{aligned}
+\end{equation*}
+\end{proof}
+
+
+\section{Simulated Examples}
+
+To illustrate, we illustrate the extrinsic prior via three constrained models.
+
+{\bf Example 1: Ordered Dirichlet Prior in Mixture Model}
+
+We first consider a simplex modeling problem, where a $(J-1)-$simplex $\{w_1,\ldots w_J\}$ has all $w_j\in (0,1)$ and $\sum_{j=1}^J w_j=1$. We illustrate this via a mixture model of normal means, for data $y_i\in \bb R^d$ indexed by $i=1,\ldots,n$:
+
+\begin{equation*}
+\begin{aligned}
+y_i &\sim \No(\mu_i,\Sigma),\\
+\mu_i &\stackrel{iid}{\sim} G,\\
+G(.) & = \sum_{j=1}^{J} w_j \delta_{\mu_j}(.).
+\end{aligned}
+\end{equation*}
+which is associated with the likelihood
+\begin{equation*}
+\begin{aligned}
+L(y) = \prod_{i=1}^n \sum_{j=1}^{J} w_j \exp\left(-\frac{1}{2}{ (y_i-\mu_j)'\Sigma^{-1}(y_i-\mu_j)}\right).
+\end{aligned}
+\end{equation*}
+
+Standard practice assigns Dirichlet distribution on the simplex in finite mixture $Dir(\alpha)$ and Dirichlet process $DP(\alpha)$ for infinite mixture when $J$ is unknown. For simplicity, we focus on finite mixture case with $J$ finite and known. The space for prior $Dir(\alpha)$ can be viewed as embedded in $\mc R = (0,1)^J$ via an equality constraint $\sum_{j=1}^J w_j=1$.
+
+However, one known issue for mixture modeling under canonical Dirichlet prior is the label-switching problem. As the parameter $\{\mu_j,w_j\}$ is indexed by $j=1,\ldots,J$, one can switch any two $j$ and $j'$ due to exchangability. It is controversial whether the occurence of label-switching or the lack thereof is more perferable (see review in \cite{jasra2005markov}); on the other hand, if the posterior distribution is symmetric about any permutation in $j$'s, as the above normal mixture model, sampling over all permutations is redundant. It is useful to avoid label-switching for better convergence. Unfortunately, even Gibbs sampling with local update sometimes cannot avoid label-switching, especially when sample size $n$ is small, posterior variances of $\mu_j$'s can be quite large with overlap across components. To mitigate this problem, we put order constraint on $w_1 \ge w_2 \ge \ldots \ge w_J$, yielding an ordered Dirichlet prior:
+
+ \begin{equation*}
+\begin{aligned}
+\pi_{0, \mc D}(w_1,\ldots w_J) \propto \prod_{j=1}^J w_j^{\alpha-1} \cdot \1_{\sum_{j=1}^J w_j=1} \cdot  \prod_{j=1}^{J-1}\1_{w_j \ge w_{j+1}}.
+\end{aligned}
+\end{equation*}
+where $w_j\in (0,1)$. This order constraint is particularly useful to prevent label-switching between large and small components. Unlike early post-hoc relabeling algorithm \citep{stephens2000dealing}, we remove exchangability directly to reduce label-switching. In early work, \cite{diebolt1994estimation} also suggested ordering in $\mu_j$'s, although it is not clear how it would work with multi-dimensional $\mu_j\in \bb R^d$ with $d\ge 2$. 
+
+
+
+
+The ordering on simplex vertex disrupts the closed-form to be used in Gibbs sampling. Instead, observe that the ordered Dirichlet prior can be approximated by:
+ \begin{equation*}
+\begin{aligned}
+\pi_K(w_1,\ldots w_J) \propto \prod_{j=1}^J w_j^{\alpha-1} \cdot \prod_{j=1}^{J-1} K_{1}{\left(( w_{j+1} - w_j )_+\right)} \cdot K_2 ( |{\sum_{j=1}^J w_j - 1}|)
+\end{aligned}
+\end{equation*}
+where $K_{k}(x)=\exp(- \lambda_k x^2) \1_{x<4/\sqrt{2\lambda_k}}$ for  $k=1,2$. We use $\lambda_1 = 10^6$ to induce almost no relaxation on the ordering and $\lambda_2 = 10^3$ to allow efficient mixing in embedding a simplex in $\mathbb{R}^J$. In comparison, we also test with $\lambda_1=0$ to remove the order constraint and allow HMC to run on a canonical Dirichlet prior without ordering.
+
+We first generate $n=100$ samples from $3$ components with true $\{w_1,w_2,w_3\}=\{0.6,0.3,0.1\}$, two-dimensional means $\{\mu_1,\mu_2,\mu_3\} = \{[1,5], [3,3], [3,5]\}$ and identity covariance $\Sigma = I_2$. We assign informative priors $\No(0,10 I_2)$ for each $\mu_j$ and inverse Gamma prior for the digonal element in $\Sigma=\diag(\sigma_1^2,\sigma_2^2)$ with $\sigma^2_1, \sigma^2_2\sim IG(2,1)$.  
+
+Figure~\ref{dirichlet} shows the traceplot of $w_j$'s in three approaches: standard Gibbs sampling with augmented component assignment under canonical Dirichlet prior, HMC using extrinsic prior associated under canonical Dirichlet prior and and HMC using extrinsic prior under ordered Dirichlet. Each approach runs $10,000$ iterations with first $5,000$ discarded as burn-in. For the posterior extrinsic collected under extrinsic prior, a projection is used as proposal in Metropolis-Hastings correction. Due to small sample size and relatively close component means, significant label-switching is shown in both Gibbs and HMC with canonical Dirichlet prior; while HMC with ordered Dirichlet prior does not suffer this issue.
+
+
+
+\begin{figure}[H]
+ \centering
+   \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=1\textwidth]{fmm_w_gibbs.pdf}
+    \caption{Gibbs sampling under unordered Dirichlet}
+    \end{subfigure}
+       \begin{subfigure}[b]{0.32\textwidth}
+  \includegraphics[width=1\textwidth]{fmm_w_hmc_unordered.pdf}
+    \caption{HMC sampling under unordered Dirichlet, using extrinsic prior}
+      \end{subfigure}
+       \begin{subfigure}[b]{0.32\textwidth}
+ \includegraphics[width=1\textwidth]{fmm_w_hmc.pdf}
+     \caption{HMC sampling under ordered Dirichlet, using extrinsic prior}
+     \end{subfigure}
+\caption{Traceplot of the posterior sample for the simplex vertices, used as the component weights in a 3-component normal mixture model. Extrinsic prior allows the inclusion of order constraint in the simplex, reducing the label-switching issue.}
+\label{dirichlet}
+\end{figure}
+
+
+{\bf Example 2: Orthogonal Gaussian Processes}
+
+We now illustrate a curve fitting problem where the shape of curve is convex. Convexity is common in real life such as a trajectory of projectile or accelerated decreasing of organ functions in disase monitinoring. Consider a cubic spline function $f(t)$ for data $y_t$ with $t\in [0,1]$
+
+
+\begin{equation*}
+\begin{aligned}
+y_t & = f(t) + \epsilon_t,\\
+f(t) & = \beta_0 + \beta_1 t + \beta_2 t^2+ \beta_3 t^3+ \sum_{j=1}^J b_j (t- \tau_j)^3_+,\\
+\end{aligned}
+\end{equation*}
+where $\epsilon_t \sim \No(0, \sigma^2)$ and $\tau_j$'s are pre-specified knots in $(0,1)$. To induce the convexity, it suffices to have the second derivative:
+
+\begin{equation*}
+\begin{aligned}
+f''(t) & =  2\beta_2 + 6\beta_3 t+ \sum_{j=1}^J 6b_j (t- \tau_j)_+ \ge 0.\\
+\end{aligned}
+\end{equation*}
+
+Given data $y_t$ at observed time $t=t_1,\ldots, t_n$, the posterior estimation of $\beta_.$ and $b_.$ is estimated under $n$ linear inequality constraints.
 
 \section{Application}
 \section{Discussion}

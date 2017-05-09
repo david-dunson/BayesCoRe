@@ -12,6 +12,13 @@ Byrne, S. and M.~Girolami (2013).
 \newblock Geodesic monte carlo on embedded manifolds.
 \newblock {\em Scandinavian Journal of Statistics\/}~{\em 40\/}(4), 825--845.
 
+\bibitem[\protect\citeauthoryear{Diebolt and Robert}{Diebolt and
+  Robert}{1994}]{diebolt1994estimation}
+Diebolt, J. and C.~P. Robert (1994).
+\newblock Estimation of finite mixture distributions through bayesian sampling.
+\newblock {\em Journal of the Royal Statistical Society. Series B
+  (Methodological)\/}, 363--375.
+
 \bibitem[\protect\citeauthoryear{Gelfand, Smith, and Lee}{Gelfand
   et~al.}{1992}]{gelfand1992bayesian}
 Gelfand, A.~E., A.~F. Smith, and T.-M. Lee (1992).
@@ -47,6 +54,13 @@ Hoffman, M.~D. and A.~Gelman (2014).
   monte carlo.
 \newblock {\em Journal of Machine Learning Research\/}~{\em 15\/}(1),
   1593--1623.
+
+\bibitem[\protect\citeauthoryear{Jasra, Holmes, and Stephens}{Jasra
+  et~al.}{2005}]{jasra2005markov}
+Jasra, A., C.~C. Holmes, and D.~A. Stephens (2005).
+\newblock Markov chain monte carlo methods and the label switching problem in
+  bayesian mixture modeling.
+\newblock {\em Statistical Science\/}, 50--67.
 
 \bibitem[\protect\citeauthoryear{Kelly and Rice}{Kelly and
   Rice}{1990}]{kelly1990monotone}
@@ -110,6 +124,12 @@ Pakman, A. and L.~Paninski (2014).
 Rao, V., L.~Lin, and D.~B. Dunson (2016).
 \newblock Data augmentation for models based on rejection sampling.
 \newblock {\em Biometrika\/}~{\em 103\/}(2), 319--335.
+
+\bibitem[\protect\citeauthoryear{Stephens}{Stephens}{2000}]{stephens2000dealing}
+Stephens, M. (2000).
+\newblock Dealing with label switching in mixture models.
+\newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)\/}~{\em 62\/}(4), 795--809.
 
 \bibitem[\protect\citeauthoryear{Uschmajew}{Uschmajew}{2010}]{uschmajew2010well}
 Uschmajew, A. (2010).
