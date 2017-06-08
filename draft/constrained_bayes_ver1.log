@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  28 FEB 2017 14:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  7 JUN 2017 21:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**scalable_tensor.tex
-(./scalable_tensor.tex
+**constrained_bayes_ver1.tex
+(./constrained_bayes_ver1.tex
 LaTeX2e <2016/03/31>
 Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/article.cls
@@ -113,6 +113,13 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks17
 \@floatcapt=\box28
 )
+(/usr/local/texlive/2016/texmf-dist/tex/latex/bbm-macros/bbm.sty
+Package: bbm 1999/03/15 V 1.2 provides fonts for set symbols - TH
+LaTeX Font Info:    Overwriting math alphabet `\mathbbm' in version `bold'
+(Font)                  U/bbm/m/n --> U/bbm/bx/n on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathbbmss' in version `bold'
+(Font)                  U/bbmss/m/n --> U/bbmss/bx/n on input line 35.
+)
 (/usr/local/texlive/2016/texmf-dist/tex/latex/amscls/amsthm.sty
 Package: amsthm 2015/03/04 v2.20.2
 \thm@style=\toks18
@@ -193,6 +200,10 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
+(/usr/local/texlive/2016/texmf-dist/tex/latex/jknapltx/mathrsfs.sty
+Package: mathrsfs 1996/01/01 Math RSFS package v1.0 (jk)
+\symrsfs=\mathgroup6
+)
 (/usr/local/texlive/2016/texmf-dist/tex/latex/units/nicefrac.sty
 Package: nicefrac 1998/08/04 v0.9b Nice fractions
 \L@UnitsRaiseDisplaystyle=\skip53
@@ -229,21 +240,21 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip58
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
-) (./scalable_tensor.aux)
-\openout1 = `scalable_tensor.aux'.
+) (./constrained_bayes_ver1.aux)
+\openout1 = `constrained_bayes_ver1.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
 
 (/usr/local/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -308,58 +319,149 @@ e
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 77.
+LaTeX Font Info:    Try loading font information for U+msa on input line 79.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 77.
+LaTeX Font Info:    Try loading font information for U+msb on input line 79.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Try loading font information for U+rsfs on input line 79.
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/jknapltx/ursfs.fd
+File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 ) [1
 
-{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
+LaTeX Font Info:    Try loading font information for U+bbm on input line 113.
 
-<D.pdf, id=23, 1156.32pt x 578.16pt>
-File: D.pdf Graphic file (type pdf)
- <use D.pdf>
-Package pdftex.def Info: D.pdf used on input line 164.
-(pdftex.def)             Requested size: 471.47249pt x 235.73265pt.
- [4 <./D.pdf>]
+(/usr/local/texlive/2016/texmf-dist/tex/latex/bbm-macros/ubbm.fd
+File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
+) [3]
+Overfull \hbox (50.53125pt too wide) in paragraph at lines 147--148
+\OT1/cmr/m/n/10 of in-trin-sic prior $\OML/cmm/m/it/10 ^^Y[]\U/bbm/m/n/10 1[] \
+OT1/cmr/m/n/10 = [](\OMS/cmsy/m/n/10 ^^@[]\OML/cmm/m/it/10 =[]\OT1/cmr/m/n/10 )
+\U/bbm/m/n/10 1[]$ \OT1/cmr/m/n/10 and ex-trin-sic pri-ors $\OML/cmm/m/it/10 ^^
+Y[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R\OT1/cmr/m/n/10 )\OMS/cmsy/m/n/10 K\OT1
+/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R\OT1/cmr/m/n/10 ; \OMS/cmsy/m/n/10 D\OT1/cmr/m
+/n/10 ) = [](\OMS/cmsy/m/n/10 ^^@[]\OML/cmm/m/it/10 =[]\OT1/cmr/m/n/10 ) [](\OM
+S/cmsy/m/n/10 ^^@\OML/cmm/m/it/10 v\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R\OT1/cm
+r/m/n/10 ))$.
+ []
 
-Package caption Warning: Unused \captionsetup[sub] on input line 34.
-See the caption package documentation for explanation.
+<density_truncated_normal.pdf, id=24, 361.35pt x 216.81pt>
+File: density_truncated_normal.pdf Graphic file (type pdf)
 
-[5] (./scalable_tensor.aux) ) 
+<use density_truncated_normal.pdf>
+Package pdftex.def Info: density_truncated_normal.pdf used on input line 151.
+(pdftex.def)             Requested size: 235.73624pt x 141.4409pt.
+ [4]
+
+LaTeX Warning: Reference `exact_posterior' on page 5 undefined on input line 16
+6.
+
+
+LaTeX Warning: Reference `extrinsic_posterior' on page 5 undefined on input lin
+e 166.
+
+[5 <./density_truncated_normal.pdf>] [6] [7] [8]
+<unit_circle_violation.pdf, id=53, 578.16pt x 216.81pt>
+File: unit_circle_violation.pdf Graphic file (type pdf)
+
+<use unit_circle_violation.pdf>
+Package pdftex.def Info: unit_circle_violation.pdf used on input line 271.
+(pdftex.def)             Requested size: 377.17943pt x 141.4409pt.
+
+<unit_circle_100steps.pdf, id=54, 578.16pt x 216.81pt>
+File: unit_circle_100steps.pdf Graphic file (type pdf)
+
+<use unit_circle_100steps.pdf>
+Package pdftex.def Info: unit_circle_100steps.pdf used on input line 272.
+(pdftex.def)             Requested size: 377.17943pt x 141.4409pt.
+
+<unit_circle_acf.pdf, id=55, 578.16pt x 216.81pt>
+File: unit_circle_acf.pdf Graphic file (type pdf)
+ <use unit_circle_acf.pdf>
+Package pdftex.def Info: unit_circle_acf.pdf used on input line 274.
+(pdftex.def)             Requested size: 377.17943pt x 141.4409pt.
+
+[9] [10 <./unit_circle_violation.pdf> <./unit_circle_100steps.pdf> <./unit_circ
+le_acf.pdf>]
+
+LaTeX Warning: Reference `exact_posterior' on page 11 undefined on input line 3
+01.
+
+[11] [12] [13] <fmm_mu_contour.pdf, id=90, 289.08pt x 289.08pt>
+File: fmm_mu_contour.pdf Graphic file (type pdf)
+
+<use fmm_mu_contour.pdf>
+Package pdftex.def Info: fmm_mu_contour.pdf used on input line 413.
+(pdftex.def)             Requested size: 141.44318pt x 141.44312pt.
+ <fmm_w_gibbs.pdf, id=91, 433.62pt x 216.81pt>
+File: fmm_w_gibbs.pdf Graphic file (type pdf)
+
+<use fmm_w_gibbs.pdf>
+Package pdftex.def Info: fmm_w_gibbs.pdf used on input line 419.
+(pdftex.def)             Requested size: 150.87465pt x 75.43802pt.
+ <fmm_w_hmc_unordered.pdf, id=92, 433.62pt x 216.81pt>
+File: fmm_w_hmc_unordered.pdf Graphic file (type pdf)
+
+<use fmm_w_hmc_unordered.pdf>
+Package pdftex.def Info: fmm_w_hmc_unordered.pdf used on input line 423.
+(pdftex.def)             Requested size: 150.87465pt x 75.43802pt.
+ <fmm_w_hmc.pdf, id=93, 433.62pt x 216.81pt>
+File: fmm_w_hmc.pdf Graphic file (type pdf)
+
+<use fmm_w_hmc.pdf>
+Package pdftex.def Info: fmm_w_hmc.pdf used on input line 427.
+(pdftex.def)             Requested size: 150.87465pt x 75.43802pt.
+
+Underfull \hbox (badness 1320) in paragraph at lines 428--428
+[]\OT1/cmr/m/n/9 (d) |HMC sam-pling un-der or-dered
+ []
+
+[14 <./fmm_mu_contour.pdf> <./fmm_w_gibbs.pdf> <./fmm_w_hmc_unordered.pdf> <./f
+mm_w_hmc.pdf>] (./constrained_bayes_ver1.bbl [15]) [16]
+(./constrained_bayes_ver1.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 4678 strings out of 493014
- 67471 string characters out of 6133351
- 138576 words of memory out of 5000000
- 8144 multiletter control sequences out of 15000+600000
- 11848 words of font info for 46 fonts, out of 8000000 for 9000
+ 4851 strings out of 493014
+ 71565 string characters out of 6133351
+ 139831 words of memory out of 5000000
+ 8285 multiletter control sequences out of 15000+600000
+ 13839 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,15n,40p,725b,286s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2016/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmex10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmmi7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmr5.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmr7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cms
-y10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
-7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10
-.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/symbols/ms
-bm10.pfb>
-Output written on scalable_tensor.pdf (5 pages, 192439 bytes).
+ 42i,10n,40p,1735b,500s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </Volumes/home/Users/leo/Library/texlive/2016/texmf-var/fonts/pk/ljfour/publ
+ic/bbm/bbm7.600pk> </Volumes/home/Users/leo/Library/texlive/2016/texmf-var/font
+s/pk/ljfour/public/bbm/bbm10.600pk></usr/local/texlive/2016/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2016/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1
+/public/amsfonts/cmextra/cmex7.pfb></usr/local/texlive/2016/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr5.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmr7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmr9.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmsy10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmsy5.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmsy7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmti10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/symb
+ols/msbm10.pfb>
+Output written on constrained_bayes_ver1.pdf (16 pages, 541451 bytes).
 PDF statistics:
- 86 PDF objects out of 1000 (max. 8388607)
- 61 compressed objects within 1 object stream
+ 196 PDF objects out of 1000 (max. 8388607)
+ 141 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

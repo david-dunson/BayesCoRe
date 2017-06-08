@@ -1,11 +1,8 @@
 data {
   int<lower=1> N;
   int<lower=1> d;
-  int<lower=1> p;
   int y[N,N];
   real lambda1;
-  real lambda2;
-  real lambda3;
 }
 transformed data {
   vector[N] mu;
@@ -52,21 +49,6 @@ model {
 
     //constrain orthonormality in U
     U2 = U' * U - diag_matrix(rep_vector(1.0, d));
-    target += - lambda2* trace( U2 *U2);
+    target += - lambda1* max(fabs(U2));
   
-    //constrain first element in each factor to be positive
-    for(m in 1:d){
-      if( U[1,m] < 0){
-        target +=   -lambda3 * (-U[1,m]);
-      }
-    }
-
-    //constrain order of tau
-    for(m in 1:(d-1)){
-      if( tau[m] < tau[m+1]){
-        target +=   -lambda1 *( tau[m+1] - tau[m]);
-      }
-    }
-
-
 }

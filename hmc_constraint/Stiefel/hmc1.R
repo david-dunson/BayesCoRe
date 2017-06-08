@@ -1,4 +1,4 @@
-setwd("~/git/empiricalTensor/hmc_constraint/Network")
+setwd("~/git/constrainedBayes/hmc_constraint/Stiefel/")
 require("rstan")
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
@@ -39,11 +39,10 @@ y = (matrix(runif(N*N),N)<p_mat)*1
 Lower=lower.tri(y)
 y[Lower] = t(y)[Lower]
 
-lambda1=0   # ordering in tau
-lambda2=1E3  # orthonormality
-lambda3=1E3  # positive
+lambda1=1E2
 
-input_dat <- list(N=N, d=d,p=p, y=y,lambda1 = lambda1, lambda2 = lambda2,lambda3= lambda3)
+
+input_dat <- list(N=N, d=d, y=y,lambda1 = lambda1)
 
 init<- list(list(U= U, tau=rep(1,d), phi =1, eta=diag(eta)))
 

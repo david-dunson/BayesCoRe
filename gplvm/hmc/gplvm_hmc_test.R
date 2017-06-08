@@ -97,9 +97,11 @@ plot(runX$x,Y[,1])
 plot(runX$x,Y[,3])
 
 #check on mixing
-runX = updateX(x=x,L = 1,steps = 2000, tuning = T,ideal_AR = 0.8)
-runX = updateX(x=x,eps = runX$eps,L = 1,steps = 200, tuning = F,burnin = F)
-acf(runX$trace_x[,2:4], lag.max = 100)
+# runX = updateX(x=x,L = 1,steps = 2000, tuning = T,ideal_AR = 0.8)
+# runX = updateX(x=x,eps = runX$eps,L = 1,steps = 2000, tuning = F,burnin = F)
+
+ts.plot(runX$trace_x[,2])
+acf(runX$trace_x[,2], lag.max = 100)
 ############
 
 plot(c(0,1),range(Y),type="n")

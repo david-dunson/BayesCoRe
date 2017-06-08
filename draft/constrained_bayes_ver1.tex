@@ -11,7 +11,7 @@
 
 %macro for commenting
 \usepackage{color}
-\newcommand{\leo}[1]{{\color{blue}{\it leo: #1}}}
+\newcommand{\leo}[1]{{\color{blue}{#1}}}
 
 % \newcommand{\Xbeta}{ X_i \theta}
 \newcommand{\xbeta}{ x_i \beta}
@@ -109,55 +109,87 @@ Theoretic studies are conducted and original models are shown in simulations and
 
 \section{Extrinsic Bayes Methodology}
 \subsection{Intrinsic Bayes}
-Let $\theta \in \mc D$ denote the parameters in likelihood function $L(\theta;y)$, with $y$ the data. The support $\mc D$ is a constrained space, and the parameters can be high or infinite-dimensional. The usual Bayesian approach assigns a prior density $\pi_{0,\mc D}(\theta)$ for $\theta$ having support $\mc D$. We assume that $\mc D \subset \mc R$, with $\mc R$ denoting a `less constrained' space. For example, if $\theta$ is a $p$-dimensional vector subject to an inequality constraint, then $\mc R$ may correspond simply to $p$-dimensional Euclidean space.
-Assuming $\pi_{0,\mc D}(\theta)$ is proper so that $\int_{\mc D} \pi_{0,\mc D}(\theta) d\theta <\infty$, the constrained prior can be obtained by starting with an unconstrained prior $\pi_{0,\mc R}(\theta)$ on $\mc R$, applying the restriction through an indicator function $\mathbbm{1}_{\theta\in \mc D}$, and renormalizing:
+Let $\theta \in \mc D$ denote the parameters in likelihood function $L(\theta;y)$, with $y$ the data. The support $\mc D$ is a constrained space. The usual Bayesian approach assigns a prior density $\pi_{0,\mc D}(\theta)$ for $\theta$ having support $\mc D$. We assume that $\mc D \subset \mc R$, with $\mc R$ denoting a `less constrained' space. For example, if $\theta$ is a $p$-dimensional vector subject to an inequality constraint, then $\mc R$ may correspond simply to $p$-dimensional Euclidean space.
+Assuming $\pi_{0,\mc D}(\theta)$ is proper so that $\int_{\mc D} \pi_{0,\mc D}(\theta) d\theta =1$, the constrained prior can be obtained by starting with an unconstrained prior $\pi_{0,\mc R}(\theta)$ on $\mc R$, applying the restriction through an indicator function $\mathbbm{1}_{\theta\in \mc D}$, and renormalizing:
 \begin{equation}
 \begin{aligned}
-\label{exact_prior}
+\label{exact_prior1}
 \pi_{0,\mc D}(\theta)= \pi_{0,\mc R}(\theta \mid \theta \in \mc D) = \frac{ \pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D} }{ \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta },
 \end{aligned}
 \end{equation}
-where $\mathbbm{1}_{\theta \in \mc D}=1$ when $\theta \in \mc D$ and $0$ otherwise. For example, if the constrained prior corresponds to the matrix von Mises--Fisher distribution for $\theta$ on the Stiefel manifold $\mc D=\mc V(N,d)$: $\pi_{0,\mc D}=\frac{\exp(\text{tr}(F'\theta))\mathbbm{1}_{\theta'\theta=I_d}}{_0G_1(F)}$, with $_0G_1(F)= \int_{\mc D} \exp(\text{tr}(F'\theta)) d\theta$ the confluent hypergeometric limit function.
-The posterior can be obtained as
+if $ \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta >0$. When $ \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta =0$, the construction becomes more complicated.
+
+ One strategy to overcome the difficulty is using the regular conditional probability for certain set $\mc A$, via the limit
 \begin{equation}
 \begin{aligned}
-\label{exact_posterior}
-\pi(\theta \mid y, \theta \in \mc D) = \frac{ L(\theta;y)\pi_{0,\mc D}(\theta)}{\int_{\mc D} L(\theta;y)\pi_{0,\mc D}(\theta) d\theta } = \frac{ L(\theta;y)\pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D} }{\int_{\mc D} L(\theta;y)\pi_{0,\mc R}(\theta) d\theta }.
-\end{aligned}
+\label{exact_prior2}
+\int_{\mc A} \pi_{0,\mc D}(\theta) d\theta=\lim_{\mc D^+\supset \mc D} \frac{\int_{\mc A} \pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D^+ } d\theta}{ \int_{\mc D^+} \pi_{0,\mc R}(\theta)d\theta }\end{aligned}
 \end{equation}
-In general, one can start with a proper prior $\pi_{0,\mc R}(\theta)$ on $\mc R$, restrict to $\mc D$, and renormalize to obtain a valid posterior on $\mc D$.
+where $\mc D^+$ is a net converging towards $\mc D$, with $\int_{\mc D^+} \pi_{0,\mc R}(\theta)d\theta>0$. Based on this probability, one derives the constrained density. To illustrate, consider two independent uniform distribution $\theta_1,\theta_2 \sim \U(0,1)$ under equality constraint $\theta_1+\theta_2=w$. One first obtains $\int_{\theta_1<x}\pi_{0,\mc D}(\theta) d\theta=\lim_{\epsilon\rightarrow 0^+} \frac{ \int_0^{x} \int_0^1 \mathbbm{1}_{\theta\in \mc D^+}  d\theta_2d\theta_1} { \int_0^1 \int_0^1 \mathbbm{1}_{\theta\in \mc D^+}  d\theta_2d\theta_1 } =\frac{x}{w}$ with $\mc D^+= \{ \theta: \theta_1+\theta_2\in (w-\epsilon, w+\epsilon)\}$, and then obtained constrained density $\pi_{0,\mc D}(\theta_1)= \frac{1}{w}$ with $\theta_2=w-\theta_1$.
+
 \subsection{Extrinsic Prior}
-Our extrinsic prior builds on the intrinsic prior in (\ref{exact_prior}), approximating the sharp indicator function
+Our extrinsic prior builds on the intrinsic prior in \eqref{exact_prior1} and \eqref{exact_prior2}, approximating the sharp indicator function
 $\mathbbm{1}_{\theta\in \mc D}$ with a {\em smooth} alternative having less constrained support.
 
-
-$$\pi_{0,\mc D}(\theta) = \frac{ \pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D} }{ \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta }$$
-
-$$\tilde{\pi}_{0,\mc D}(\theta) = \frac{ \pi_{0,\mc R}(\theta) \mathcal{K}( \theta; \mc D) }{ \int_{\mc R} \pi_{0,\mc R}(\theta) \mathcal{K}(\theta; \mc D)d\theta }
-$$
-
-
-\subsection{Extrinsic Prior}
-
-One obvious extrinsic approach utilizing \eqref{exact_posterior} is to first generate proposal in $\mc R$ based on $L(\theta;y)\pi_{0,\mc R}(\theta)$ (assuming it is proper), then accepting it when it falls in $\mc D$ \citep{gelfand1992bayesian}. However, when the ratio of probabilities $Pr(\theta\in \mc D \mid y) / Pr(\theta\in \mc R \mid y) \approx 0$, commonly in equality constraint, this would lead to most of the proposals being rejected.
-
-We propose a different strategy. Instead of ignoring $\mathbbm{1}_{\theta\in \mc D} $ in the first step, we approximate it with a strongly informative prior with density $\mc K(\theta)$. This prior has support $\mc S$ that $\mc D\subset\mc S\subset\mc R$ with its mass concentrated around $\mc D$. Then one can first obtain posterior based on density proportional to $L(\theta;y)\pi_{0,\mc R}(\theta)\mc K(\theta)$.
-
-In this paper, we focus on $\mc D$ that can be embedded in $\mc R$ via equality and inequality constraints, although other types of constraints can be incorporated similarly. Letting there be $m$ equalities and $l$ inequalities, this leads to embedding $\mc D = \{ \theta \in \mc R: E_k(\theta)=0 \text{ for } k=1,\ldots,m, \quad G_{k'}(\theta)\le 0  \text{ for } k'=1,\ldots,l \}$, where $E_k(.)$ and $G_{k'}(.)$ are functions that map from $\mc R$ to real line $\mathbb R$. Then the indicator function in \eqref{exact_posterior} can be broken into $\mathbbm{1}_{\theta\in \mc D} = \prod_k \mathbbm{1}_{E_k(\theta)=0} \cdot \prod_{k'}\mathbbm{1}_{G_k'(\theta)\le 0}$.
-
-
-We now form extrinsic prior $\mc K(\theta)$ by replacing each indicator functions with a kernel function $K_.(.)$, this yields posterior:
-
 \begin{equation}
-\begin{aligned}
 \label{extrinsic_prior}
-\pi_{\mc K}(\theta \mid y) & \propto L(\theta;y)\pi_{0,\mc R}(\theta) \mc K(\theta) \\
-&= L(\theta;y)\pi_{0,\mc R}(\theta) \cdot \prod_{k=1}^{m} K_{1,k}\Big( | E_k(\theta)| \Big) \cdot \prod_{k'=1}^{l} K_{2,k'}\Big( \big( G_{k'}(\theta) \big)_+ \Big)
-\end{aligned}
+	\tilde{\pi}_{0,\mc D}(\theta) = \frac{ \pi_{0,\mc R}(\theta) \mc{K}( \theta; \mc D) }{ \int_{\mc R} \pi_{0,\mc R}(\theta) \mc{K}(\theta; \mc D)d\theta }
 \end{equation}
-where $(x)_+ = x$ if $x>0$, $0$ if $x\le 0$. For example, one simple kernel is the truncated Gaussian kernel $K_{i,k}(x) = \exp( -{\lambda_{i,k} x^2}) \mathbbm{1}_{x<\varepsilon(\lambda_{i,k})}$, where $\varepsilon(\lambda_{i,k})$ is a truncation bound depends on $\lambda_{i,k}$ (more will be explained in next section). Generally, the posterior value of functions $|E_k(\theta)|\in [0,\infty)$ or $(G_{k'}(\theta))_+ \in [0,\infty)$ represent the amount of relaxation for each constraint, where $0$ represents no relaxation. Each kernel $K_{i,k}$ satisfies $K_{i,k}(0)=1$ when the constraints are met; the tolerable amount of relaxation is controlled by hyper-parameter $\lambda_{i,k}$. When $\lambda_{i,k} \rightarrow \infty$, the kernel becomes a point mass at $0$. Therefore, \eqref{exact_posterior} is a special limiting case of \eqref{extrinsic_prior}.
+where $\mc K(\theta; \mc D)$ is an approximation to $\mathbbm{1}_{\theta\in \mc D}$ and satisfies  $ \int_{\mc R} \pi_{0,\mc R}(\theta) \mc{K}(\theta; \mc D)d\theta>0$.
 
-When $\lambda_{i,k}$'s take large but finite values, they give rise to a continuous relaxation of the sharp boundary of the indicator function. The relaxation allows the posterior $\theta$ to be easily sampled in $\mc R$ under the influence of the strongly informative prior $\mc K(\theta)$. At the same time, since posteriors are generated in a tight neighborhood of $\mc D$, they can be easily projected back to $\mc D$ as to produce exact posterior in $\mc D$, if needed. We use subscript $\mc K$ to denote posterior $\pi_{\mc K}(\theta \mid y)$, which can be viewed as an approximation to $\pi(\theta \mid y)$ in \eqref{exact_posterior}. We will now refer $\pi_{\mc K}(\theta \mid y)$ as ``extrinsic posterior''.
+Let the constraints that define $\mc D$ be broken into $m$ separable parts, with each corresponding to a constrained space $\mc D_k$. We have $\mc D = \bigcap_{k=1}^m\mc D_k$ and define $\mc K$ as:
+\begin{equation}
+\label{smoothing}
+\mc K(\theta; \mc D)= \prod_{k=1}^m K_k(v_k(\theta))
+\end{equation}
+where $v_k$ is a function $v_k: \mc R \rightarrow [0,\infty)$ that measures the distance to the space $\mc D_k$, with $v_k(\theta)=0$ when $\theta\in \mc D_k$; $K_k(v_k(\theta))$ is a function $K_k:[0,\infty)\rightarrow [0,1]$, which decreases in $v_k(\theta)$, with $K_k(0)=1$ and $K_k(\infty)=0$. Therefore,  $\theta\in \mc D$ and $\mc K(\theta;\mc D)=1$ if and only if all $v_k(\theta)=0$. In this paper, we focus on a simple exponential function $K_k(v) = \exp(-v/\lambda_k)$, with $\lambda_k>0$ as the tuning parameter.
+
+To illustrate, consider a truncated normal prior $\No_{(-\infty,5)}(0,5^2)$. Figure~\ref{truncated_normal} plots the unnormalized densities of intrinsic prior $\pi_{0,\mc R}\mathbbm{1}_{\theta\in \mc D}=\exp(-{\theta^2}/{2\cdot 5^2})\mathbbm{1}_{\theta\in (-\infty,5)}$ and extrinsic priors $ \pi_{0,\mc R}(\theta) \mc{K}( \theta; \mc D) = \exp(-{\theta^2}/{2\cdot 5^2}) \exp(-v(\theta))$. For the latter, we consider $2$ distances $v(\theta)$: $(\theta-5)_+$, $(\theta-5)^2_+$, where $(x)_+ = \left\{\begin{array}{cc}  0 \text{ if } x\le 0 \\ x \text{ if } x> 0\end{array}\right.$. Inside $\mc D$, The intrinsic and extrinsic priors are the same up to a constant difference due to normalizing. Outside $\mc D$, the extrinsic prior decreases continuously towards 0, while intrinsic prior discontinuously drops to $0$ at the boundary. With the same $\lambda$, the first-order $(\theta-5)_+$ drops faster than second-order $(\theta-5)_+^2$ when $(\theta-5)_+<1$.%In general, one would prefer $v(\theta)$ to be small with most less than $1$, therefore, first-order $v(\theta)$ is commonly preferrable.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=0.5\textwidth]{density_truncated_normal}
+\caption{Unnormalized densities for truncated normal $\No_{(-\infty,5)}(0,5^2)$ under exact intrinsic prior and approximating extrinsic prior. Inside $(-\infty,5)$, the priors are the same up to a constant difference. The intrinsic prior abruptly drops to $0$ on the boundary, while the approximating ones drop continuously. Intrinsic prior based on first-order $v(\theta)$ drops faster than the one based on second order when $v(\theta)\in (0,1)$.}
+\label{truncated_normal}
+\end{figure}
+
+This smoothing function $\mc K(\theta;\mc D)$ in \eqref{smoothing} is applicable to more general and complicated scenarios. For example, $\theta$ can have some parameters constrained and some unconstrained; some parameters can be in multiple constraints simultaneously; constraints can be dependent. In all these cases, one can find proper $\mc D_k$'s and define $v_k(\theta)$'s accordingly.
+
+\subsection{Property of Extrinsic Prior}
+
+
+
+\subsection{Selection of Kernel Hyper-Parameters}
+
+The hyper-parameters in the kernel control the upper bound of the constraint violation $v_k$ and how fast it approaches zero. In this section, we describe the strategy in selecting those parameters.
+
+As $\lambda_k\rightarrow \infty$ in each $K_k(\theta)$, $\mc{K}(\theta; \mc D)\rightarrow \mathbbm{1}_{\theta\in \mc D}$, the distance between \eqref{exact_posterior} and \eqref{extrinsic_posterior} decreases to zero.
+
+
+% We may include some parameter \lambda controlling how close the approximation is & show that the distance between the indicator function and approximation decreases to zero in \lambda or something.  Also the distance between the intrinsic prior and extrinsic prior also decreases to zero in \lambda.  But as \lambda decreases the energy barrier increases and posterior computation becomes more intractable etc etc.
+
+
+%\subsection{Extrinsic Prior}
+%
+%One obvious extrinsic approach utilizing \eqref{exact_posterior} is to first generate proposal in $\mc R$ based on $L(\theta;y)\pi_{0,\mc R}(\theta)$ (assuming it is proper), then accepting it when it falls in $\mc D$ \citep{gelfand1992bayesian}. However, when the ratio of probabilities $Pr(\theta\in \mc D \mid y) / Pr(\theta\in \mc R \mid y) \approx 0$, commonly in equality constraint, this would lead to most of the proposals being rejected.
+%
+%We propose a different strategy. Instead of ignoring $\mathbbm{1}_{\theta\in \mc D} $ in the first step, we approximate it with a strongly informative prior with density $\mc K(\theta)$. This prior has support $\mc S$ that $\mc D\subset\mc S\subset\mc R$ with its mass concentrated around $\mc D$. Then one can first obtain posterior based on density proportional to $L(\theta;y)\pi_{0,\mc R}(\theta)\mc K(\theta)$.
+%
+%In this paper, we focus on $\mc D$ that can be embedded in $\mc R$ via equality and inequality constraints, although other types of constraints can be incorporated similarly. Letting there be $m$ equalities and $l$ inequalities, this leads to embedding $\mc D = \{ \theta \in \mc R: E_k(\theta)=0 \text{ for } k=1,\ldots,m, \quad G_{k'}(\theta)\le 0  \text{ for } k'=1,\ldots,l \}$, where $E_k(.)$ and $G_{k'}(.)$ are functions that map from $\mc R$ to real line $\mathbb R$. Then the indicator function in \eqref{exact_posterior} can be broken into $\mathbbm{1}_{\theta\in \mc D} = \prod_k \mathbbm{1}_{E_k(\theta)=0} \cdot \prod_{k'}\mathbbm{1}_{G_k'(\theta)\le 0}$.
+%
+%
+%We now form extrinsic prior $\mc K(\theta)$ by replacing each indicator functions with a kernel function $K_.(.)$, this yields posterior:
+%
+%%\begin{equation}
+%%\begin{aligned}
+%%\label{extrinsic_prior}
+%%\pi_{\mc K}(\theta \mid y) & \propto L(\theta;y)\pi_{0,\mc R}(\theta) \mc K(\theta) \\
+%%&= L(\theta;y)\pi_{0,\mc R}(\theta) \cdot \prod_{k=1}^{m} K_{1,k}\Big( | E_k(\theta)| \Big) \cdot \prod_{k'=1}^{l} K_{2,k'}\Big( \big( G_{k'}(\theta) \big)_+ \Big)
+%%\end{aligned}
+%%\end{equation}
+%where $(x)_+ = x$ if $x>0$, $0$ if $x\le 0$. For example, one simple kernel is the truncated Gaussian kernel $K_{i,k}(x) = \exp( -{\lambda_{i,k} x^2}) \mathbbm{1}_{x<\varepsilon(\lambda_{i,k})}$, where $\varepsilon(\lambda_{i,k})$ is a truncation bound depends on $\lambda_{i,k}$ (more will be explained in next section). Generally, the posterior value of functions $|E_k(\theta)|\in [0,\infty)$ or $(G_{k'}(\theta))_+ \in [0,\infty)$ represent the amount of relaxation for each constraint, where $0$ represents no relaxation. Each kernel $K_{i,k}$ satisfies $K_{i,k}(0)=1$ when the constraints are met; the tolerable amount of relaxation is controlled by hyper-parameter $\lambda_{i,k}$. When $\lambda_{i,k} \rightarrow \infty$, the kernel becomes a point mass at $0$. Therefore, \eqref{exact_posterior} is a special limiting case of \eqref{extrinsic_prior}.
+%
+%When $\lambda_{i,k}$'s take large but finite values, they give rise to a continuous relaxation of the sharp boundary of the indicator function. The relaxation allows the posterior $\theta$ to be easily sampled in $\mc R$ under the influence of the strongly informative prior $\mc K(\theta)$. At the same time, since posteriors are generated in a tight neighborhood of $\mc D$, they can be easily projected back to $\mc D$ as to produce exact posterior in $\mc D$, if needed. We use subscript $\mc K$ to denote posterior $\pi_{\mc K}(\theta \mid y)$, which can be viewed as an approximation to $\pi(\theta \mid y)$ in \eqref{exact_posterior}. We will now refer $\pi_{\mc K}(\theta \mid y)$ as ``extrinsic posterior''.
 
 \subsection{Control of Constraint Relaxation}
 
@@ -177,12 +209,6 @@ To illustrate the control of constraint relaxation, we assume a simple scenario 
 $$\pi(\theta\mid y)\propto \exp(-\frac{\theta^2}{2}) \mathbbm{1}_{\theta\in(\alpha,\beta)}, \quad \pi_{\mc K}(\theta\mid y)\propto \exp(-\frac{\theta^2}{2}) K \left ( (\alpha - \theta)_+ \right) K \left ( ( \theta - \beta)_+ \right).$$
 with $K(x)= \exp( - \lambda x^2)\mathbbm{1}_{x<4/\sqrt{2\lambda}}$. We set $(\alpha, \beta)=(1,2)$. Figure~\ref{truncated_normal} plots the unnormalized densities under the exact and extrinsic posteriors with different $\lambda$'s. The extrinsic posterior densities inside $\mc D = (1,2)$ are the same as the exact one, up to a constant difference due to normalization. Outside $\mc D$, the larger $\lambda$ leads to more rapid decline of density and therefore smaller constraint relaxation $(\alpha - \theta)_+ $ and $ ( \theta - \beta)_+$.
 
-\begin{figure}[H]
- \centering
- \includegraphics[width=0.5\textwidth]{density_truncated_normal}
-\caption{Unnormalized densities for truncated normal $\No_{(1,2)}(0,1)$, under exact $\pi(\theta\mid y)$ and extrinsic posterior $\pi_{\mc K}(\theta\mid y)$. The exact density abruptly drops to $0$ on the two boundaries, while the approximating ones drop continuously. In the approximation, larger $\lambda$ is associated with lower tolerance for constraint relaxation ($( 1-\theta )_+$ and $( \theta - 2)_+$). All densities inside $(1,2)$ are the same up to a constant difference.}
-\label{truncated_normal}
-\end{figure}
 
 It is temping to always induce almost $0$ relaxation with very large $\lambda$, however, in heavily constrained models such as the ones with equality constraint, the narrow distribution width in $\mc R$ will cause a adverse effect in some popular algorithms such as Hamiltonian Monte Carlo. In those cases, it is rather useful to have a slightly larger relaxation, then use projection to correct the imperfection. We will illustrate this in the next section.
 <<<<<<< HEAD
@@ -264,14 +290,12 @@ We now introduce two new notions ``soft'' and ``hard'' constraints. Often, some 
 
 On the other hand, there are some constraints that need to be upheld strictly, such the constraints embedding manifold in Euclidean space. We refer those as hard constraints. In the last example, the $2$-norm constraint needs to be always met in order to have parameter on the unit circle. Under this scenario, the extrinsic posterior is an approximation to posterior under hard constraint, hence needs to be corrected to have valid inference. We now describe a simple procedure in the next section.
 
-=======
 
 %\leo{I hide this paragraph, because I want to use order constraint on simplex instead of on component means in the next example section}
 % Moreover, another important advantage is that soft constraint can allow multiple conflicting constraints to co-exist in the same model. One example is the ordering of multivariate parameters $\theta_{i}=\{ \theta_{i1}, \theta_{i2},\ldots, \theta_{ip}\}$ over index $i=1,\ldots, n$. One can use kernel $\prod_{j=1}^p \prod_{i=1}^{n-1} K_j( (\theta_{i,j} - \theta_{i+1,j})_+)$ as an extrinsic prior to induce favoring of some ordering in all of the $p$ sub-dimensions. Then one could use $\lambda_j$ decreasing in $j$, to induces lower penality of order violation as $j$ increases.
 
 On the other hand, there are some constraints that need to be upheld strictly, such the constraints embedding manifold in Euclidean space. We refer those as hard constraints. In the last example, the $2$-norm constraint needs to be always met in order to have parameter on the unit circle. Under this scenario, the extrinsic posterior is an approximation to posterior under hard constraint, hence needs to be corrected to have valid inference. We now describe a simple procedure in the next section.
 
->>>>>>> f93f553a9c88cbf78a223c334add8953e35ae87c
 \subsection{Correcting Projection for Hard Constraint}
  
  The extrinsic posterior $\pi_{\mc K}(\theta \mid y)$ is an approximation to \eqref{exact_posterior} under hard constraint. We now introduce a step to correct the approximation error, by projecting $\theta$ back to constrained space $\mc D$.
@@ -408,45 +432,47 @@ Figure~\ref{dirichlet} shows the contour of true posterior density of $\mu_j$'s 
 \end{figure}
 
 
-{\bf Example 2: Orthonormal Gaussian Processes in Functional Principle Component Analysis}
+%{\bf Example 2: Orthonormal Gaussian Processes in Functional Principle Component Analysis}
+%
+%\leo{There are some issues with this model. Skip it for now.}
+%
+%We now consider functional principle component analysis. Letting $x_i$ be the input for $i=1,\ldots,n$ in functions $f_j(x_i)$ for $j=1,\ldots,p$. We observe functional data $y_{i,j}$ as noisy realizations of $f_j(x_i)$. Commonly, $p$ is very large and it is useful to view the functions as linear combination of $d$ functional factors $g_k$.
+%
+%\begin{equation*}
+%\begin{aligned}
+%y_{ij} & = f_j(x_i) + \epsilon_{ij},\\
+% f_j(x_i) & = \sum_{k=1}^{d} \eta_{jk} g_k(x_i),\\
+% \left [ g_k(x_1) , \ldots , g_k(x_n) \right] &\sim \No (0, \Sigma_k)\\
+%\Sigma_{k,(i,i')} &= \phi_k\exp( - \frac{||x_i-x_{i'}||^2}{2\rho_k^2})
+%\end{aligned}
+%\end{equation*}
+%for $k=1,\ldots d$ with $d<p$, and $\epsilon_{ij}\sim \No(0,\sigma^2)$ is the random measurement error; $\Sigma_{k,(i,i')}$ is the $(i,i')$th element in matrix $\Sigma_k$. Using matrix notation $G=[g_1, \ldots, g_d]$ and $\eta= [\eta_{.1},\ldots,\eta_{.d}]$, the $n\times p$ function matrix $[f_j(x_i)]_{ij}$ can be written as $G \eta'$. We utilize a squared exponential Gaussian process to model each latent factor $g_k$.
+%
+%We first assign a shrinkage prior on loadings $\eta_{jk}\sim \No(0,\tau_k)$, $\tau_k \sim IG(aq^{3(k-1)},q^{2(k-1)})$  with $q>1$. This prior ensures the shrinkage grows stronger as $k$ increases \citep{bhattacharya2011sparse}, avoiding arbitrary specification of $d$ and exchangability in permuting $k$. However, $G$ and $\eta$ are still not identifiable. Any orthonormal matrix $P$ that $P'P = I_d$ can produce another set of factors $G^*= GP'$ and loadings $\eta^* = P\eta$. Since this projection $P$ is associated with rotation, scaling or column-wise sign change, we apply the following constraint on $G$:
+%
+%\begin{equation*}
+%\begin{aligned}
+% \sum_{i=1}^n g_k(x_i) g_{k'}(x_i) &= \left\{ \begin{array}{cc}1 \text{ if } k=k' \\ 0 \text{ if } k \neq k'\end{array}\right. \\
+% g_k(x_1) \ge 0
+%<<<<<<< HEAD
+%\end{aligned}
+%\end{equation*}
+%for $k=1,\ldots d$. The orthonormailty restricts rotation and scaling and $g_k(x_1)\ge 0$ restricts column-wise sign change. 
+%
+%As the result, these constraints create a Gaussian process prior on a Stiefel manifold $\mc V(N,d)$. To our best knowledge, this is the first application of Gaussian process in this manifold. We approximate these constraints with extrinsic prior:
+%
+% \begin{equation*}
+%\begin{aligned}
+%\pi_{\mc K}(G) \propto   \prod_{k=1}^{d} K_{1}{\left((-g_k(x_1) )_+\right)} \cdot \prod_{k'=1}^{d}\prod_{k=1}^{k'} K_2 ( |\sum_{i=1}^n g_k(x_i) g_{k'}(x_i) - \delta_{k,k'}|)
+%\end{aligned}
+%\end{equation*}
+%where $K_{k}(x)=\exp(- \lambda_k x^2) \1_{x<4/\sqrt{2\lambda_k}}$ for  $k=1,2$. We use $\lambda_1 = 10^6$ to strongly enforce the sign of $g_k(x_1)$ to be positive, while $\lambda_2 = 10^3$ to allow efficient mixing in embedding Stiefel manifold in $\mathbb{R}^{N\times d}$. To compare with unconstrained Gaussian processes for $g_k$'s, we also test with $\lambda_1=0$ and $\lambda_2=0$.
+%
+%We generate $n=50$ inputs $x_i\sim \text{U}(0,1)$ from uniform $(0,1)$ and three smooth functions $g^*_1(x)= \sin(16 x)/x$, $g^*_2(x)= \sin(25 x)\cdot x$ and $g^*_3(x)= \cos(20 x)/x$. The functions are combined via $f_j(x_i)=\sum_{i=1}^3 \eta^*_{jk} g^*_k(x_i)$ with $\eta^*_{jk}\stackrel{iid}{\sim} \No(0,1)$ for $j=1,\ldots,20$ and $i=1,\ldots,n$. We add random noise to create a $50\times 20$ data points $y_{ij} \sim \No(f_j(x_i),0.1^2)$, and randomly remove $20\%$ of data to mimic the unbalanced data in real world. We set $a=q=2$ in the shrinkage prior for all $\eta_{jk}$'s, uniform prior $\text{U}(0,20)$ for all $\rho_k$'s, $\phi_k$'s and $\sigma^2$.
 
-\leo{There are some issues with this model. Skip it for now.}
+{\bf Example 2: Orthonormal Tucker Factorization in Multiple Network Analysis}
 
-We now consider functional principle component analysis. Letting $x_i$ be the input for $i=1,\ldots,n$ in functions $f_j(x_i)$ for $j=1,\ldots,p$. We observe functional data $y_{i,j}$ as noisy realizations of $f_j(x_i)$. Commonly, $p$ is very large and it is useful to view the functions as linear combination of $d$ functional factors $g_k$.
-
-\begin{equation*}
-\begin{aligned}
-y_{ij} & = f_j(x_i) + \epsilon_{ij},\\
- f_j(x_i) & = \sum_{k=1}^{d} \eta_{jk} g_k(x_i),\\
- \left [ g_k(x_1) , \ldots , g_k(x_n) \right] &\sim \No (0, \Sigma_k)\\
-\Sigma_{k,(i,i')} &= \phi_k\exp( - \frac{||x_i-x_{i'}||^2}{2\rho_k^2})
-\end{aligned}
-\end{equation*}
-for $k=1,\ldots d$ with $d<p$, and $\epsilon_{ij}\sim \No(0,\sigma^2)$ is the random measurement error; $\Sigma_{k,(i,i')}$ is the $(i,i')$th element in matrix $\Sigma_k$. Using matrix notation $G=[g_1, \ldots, g_d]$ and $\eta= [\eta_{.1},\ldots,\eta_{.d}]$, the $n\times p$ function matrix $[f_j(x_i)]_{ij}$ can be written as $G \eta'$. We utilize a squared exponential Gaussian process to model each latent factor $g_k$.
-
-We first assign a shrinkage prior on loadings $\eta_{jk}\sim \No(0,\tau_k)$, $\tau_k \sim IG(aq^{3(k-1)},q^{2(k-1)})$  with $q>1$. This prior ensures the shrinkage grows stronger as $k$ increases \citep{bhattacharya2011sparse}, avoiding arbitrary specification of $d$ and exchangability in permuting $k$. However, $G$ and $\eta$ are still not identifiable. Any orthonormal matrix $P$ that $P'P = I_d$ can produce another set of factors $G^*= GP'$ and loadings $\eta^* = P\eta$. Since this projection $P$ is associated with rotation, scaling or column-wise sign change, we apply the following constraint on $G$:
-
-\begin{equation*}
-\begin{aligned}
- \sum_{i=1}^n g_k(x_i) g_{k'}(x_i) &= \left\{ \begin{array}{cc}1 \text{ if } k=k' \\ 0 \text{ if } k \neq k'\end{array}\right. \\
- g_k(x_1) \ge 0
-<<<<<<< HEAD
-\end{aligned}
-\end{equation*}
-for $k=1,\ldots d$. The orthonormailty restricts rotation and scaling and $g_k(x_1)\ge 0$ restricts column-wise sign change. 
-
-As the result, these constraints create a Gaussian process prior on a Stiefel manifold $\mc V(N,d)$. To our best knowledge, this is the first application of Gaussian process in this manifold. We approximate these constraints with extrinsic prior:
-
- \begin{equation*}
-\begin{aligned}
-\pi_{\mc K}(G) \propto   \prod_{k=1}^{d} K_{1}{\left((-g_k(x_1) )_+\right)} \cdot \prod_{k'=1}^{d}\prod_{k=1}^{k'} K_2 ( |\sum_{i=1}^n g_k(x_i) g_{k'}(x_i) - \delta_{k,k'}|)
-\end{aligned}
-\end{equation*}
-where $K_{k}(x)=\exp(- \lambda_k x^2) \1_{x<4/\sqrt{2\lambda_k}}$ for  $k=1,2$. We use $\lambda_1 = 10^6$ to strongly enforce the sign of $g_k(x_1)$ to be positive, while $\lambda_2 = 10^3$ to allow efficient mixing in embedding Stiefel manifold in $\mathbb{R}^{N\times d}$. To compare with unconstrained Gaussian processes for $g_k$'s, we also test with $\lambda_1=0$ and $\lambda_2=0$.
-
-We generate $n=50$ inputs $x_i\sim \text{U}(0,1)$ from uniform $(0,1)$ and three smooth functions $g^*_1(x)= \sin(16 x)/x$, $g^*_2(x)= \sin(25 x)\cdot x$ and $g^*_3(x)= \cos(20 x)/x$. The functions are combined via $f_j(x_i)=\sum_{i=1}^3 \eta^*_{jk} g^*_k(x_i)$ with $\eta^*_{jk}\stackrel{iid}{\sim} \No(0,1)$ for $j=1,\ldots,20$ and $i=1,\ldots,n$. We add random noise to create a $50\times 20$ data points $y_{ij} \sim \No(f_j(x_i),0.1^2)$, and randomly remove $20\%$ of data to mimic the unbalanced data in real world. We set $a=q=2$ in the shrinkage prior for all $\eta_{jk}$'s, uniform prior $\text{U}(0,20)$ for all $\rho_k$'s, $\phi_k$'s and $\sigma^2$.
-
-{\bf Example 3: Orthonormal Tucker Factorization in Multiple Network Analysis}
+We now consider another application of constrained model in network analysis. What a a
 
 
  \begin{equation*}
@@ -455,24 +481,10 @@ We generate $n=50$ inputs $x_i\sim \text{U}(0,1)$ from uniform $(0,1)$ and three
 & \psi_i = UD_iU \\
 & D_i = \diag(d_{i1},d_{i2},d_{i3}) \\
 & vec(U) \sim N (vec (X), \sigma^2)\\
-=======
->>>>>>> f93f553a9c88cbf78a223c334add8953e35ae87c
 \end{aligned}
 \end{equation*}
 for $k=1,\ldots d$. The orthonormailty restricts rotation and scaling and $g_k(x_1)\ge 0$ restricts column-wise sign change. 
 
-As the result, these constraints create a Gaussian process prior on a Stiefel manifold $\mc V(N,d)$. To our best knowledge, this is the first application of Gaussian process in this manifold. We approximate these constraints with extrinsic prior:
-
- \begin{equation*}
-\begin{aligned}
-\pi_{\mc K}(G) \propto   \prod_{k=1}^{d} K_{1}{\left((-g_k(x_1) )_+\right)} \cdot \prod_{k'=1}^{d}\prod_{k=1}^{k'} K_2 ( |\sum_{i=1}^n g_k(x_i) g_{k'}(x_i) - \delta_{k,k'}|)
-\end{aligned}
-\end{equation*}
-where $K_{k}(x)=\exp(- \lambda_k x^2) \1_{x<4/\sqrt{2\lambda_k}}$ for  $k=1,2$. We use $\lambda_1 = 10^6$ to strongly enforce the sign of $g_k(x_1)$ to be positive, while $\lambda_2 = 10^3$ to allow efficient mixing in embedding Stiefel manifold in $\mathbb{R}^{N\times d}$. To compare with unconstrained Gaussian processes for $g_k$'s, we also test with $\lambda_1=0$ and $\lambda_2=0$.
-
-We generate $n=50$ inputs $x_i\sim \text{U}(0,1)$ from uniform $(0,1)$ and three smooth functions $g^*_1(x)= \sin(16 x)/x$, $g^*_2(x)= \sin(25 x)\cdot x$ and $g^*_3(x)= \cos(20 x)/x$. The functions are combined via $f_j(x_i)=\sum_{i=1}^3 \eta^*_{jk} g^*_k(x_i)$ with $\eta^*_{jk}\stackrel{iid}{\sim} \No(0,1)$ for $j=1,\ldots,20$ and $i=1,\ldots,n$. We add random noise to create a $50\times 20$ data points $y_{ij} \sim \No(f_j(x_i),0.1^2)$, and randomly remove $20\%$ of data to mimic the unbalanced data in real world. We set $a=q=2$ in the shrinkage prior for all $\eta_{jk}$'s, uniform prior $\text{U}(0,20)$ for all $\rho_k$'s, $\phi_k$'s and $\sigma^2$.
-
-{\bf Example 3: Orthonormal Tucker Factorization in Multiple Network Analysis}
 
 
 \section{Discussion}

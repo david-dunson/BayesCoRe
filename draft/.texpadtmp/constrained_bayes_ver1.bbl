@@ -1,0 +1,110 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Boyd and Vandenberghe}{Boyd and
+  Vandenberghe}{2004}]{boyd2004convex}
+Boyd, S. and L.~Vandenberghe (2004).
+\newblock {\em Convex optimization}.
+\newblock Cambridge university press.
+
+\bibitem[\protect\citeauthoryear{Byrne and Girolami}{Byrne and
+  Girolami}{2013}]{byrne2013geodesic}
+Byrne, S. and M.~Girolami (2013).
+\newblock Geodesic monte carlo on embedded manifolds.
+\newblock {\em Scandinavian Journal of Statistics\/}~{\em 40\/}(4), 825--845.
+
+\bibitem[\protect\citeauthoryear{Diebolt and Robert}{Diebolt and
+  Robert}{1994}]{diebolt1994estimation}
+Diebolt, J. and C.~P. Robert (1994).
+\newblock Estimation of finite mixture distributions through bayesian sampling.
+\newblock {\em Journal of the Royal Statistical Society. Series B
+  (Methodological)\/}, 363--375.
+
+\bibitem[\protect\citeauthoryear{Gelfand, Smith, and Lee}{Gelfand
+  et~al.}{1992}]{gelfand1992bayesian}
+Gelfand, A.~E., A.~F. Smith, and T.-M. Lee (1992).
+\newblock Bayesian analysis of constrained parameter and truncated data
+  problems using gibbs sampling.
+\newblock {\em Journal of the American Statistical Association\/}~{\em
+  87\/}(418), 523--532.
+
+\bibitem[\protect\citeauthoryear{Girolami and Calderhead}{Girolami and
+  Calderhead}{2011}]{girolami2011riemann}
+Girolami, M. and B.~Calderhead (2011).
+\newblock Riemann manifold langevin and hamiltonian monte carlo methods.
+\newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)\/}~{\em 73\/}(2), 123--214.
+
+\bibitem[\protect\citeauthoryear{Hoff}{Hoff}{2009}]{hoff2009simulation}
+Hoff, P.~D. (2009).
+\newblock Simulation of the matrix bingham--von mises--fisher distribution,
+  with applications to multivariate and relational data.
+\newblock {\em Journal of Computational and Graphical Statistics\/}~{\em
+  18\/}(2), 438--456.
+
+\bibitem[\protect\citeauthoryear{Hoffman and Gelman}{Hoffman and
+  Gelman}{2014}]{hoffman2014no}
+Hoffman, M.~D. and A.~Gelman (2014).
+\newblock The no-u-turn sampler: adaptively setting path lengths in hamiltonian
+  monte carlo.
+\newblock {\em Journal of Machine Learning Research\/}~{\em 15\/}(1),
+  1593--1623.
+
+\bibitem[\protect\citeauthoryear{Jasra, Holmes, and Stephens}{Jasra
+  et~al.}{2005}]{jasra2005markov}
+Jasra, A., C.~C. Holmes, and D.~A. Stephens (2005).
+\newblock Markov chain monte carlo methods and the label switching problem in
+  bayesian mixture modeling.
+\newblock {\em Statistical Science\/}, 50--67.
+
+\bibitem[\protect\citeauthoryear{Khatri and Mardia}{Khatri and
+  Mardia}{1977}]{khatri1977mises}
+Khatri, C. and K.~Mardia (1977).
+\newblock The von mises-fisher matrix distribution in orientation statistics.
+\newblock {\em Journal of the Royal Statistical Society. Series B
+  (Methodological)\/}, 95--106.
+
+\bibitem[\protect\citeauthoryear{Lin and Dunson}{Lin and
+  Dunson}{2014}]{lin2014monogp}
+Lin, L. and D.~B. Dunson (2014).
+\newblock Bayesian monotone regression using gaussian process projection.
+\newblock {\em Biometrika\/}.
+
+\bibitem[\protect\citeauthoryear{Lin, St~Thomas, Zhu, and Dunson}{Lin
+  et~al.}{2016}]{lin2016extrinsic}
+Lin, L., B.~St~Thomas, H.~Zhu, and D.~B. Dunson (2016).
+\newblock Extrinsic local regression on manifold-valued data.
+\newblock {\em Journal of the American Statistical
+  Association\/}~(just-accepted).
+
+\bibitem[\protect\citeauthoryear{Livingstone, Betancourt, Byrne, and
+  Girolami}{Livingstone et~al.}{2016}]{livingstone2016geometric}
+Livingstone, S., M.~Betancourt, S.~Byrne, and M.~Girolami (2016).
+\newblock On the geometric ergodicity of hamiltonian monte carlo.
+\newblock {\em arXiv preprint arXiv:1601.08057\/}.
+
+\bibitem[\protect\citeauthoryear{Neal}{Neal}{2011}]{neal2011mcmc}
+Neal, R.~M. (2011).
+\newblock Mcmc using hamiltonian dynamics.
+\newblock {\em Handbook of Markov Chain Monte Carlo\/}~{\em 2}, 113--162.
+
+\bibitem[\protect\citeauthoryear{Pakman and Paninski}{Pakman and
+  Paninski}{2014}]{pakman2014exact}
+Pakman, A. and L.~Paninski (2014).
+\newblock Exact hamiltonian monte carlo for truncated multivariate gaussians.
+\newblock {\em Journal of Computational and Graphical Statistics\/}~{\em
+  23\/}(2), 518--542.
+
+\bibitem[\protect\citeauthoryear{Stephens}{Stephens}{2000}]{stephens2000dealing}
+Stephens, M. (2000).
+\newblock Dealing with label switching in mixture models.
+\newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)\/}~{\em 62\/}(4), 795--809.
+
+\bibitem[\protect\citeauthoryear{Zhang, Ghahramani, Storkey, and Sutton}{Zhang
+  et~al.}{2012}]{zhang2012continuous}
+Zhang, Y., Z.~Ghahramani, A.~J. Storkey, and C.~A. Sutton (2012).
+\newblock Continuous relaxations for discrete hamiltonian monte carlo.
+\newblock In {\em Advances in Neural Information Processing Systems}, pp.\
+  3194--3202.
+
+\end{thebibliography}

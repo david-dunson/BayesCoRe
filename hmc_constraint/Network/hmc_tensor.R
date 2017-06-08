@@ -1,4 +1,4 @@
-setwd("~/git/empiricalTensor/hmc_constraint/Network")
+setwd("~/git/constrainedBayes/hmc_constraint/Network")
 require("rstan")
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
@@ -41,10 +41,10 @@ extractPosterior3D<-function(varname, d1,d2,d3, stan_fit){
 ss_model = stan_model(file= "ortho_tensor.stan")
 
 ##### Data ###
-N = 10
+N = 20
 d1 = 2
-p = 5
 d2 = 3
+p = 5
 
 
 U = matrix(rnorm(N*d1),N,d1)
@@ -72,7 +72,9 @@ n_steps = 1E4
 ss_fit <- sampling(ss_model, data = input_dat, iter = n_steps, chains = 1, algorithm = "NUTS")
 
 # data = list("y"=y,"g"=g,"x"=x,"ss_fit"=ss_fit)
-# save(data,file="gp1.RDa")
+# save(ss_fit,file="network1.RDa")
+
+load(file="network1.RDa")
 
 sampling_idx<- c((n_steps/2+1):n_steps)
 
@@ -99,21 +101,13 @@ ts.plot(post_eta[sampling_idx,1])
 acf(post_eta[sampling_idx,2])
 
 
-U1 = matrix(0,N,d)
-for(j in 1:d){
+d=d1
+
+U1 = matrix(0,N,d1)
+for(j in 1:d1){
   U1[,j]=post_U[n_steps/2,((j-1)*N+1):(j*N)]
 }
 t(U1)%*%U1
 
 
-
-eta1 = matrix(0,d,d)
-for(j in 1:d){
-  eta1[,j]=post_eta[n_steps/2,((j-1)*d+1):(j*d)]
-}
-
-acf(post_eta[,1])
-acf(post_eta[,2])
-ts.plot(post_eta[,3])
-acf(post_eta[,4])
 
