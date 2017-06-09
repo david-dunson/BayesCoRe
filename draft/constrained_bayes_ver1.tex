@@ -11,7 +11,7 @@
 
 %macro for commenting
 \usepackage{color}
-\newcommand{\leo}[1]{{\color{blue}{#1}}}
+\newcommand{\leo}[1]{{\color{blue}{LD: #1}}}
 
 % \newcommand{\Xbeta}{ X_i \theta}
 \newcommand{\xbeta}{ x_i \beta}
@@ -157,7 +157,24 @@ This smoothing function $\mc K(\theta;\mc D)$ in \eqref{smoothing} is applicable
 
 \subsection{Property of Extrinsic Prior}
 
+We now study the property of the extrinsic prior. One important question is the approximation difference between extrinsic and intrinsic prior. We first focus on the first case in \eqref{exact_prior1}.
 
+%distance between extrinsic and intrinsic
+\begin{theorem}
+Let $M_1= \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta$ and $M_2 = \int_{\mc R} \pi_{0,\mc R}(\theta) \mc K(\theta;\mc D)d\theta$, when $M_1>0$, the total variation distance between the measures of extrinsic and intrinsic prior
+$$||\pi_{0,\mc D}(\theta), \tilde{\pi}_{0,\mc D}(\theta) ||_{TV} = 1 - \frac{M_1}{M_2} \le \frac{\int_{\theta  \in \mc R \setminus \mc D} \pi_{0,\mc R}(\theta) \mc K(\theta;\mc D)d\theta}{M_1}$$.
+\end{theorem}
+\leo{via definition of total variation and $K(\theta;\mc D)=1$  $\theta\in\mc D$}
+
+
+Taking the special case of exponential smoothing function \eqref{smoothing}, we have:
+f
+\begin{corollary}
+Let $M_1= \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta>0$ and $\mc K(\theta; D) = \prod_{k=1}^m \exp( -v_k(\theta)/\lambda_k)$, one sufficient condition to have
+$$\lim_{\text{ all } \lambda_k\rightarrow 0}||\pi_{0,\mc D}(\theta), \tilde{\pi}_{0,\mc D}(\theta) ||_{TV} = 0$$
+is that $\pi_{0,\mc R}(\theta)$ is proper, $\int_{\mc R} \pi_{0,\mc R}(\theta) d\theta<\infty$.
+\end{corollary}
+\leo{via DCT}
 
 \subsection{Selection of Kernel Hyper-Parameters}
 
