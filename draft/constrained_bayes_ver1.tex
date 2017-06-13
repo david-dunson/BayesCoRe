@@ -157,24 +157,64 @@ This smoothing function $\mc K(\theta;\mc D)$ in \eqref{smoothing} is applicable
 
 \subsection{Property of Extrinsic Prior}
 
-We now study the property of the extrinsic prior. One important question is the approximation difference between extrinsic and intrinsic prior. We first focus on the first case in \eqref{exact_prior1}.
+We now study the properties of the extrinsic prior. One important task is to quantify the difference between extrinsic and intrinsic priors. We first focus on the first case in \eqref{exact_prior1}, when $\int_{\mc D} \pi_{0,\mc R}(\theta)d\theta>0$.
 
 %distance between extrinsic and intrinsic
 \begin{theorem}
 Let $M_1= \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta$ and $M_2 = \int_{\mc R} \pi_{0,\mc R}(\theta) \mc K(\theta;\mc D)d\theta$, when $M_1>0$, the total variation distance between the measures of extrinsic and intrinsic prior
 $$||\pi_{0,\mc D}(\theta), \tilde{\pi}_{0,\mc D}(\theta) ||_{TV} = 1 - \frac{M_1}{M_2} \le \frac{\int_{\theta  \in \mc R \setminus \mc D} \pi_{0,\mc R}(\theta) \mc K(\theta;\mc D)d\theta}{M_1}$$.
 \end{theorem}
-\leo{via definition of total variation and $K(\theta;\mc D)=1$  $\theta\in\mc D$}
+proof:
+{via definition of total variation and $K(\theta;\mc D)=1$ and $\theta\in\mc D$}
 
 
 Taking the special case of exponential smoothing function \eqref{smoothing}, we have:
-f
 \begin{corollary}
 Let $M_1= \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta>0$ and $\mc K(\theta; D) = \prod_{k=1}^m \exp( -v_k(\theta)/\lambda_k)$, one sufficient condition to have
 $$\lim_{\text{ all } \lambda_k\rightarrow 0}||\pi_{0,\mc D}(\theta), \tilde{\pi}_{0,\mc D}(\theta) ||_{TV} = 0$$
 is that $\pi_{0,\mc R}(\theta)$ is proper, $\int_{\mc R} \pi_{0,\mc R}(\theta) d\theta<\infty$.
 \end{corollary}
-\leo{via DCT}
+proof:
+{via DCT}
+
+Rewriting $\mc K(\theta; D) = \exp(-v(\theta)/\lambda)$ with $\lambda = \sup_k \lambda_k$, $v(\theta)=\lambda\sum_{k=1}^m\frac{ v_k(\theta)}{\lambda_k}$, we obtain the convergence rate:
+
+\begin{theorem}
+Assuming $M_3= \int_{\mc R \setminus \mc D} \pi_{0,\mc R}(\theta) d\theta<\infty$, and $f(v)$ be the density of $v(\theta)$ as the transform of $\pi_{0,\mc R}/M_3$. If $f(v) < \infty$ when $v<t$,
+$$\int_0^\infty {\pi_{0,\mc R}(\theta)}exp(- \frac{v(\theta)}{\lambda}) d \theta \le 
+2 {M_3} \exp(-\frac{t}{\lambda}) + {M_3} \sup_{t^*\in(0,t)} {f(t^*)}\lambda 
+$$
+\end{theorem}
+proof:
+
+\begin{equation}
+\begin{aligned}
+\int_0^\infty {f(v)} \exp(- \frac{v}{\lambda}) d v
+= & \int_0^t {f(v)} \exp(- \frac{v}{\lambda}) d v + \int_t^\infty \frac{f(v)}{M_3} \exp(- \frac{v}{\lambda}) d v \\
+% \le &  t\frac{f(t^*)}{M_3} \exp(- \frac{t^*}{\lambda})+ \exp(- \frac{t}{\lambda})  \int_t^\infty \frac{f(v)}{M_3} d v \\
+% \le &  t\frac{f(t^*)}{M_3} \exp(- \frac{t^*}{\lambda})+ \exp(- \frac{t}{\lambda})\\
+\le & {F(t)} \exp(-\frac{t}{\lambda}) + 
+\frac{1}{\lambda}\int_0^t {F(v)} \exp(-\frac{v}{\lambda})dv + \exp(-\frac{t}{\lambda}) \\
+= & ({F(t)} +1) \exp(-\frac{t}{\lambda}) + 
+\frac{1}{\lambda}\int_0^t {f(v^*)} v\exp(-\frac{v}{\lambda})dv \\
+\le & ({F(t)} +1) \exp(-\frac{t}{\lambda}) + \sup_{t^*\in(0,t)} {f(t^*)}
+\int_0^t  \frac{1}{\lambda}v\exp(-\frac{v}{\lambda})dv \\
+\le & 2 \exp(-\frac{t}{\lambda}) + \sup_{t^*\in(0,t)} {f(t^*)}\lambda 
+\end{aligned}
+\end{equation}
+where the third step is based on mean value theorem with $v^*\in (0,v)$. Rearranging term yields the result.  $\blacksquare$
+
+That is, for $\lambda$ small, the extrinsic prior approaches intrinsic prior in total varation distance in $O(\lambda)$.
+
+We now examine the second case in \eqref{exact_prior2} where ${ \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta }=0$.
+
+
+%distance between extrinsic and intrinsic
+\begin{theorem}
+Let $M_1= \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta$ and $M_2 = \int_{\mc R} \pi_{0,\mc R}(\theta) \mc K(\theta;\mc D)d\theta$, when $M_1>0$, the total variation distance between the measures of extrinsic and intrinsic prior
+$$||\pi_{0,\mc D}(\theta), \tilde{\pi}_{0,\mc D}(\theta) ||_{TV} = \lim_{\mc D^+\supset \mc D} \frac{\int_{\mc R} \pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D^+ } d\theta}{ \int_{\mc D^+} \pi_{0,\mc R}(\theta)d\theta }
+ -  \frac{\int_{\theta  \in \mc R } \pi_{0,\mc R}(\theta) \mc K(\theta;\mc D)d\theta}{M_2}$$.
+\end{theorem}
 
 \subsection{Selection of Kernel Hyper-Parameters}
 
@@ -182,8 +222,6 @@ The hyper-parameters in the kernel control the upper bound of the constraint vio
 
 As $\lambda_k\rightarrow \infty$ in each $K_k(\theta)$, $\mc{K}(\theta; \mc D)\rightarrow \mathbbm{1}_{\theta\in \mc D}$, the distance between \eqref{exact_posterior} and \eqref{extrinsic_posterior} decreases to zero.
 
-
-% We may include some parameter \lambda controlling how close the approximation is & show that the distance between the indicator function and approximation decreases to zero in \lambda or something.  Also the distance between the intrinsic prior and extrinsic prior also decreases to zero in \lambda.  But as \lambda decreases the energy barrier increases and posterior computation becomes more intractable etc etc.
 
 
 %\subsection{Extrinsic Prior}

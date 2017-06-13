@@ -41,26 +41,34 @@ extractPosterior3D<-function(varname, d1,d2,d3, stan_fit){
 ss_model = stan_model(file= "ortho_tensor.stan")
 
 ##### Data ###
-N = 20
-d1 = 2
-d2 = 3
-p = 5
+# N = 20
+# d1 = 2
+# d2 = 3
+# p = 5
+# 
+# 
+# U = matrix(rnorm(N*d1),N,d1)
+# U = qr.Q(qr(U))
+# y = array(0, c(N,N,p))
+# 
+# 
+# for(l in 1:p){
+#   eta = rnorm(d1)
+#   UDU = U%*%diag(eta)%*%t(U)
+#   p_mat = 1/(1+exp(-UDU))
+#   y_l = (matrix(runif(N*N),N)<p_mat)*1
+#   Lower=lower.tri(y_l)
+#   y_l[Lower] = t(y_l)[Lower]
+#   y[,,l] = y_l
+# }
 
+load("tensorA.RDa")
+y=A
+N = dim(A)[1]
+p = dim(A)[3]
 
-U = matrix(rnorm(N*d1),N,d1)
-U = qr.Q(qr(U))
-y = array(0, c(N,N,p))
-
-
-for(l in 1:p){
-  eta = rnorm(d1)
-  UDU = U%*%diag(eta)%*%t(U)
-  p_mat = 1/(1+exp(-UDU))
-  y_l = (matrix(runif(N*N),N)<p_mat)*1
-  Lower=lower.tri(y_l)
-  y_l[Lower] = t(y_l)[Lower]
-  y[,,l] = y_l
-}
+d1 = 10
+d2 = 10
 
 lambda1=0   # ordering in tau
 lambda2=1E3  # orthonormality
@@ -71,10 +79,9 @@ input_dat <- list(N=N, p=p,d1=d1,d2=d2 , y=y,lambda1 = lambda1, lambda2 = lambda
 n_steps = 1E4
 ss_fit <- sampling(ss_model, data = input_dat, iter = n_steps, chains = 1, algorithm = "NUTS")
 
-# data = list("y"=y,"g"=g,"x"=x,"ss_fit"=ss_fit)
+# data = list("y"=y,"ss_fit"=ss_fit)
 # save(ss_fit,file="network1.RDa")
-
-load(file="network1.RDa")
+# load(file="network1.RDa")
 
 sampling_idx<- c((n_steps/2+1):n_steps)
 
