@@ -41,43 +41,59 @@ extractPosterior3D<-function(varname, d1,d2,d3, stan_fit){
 ss_model = stan_model(file= "ortho_tensor.stan")
 
 ##### Data ###
-# N = 20
-# d1 = 2
-# d2 = 3
-# p = 5
-# 
-# 
-# U = matrix(rnorm(N*d1),N,d1)
-# U = qr.Q(qr(U))
-# y = array(0, c(N,N,p))
-# 
-# 
-# for(l in 1:p){
-#   eta = rnorm(d1)
-#   UDU = U%*%diag(eta)%*%t(U)
-#   p_mat = 1/(1+exp(-UDU))
-#   y_l = (matrix(runif(N*N),N)<p_mat)*1
-#   Lower=lower.tri(y_l)
-#   y_l[Lower] = t(y_l)[Lower]
-#   y[,,l] = y_l
-# }
+
+if(FALSE){
+  N = 20
+  d1 = 5
+  d2 = 5
+  p = 20
+  
+  
+  U = matrix(rnorm(N*d1),N,d1)
+  U = qr.Q(qr(U))
+  y = array(0, c(N,N,p))
+  
+  
+  for(l in 1:p){
+    eta = rnorm(d1)
+    UDU = U%*%diag(eta)%*%t(U)
+    p_mat = 1/(1+exp(-UDU))
+    y_l = (matrix(runif(N*N),N)<p_mat)*1
+    Lower=lower.tri(y_l)
+    y_l[Lower] = t(y_l)[Lower]
+    y[,,l] = y_l
+  }
+
+}
 
 load("tensorA.RDa")
 y=A
 N = dim(A)[1]
 p = dim(A)[3]
 
-d1 = 10
-d2 = 10
+d1 = 5
+d2 = 5
 
 lambda1=0   # ordering in tau
 lambda2=1E3  # orthonormality
-lambda3=1E3  # positive
+lambda3=0  # positive
 
 input_dat <- list(N=N, p=p,d1=d1,d2=d2 , y=y,lambda1 = lambda1, lambda2 = lambda2,lambda3= lambda3)
 
 n_steps = 1E4
-ss_fit <- sampling(ss_model, data = input_dat, iter = n_steps, chains = 1, algorithm = "NUTS")
+eps = 0.002
+L = 20
+
+ss_fit <- sampling(ss_model, data = input_dat, iter = n_steps, chains = 1
+                   ,algorithm="HMC",
+                   control = list(adapt_engaged = F, stepsize = eps, int_time=eps*L))
+
+
+L = 10
+ss_fit <- sampling(ss_model, data = input_dat, iter = n_steps, chains = 1
+                   ,algorithm="NUTS",
+                   control = list(adapt_engaged = T,  max_treedepth=L))
+
 
 # data = list("y"=y,"ss_fit"=ss_fit)
 # save(ss_fit,file="network1.RDa")
@@ -87,8 +103,8 @@ sampling_idx<- c((n_steps/2+1):n_steps)
 
 post_U = extractPosteriorMat("U",N,d1,"ss_fit")
 
-acf(post_U[sampling_idx,1])
-acf(post_U[sampling_idx,N+1])
+acf(post_U[sampling_idx,1],lag.max = 40)
+acf(post_U[sampling_idx,N+1],lag.max = 40)
 
 ts.plot(post_U[sampling_idx,1])
 ts.plot(post_U[sampling_idx,N+2])
@@ -96,8 +112,8 @@ ts.plot(post_U[sampling_idx,N+2])
 
 post_V = extractPosteriorMat("V",p,d2,"ss_fit")
 
-acf(post_V[sampling_idx,1])
-acf(post_V[sampling_idx,N+1])
+acf(post_V[sampling_idx,1],lag.max = 40)
+acf(post_V[sampling_idx,N+1],lag.max = 40)
 
 ts.plot(post_V[sampling_idx,1])
 ts.plot(post_V[sampling_idx,N+2])
