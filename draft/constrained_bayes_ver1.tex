@@ -211,9 +211,11 @@ We now examine the second case in \eqref{exact_prior2} where ${ \int_{\mc D} \pi
 
 %distance between extrinsic and intrinsic
 \begin{theorem}
-Let $M_1= \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta$ and $M_2 = \int_{\mc R} \pi_{0,\mc R}(\theta) \mc K(\theta;\mc D)d\theta$, when $M_1>0$, the total variation distance between the measures of extrinsic and intrinsic prior
-$$||\pi_{0,\mc D}(\theta), \tilde{\pi}_{0,\mc D}(\theta) ||_{TV} = \lim_{\mc D^+\supset \mc D} \frac{\int_{\mc R} \pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D^+ } d\theta}{ \int_{\mc D^+} \pi_{0,\mc R}(\theta)d\theta }
- -  \frac{\int_{\theta  \in \mc R } \pi_{0,\mc R}(\theta) \mc K(\theta;\mc D)d\theta}{M_2}$$.
+Let $M_1(\mc D^+)= \int_{\mc D^+} \pi_{0,\mc R}(\theta)d\theta$ and $M_2 = \int_{\mc R} \pi_{0,\mc R}(\theta) \mc K(\theta;\mc D)d\theta$, with $\mc D^+$ chosen such that $M_1(\mc D^+)>0$ and $M_1(\mc D^+)<M_2$, the total variation distance between the measures of extrinsic and intrinsic prior
+
+$$||\pi_{0,\mc D}(\theta), \tilde{\pi}_{0,\mc D}(\theta) ||_{TV} = 1 - \frac{\lim_{\mc D^+\supset \mc D}\int_{\theta  \in \mc D^+} \pi_{0,\mc R}(\theta) \mc K(\theta;\mc D)d\theta}{M_2} = \frac{\lim_{\mc D^+\supset \mc D}\int_{\theta  \in \mc R \setminus \mc D^+} \pi_{0,\mc R}(\theta) \mc K(\theta;\mc D)d\theta}{M_2}$$.
+
+
 \end{theorem}
 
 \subsection{Selection of Kernel Hyper-Parameters}
