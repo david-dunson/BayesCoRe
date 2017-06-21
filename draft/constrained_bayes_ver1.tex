@@ -276,7 +276,13 @@ We now further examine this via a view of computing efficiency. Since each itera
 $$\epsilon^* =  \underset{\epsilon: \epsilon \le \epsilon_{max}}{\arg\inf}\inf_{L}\{L: \gamma \left(\theta^{(0)}, \theta^{(\epsilon L)} \right) \le \gamma^*   \},$$
 where $\epsilon_{max}$ is the stability bound for the integrator step size. Given fixed integrator time $\epsilon L$, to minimize $L$, often the optimality occurs when $\epsilon\approx \epsilon_{max}$.
 
-The stability bound $\epsilon_{max}$ can be influenced by the specification in extrinsic prior. The stability bound is roughly determined by the width of distribution in the most constrained direction  \citep{neal2011mcmc}. To provide an intuition, we focus on one-step update $L=1$. Each update in leap-frog algorithm corresponds to $\theta^{(\epsilon)}=\theta^{(0)} + \epsilon  p^{(0)} - \epsilon^2/2  \frac{\partial U}{\partial  \theta } = \theta^{(0)} + \varepsilon  p^{(0)} + O(\epsilon^2)$. If the extrinsic posterior has support too narrow along certain direction, a random move in $\varepsilon  p(0)$ can end outside the support with $U(\theta^{(\epsilon)})=\infty$. This would violate the condition that discrete integrator approximately preserves $U(\theta^{(\varepsilon)})+M(p^{(\varepsilon)}) = U(\theta^{(0)})+M(p^{(0)})< \infty$.
+The stability bound $\epsilon_{max}$ can be influenced by the specification in extrinsic prior. The stability bound is roughly determined by the width of support in the most constrained direction  \citep{neal2011mcmc}. Formally, letting $\mc S_{\epsilon}$ be the contour region of the support $\mc S_{\epsilon}=\{x: \pi(x)\in (0,\epsilon)\}$ with $\pi(x)$ as the density, the minimum support width is:
+
+$$w_\pi = \underset{{x_1\in \mc S_\epsilon}}{\inf}\underset{x_2\in \mc S_\epsilon}{\sup} \{ d(x_1, x_2): \pi(\alpha x_1 + (1-\alpha)x_2)>0 \text{ for } \alpha \in [0,1]  \}$$
+where $d(.,.)$ is a metric, and is Eucledean distance in continous HMC.
+
+
+To provide an intuition for why $\epsilon_{max}$ depends on $w_\pi$, we focus on one-step update $L=1$. Each update in leap-frog algorithm corresponds to $\theta^{(\epsilon)}=\theta^{(0)} + \epsilon  p^{(0)} - \epsilon^2/2  \frac{\partial U}{\partial  \theta } = \theta^{(0)} + \varepsilon  p^{(0)} + O(\epsilon^2)$. If $\epsilon \gg w_\pi$, a random move in $\varepsilon  p(0)$ can end outside the support with $U(\theta^{(\epsilon)})=\infty$. This would violate the condition that discrete integrator approximately preserves $U(\theta^{(\varepsilon)})+M(p^{(\varepsilon)}) = U(\theta^{(0)})+M(p^{(0)})< \infty$.
 
 Therefore to efficiently utilize HMC, if the constrained space $\mc D$ has narrow support via certain direction in its embedded space $\mc R$, one needs to create more relaxation in extrinsic prior. For example, one equality constraint $x+y+z=1$ in $\mathbb{R}^3$ creates a hyperplane. Extrinsic prior with $\exp(- \frac{|x+y+z-1|}{\lambda})$ relaxes the support along the normal vector of the plane, creating a slab with some thickness greater than $0$. To have decent $\epsilon_{max}$, one needs to avoid choosing $\lambda$ too small. Empirically, we found $\lambda= 10^{-3}$ is often a good value for such constraint.
 
@@ -285,82 +291,107 @@ Therefore to efficiently utilize HMC, if the constrained space $\mc D$ has narro
 
 We now use examples to illustrate the properties of extrisinc priors and their utility in complex real data application.
 
-We first illustrate the specification of tuning parameter and its effect in computational efficiency.  Consider data $y_i\in \mathbb{R}^2$ for $i=1,\ldots,n$  that are noisy realization from a unit circle:
+\subsection{Simulations}
 
-$$y_i\sim \No(\theta_i, I_2\sigma^2),\text{ with } \theta_i'\theta_i=1,$$
-where $\theta_i \in \mc V(2,1)$, in a $(2,1)$--Stiefel manifold, is assigned a von Mises--Fisher prior $\pi_{0,\mc D}(\theta) \propto \exp(F'\theta_i)$ with $\theta_i'\theta_i =1$. In generating data, we use $F=(1,1)$ to induce $\theta_i$ widely spreaded over the manifold and $\sigma^2=0.1^2$. For posterior sampling, we set $F$ to its oracle value and $\sigma^2$ unknown but associated with a inverse-Gamma prior $\text{IG}(2,1)$. To allow extrinsic posterior sampling, we use extrinsic prior $\tilde\pi_{0,\mc D}(\theta)= \exp(F'\theta_i) \exp(-\frac{|\theta'\theta -1|}{\lambda})$.
+{\bf Example 1: Unit Circle}
 
-Geometrically, this prior expands the posterior support from a circle to a ring, with its width $|\theta'\theta -1|$ affected by $\lambda$.
+When the constrained support in $\mc D$ has small minimum support width $w_\pi$, it limits the stability bound. Therefore it is important to allow some support expansion to the corresponding constraint. We first illustrate such case via estimation on a unit circle. The circle has $w_\pi =0$ and therefore needs some support expansion to run HMC. 
+
+
+Consider data $y_i\in \mathbb{R}^2$ for $i=1,\ldots,n$  that are noisy realization from one point on unit circle:
+
+$$y_i\sim \No(\theta, I_2\sigma^2),\text{ with } \theta'\theta=1,$$
+where $\theta \in \mc V(2,1)$, a $(2,1)$--Stiefel manifold, is assigned a von Mises--Fisher prior $\pi_{0,\mc D}(\theta) \propto \exp(F'\theta_i)$.
+
+ To generate data, we use $\theta= (\sqrt 3/2, 1/2)$, $\sigma^2=0.5^2$ and small $n=5$, in order to induce widely spread-out posterior $\theta$ on the manifold. For posterior sampling, we use $F=(1,1)$ to induce a weakly informative prior for $\theta$ and an inverse-Gamma prior $\text{IG}(2,1)$ for $\sigma^2$ . To allow extrinsic posterior sampling, we use $v(\theta)=|\theta'\theta -1|$ as the distance to constrained space and extrinsic prior $\tilde\pi_{0,\mc D}(\theta)= \exp(F'\theta_i) \exp(-\frac{|\theta'\theta -1|}{\lambda})$.
+
+We test three different tuning parameters  $\lambda = 0.001$, $0.0001$ and $0.00001$. We run each algorithm for $20,000$ steps, with first $10,000$ discarded. To compare the computing efficiency, we restrict the maximum leap-frog steps $L$ to be $100$ and visualize how much space each algorithm can explore within one HMC iteration. Figure~\ref{unit_circle}(a) plots the path of $L=100$ leap-frog steps. Larger $\lambda$ leads to wider support expansion and larger stability bound $\epsilon_{max}$. This makes $\theta^{(\epsilon L)}$  much less correlated with $\theta^{(0)}$ at each iteration, measured by autocorrelation (ACF) based on the posterior sample of $\theta_1$ (Figure~\ref{unit_circle}(b)). The posterior distribution of the distance $v(\theta)$ is small for all three settings (Figure~\ref{unit_circle}(c)), with smaller $\lambda$ associated with smaller $v(\theta)$
 
 \begin{figure}[H]
- \centering
-    \includegraphics[width=0.8\textwidth]{unit_circle_violation}
-  \includegraphics[width=0.8\textwidth]{unit_circle_100steps}
- % \includegraphics[width=0.8\textwidth]{unit_circle_path}
- \includegraphics[width=0.8\textwidth]{unit_circle_acf}
-\caption{Sampling posterior from a von Mises--Fisher distribution on a unit circle, using HMC with extrinc prior under $\lambda=10^3,10^4,10^5$. Row $1$ shows the posterior distribution of the constraint relaxation $|\theta'\theta -1|$; Row $2$ shows the path of $100$ leap-frog steps; Row $3$ shows the autocorrelation plot (ACF). Large $\lambda$ gives very small constraint relaxation, but suffers from slow mixing due to inefficient local update; smaller $\lambda$ increases the relaxation but results in excellent mixing.}
+\centering
+   \begin{subfigure}[b]{0.8\textwidth}
+    \includegraphics[width=1\textwidth]{unit_circle_100steps}
+    \caption{Path of 100 itegrator steps in one HMC iteraton}
+	\end{subfigure}
+    \begin{subfigure}[b]{0.8\textwidth}
+     \includegraphics[width=1\textwidth]{unit_circle_acf}
+     \caption{Autocorrelation of $\theta_1$}
+     	\end{subfigure}
+    \begin{subfigure}[b]{0.8\textwidth}
+    \includegraphics[width=1\textwidth]{unit_circle_violation}
+         \caption{Posterior distribution of  $|\theta'\theta-1|$}
+    	\end{subfigure}
+\caption{HMC Sampling on a unit circle, using extrinc prior with $\mc K(\theta)=\exp(-\frac{|\theta'\theta -1|}{\lambda})$, with $\lambda=0.001$, $0.0001$ and $0.00001$. Panel (a) shows the larger relaxation in the narrowest direction of support (orthogonal vector to the circle) can result in more efficient space exploration within $100$ leap-frog steps; panel (b) shows the autocorrelation of the posterior sample; panel (c) shows the posterior distribution of the distance to the constraint.}
 \label{unit_circle}
 \end{figure}
 
+{\bf Example 2: Linear Regression Under Inequality Constraint}
 
-We tested three different values of $\lambda = 10^3,10^4,10^5$. For each $\lambda$, we ran HMC for $10,000$ iterations, with $L=100$ leap-frog steps in each iteration. 
-We set $\Sigma= \diag(1,1)$ in generating velocity $p$. During the initial $2,000$ iterations, the leap-frog step size $\varepsilon$ is tuned for an acceptance rate close to $0.8$, then it is fixed during the remaining part of Markov chain. The last $5,000$ iterations are used as posterior samples. Figure~\ref{unit_circle} plots the posterior distribution of constraint relaxation $|\theta'\theta -1|$, the sampling path and the autocorrelation function (ACF) for each Markov chain. Very large $\lambda=10^5$ has much less constraint relaxation; however, due to the small ring width, the Hamiltonian dynamics has to use small $\varepsilon$ and can only explore local space for each $100$ time steps. This results in a very slow mixing (large autocorrelation even at 40 lags). On the other hand, smaller $\lambda=10^3$ has slightly larger constraint relaxation, but allows much more efficient exploration of the space and excellent mixing performance. In general, we find that $\lambda=10^3$ is a good empirical value for all the equality constraints used in this paper.
+If the support on constrained space $\mc D$ does not have small minimum support width $w_\pi$, one can use extrinsic prior with almost no relaxation. This applies a large class of inequality constraints that has wide support. To illustrate, consider a linear regression
 
+$$y_i \sim \No (x_i \theta, \sigma^2) \text{ for } i=1,\ldots n, \quad\text{ with } A\theta \le c$$
+where both $\theta$ is a $p$-dimensional vector; $d$ many linear equalities are defined by $d\times p$ matrix  $A$ and a $d$-dimensional vector $c$. The inequalities form one or multiple polyhedrons in $\mathbb R^p$, with $\mc D$ as the interior or exterior space.
 
-In this section, we demonstrate the utility of extrinsic prior via three examples. %Through the simple implementation of equality and inequality in the prior, our approach not only works well with conventional constrained model such as probability simplex, but also allows low-cost inclusion of additional constraints, which are useful to improve computational efficiency.
+We consider simple bivariate case $\theta \in (0,1)^2$ subject to $\theta_1+\theta_2\le 1$, making $\mc D$ a triangle. To simulate data, we use $\sigma^2=0.1^2$, $x_i\sim \No([0,0]',I)$ for $i=1,\ldots,n$. We then generate two datasets with two different sets of $(\theta,n)$. In the first set, we use $\theta=[0.3,0.3]'$ with $n=10$, so that the posterior has wide spread in the constrained space; in the second set, we use $\theta=[0.7,0.3]'$ with $n=10^4$ so that the posterior is concentrated near the boundary. In both cases, we assign weakly informative prior for $\theta\sim \No([0.5, 0.5]',I10^2)$ and $\sigma^2\sim IG(2,1)$.
 
-{\bf Example 1: Ordered Dirichlet Prior in Mixture Model}
+Unlike the unit circle example, the constrained space $\mc D$ has large $w_\pi$. This allows us to choose $\lambda=10^{-8}$ for $\mc K(\theta)=\exp( - \frac{|\theta_1+\theta_2-1|}{\lambda})$ in the extrinsic prior, leading to almost no constraint relaxation. We collect $10,000$ posterior samples efficiently via HMC. Figure~\ref{linear_inequality} plots the posterior sample and its contour. There is no posterior outside $\mc D$ due to the small $\lambda$.
 
-We first consider a simplex modeling problem, where a $(J-1)$--simplex $w=\{w_1,\ldots w_J\}$ has all $w_j\in (0,1)$ and $\sum_{j=1}^J w_j=1$. We illustrate its use via a normal mixture model with mixture means and common variance, for data $y_i\in \bb R^d$ indexed by $i=1,\ldots,n$:
+\begin{figure}[H]
+   \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=1\textwidth]{linear_inequal_1}
+    \caption{$n=10$ with true $\theta=[0.3,0.3]'$}
+	\end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+     \includegraphics[width=1\textwidth]{linear_inequal_2}
+     \caption{$n=10^4$ with true $\theta=[0.7,0.3]'$}
+     	\end{subfigure}
+\caption{Extrinsic posterior distribution of the normal mean $\theta$, with approximation to constraint $\theta_1+\theta_2\le 1$. Posterior is either loosely distributed near the center (panel (a)) or concentrated on the boundary (panel (b)) of the region. The extrinsic posterior has no samples outside of the region due to almost no relaxation.}
+\label{linear_inequality}
+\end{figure}
 
-\begin{equation*}
-\begin{aligned}
-y_i &\stackrel{indep}{\sim} \No(\mu_i,\Sigma),\\
-\mu_i &\stackrel{iid}{\sim} G,\\
-G(.) & = \sum_{j=1}^{J} w_j \delta_{\mu_j}(.),
-\end{aligned}
-\end{equation*}
-which is associated with likelihood
-\begin{equation*}
-\begin{aligned}
-L(y) = |\Sigma|^{-n/2}\prod_{i=1}^n \sum_{j=1}^{J} w_j \exp\left(-\frac{1}{2}{ (y_i-\mu_j)'\Sigma^{-1}(y_i-\mu_j)}\right).
-\end{aligned}
-\end{equation*}
+\subsection{Applications}
 
-Standard practice assigns Dirichlet distribution on the simplex in finite mixture $Dir(\alpha)$ and Dirichlet process $DP(\alpha)$ for infinite mixture when $J$ is unknown. For simplicity, we focus on finite mixture case with $J$ finite and known. The prior $Dir(\alpha)$ can be viewed as a prior $\pi_{0, \mc R}(w) = \prod_{j=1}^J w_j^{\alpha-1}$ with $\mc R = (0,1)^J$, under additional hard constrained of $1-$norm equality:
+We now illustrate the utilitiy of extrinsic prior in two applications. 
 
-\begin{equation}
-\begin{aligned}
-\label{canonical_dp_prior}
-\pi_{0, \mc D}(w) \propto \prod_{j=1}^J w_j^{\alpha-1} \1_{\sum_{j=1}^J w_j=1}
-\end{aligned}
-\end{equation}
+{\bf Application 1: Ordered Dirichlet Prior}
 
-This can be easily approximated with extrinsic prior. However, one known issue for mixture modeling under canonical Dirichlet prior is the label-switching problem. With parameter $\{\mu_j,w_j\}$ indexed by $j=1,\ldots,J$, due to exchangability, one can switch any two $j$ and $j'$ without changing likelihood. It is a controversial topic whether the occurrence of label-switching or the lack thereof is more ideal (see review in \cite{jasra2005markov}) in general; but in the case that posterior distribution is symmetric about any permutation in $j$'s, as our normal mixture example, sampling over all permutations of $j$ is redundant. Therefore, it is rather useful to avoid label-switching and have convergence in such cases. Unfortunately, sometimes the switching issue can be impossible to avoid, even with very local update in Gibbs sampling. This is because when sample size $n$ is small, posterior variances of $\mu_j$'s can be quite large, with significant overlap among their high posterior regions. In early work, \cite{diebolt1994estimation} suggested ordering in $\mu_j$'s, but it is not clear how it would work with multi-dimensional $\mu_j\in \bb R^d$ with $d\ge 2$.
+We first use ordered simplex in finite mixture model. A $(J-1)$--simplex is a vector $w=\{w_1,\ldots w_J\}$ with $1> w_1 \ge \ldots \ge w_J > 0$ and $\sum_{j=1}^J w_j=1$.
 
-Observing that each $w_j$ is one-dimensional, we apply order constraint on $w_1 \ge w_2 \ge \ldots \ge w_J$, yielding an ordered Dirichlet prior:
+For probablity simplex, standard practice assigns Dirichlet prior $Dir(\alpha)$, with $
+\pi_{0, \mc D}(w) = \prod_{j=1}^J w_j^{\alpha-1} \1_{\sum_{j=1}^J w_j=1}$. However, this does not accomodate ordering; therefore, the index $j$ is exchangeable and permutating $j$'s does not change the density. This commonly leads to label-switching problem in mixture model estimation (reviewed in \cite{jasra2005markov}).
+
+Imposing order constraint yields an ordered Dirichlet prior:
 
  \begin{equation}
 \begin{aligned}
 \label{ordered_dp_prior}
-\pi_{0, \mc D}(w_1,\ldots w_J) \propto \prod_{j=1}^J w_j^{\alpha-1} \cdot \1_{\sum_{j=1}^J w_j=1} \cdot  \prod_{j=1}^{J-1}\1_{w_j \ge w_{j+1}}.
+\pi_{0, \mc D}(w_1,\ldots w_J) = \prod_{j=1}^J w_j^{\alpha-1} \cdot \1_{\sum_{j=1}^J w_j=1} \cdot  \prod_{j=1}^{J-1}\1_{w_j \ge w_{j+1}}.
 \end{aligned}
 \end{equation}
-where $w_j\in (0,1)$. Unlike early post-hoc relabeling algorithm \citep{stephens2000dealing}, we remove exchangability directly to reduce label-switching. Strictly speaking, label-switching could still happen when any two $w_j$'s are very close; nevertheless, this help prevent label-switching between large and small components.
+where $w_j\in (0,1)$ for $j=1,\ldots,J$. The ordered Dirichlet prior can be approximated by extrinsic prior:
 
-The ordered Dirichlet no longer has closed-form posterior, however it is easy to approximately estimate with the help of extrinsic prior:
 
  \begin{equation*}
 \begin{aligned}
-\pi_{0,\mc R}(w)\cdot \mc K(w) \propto \prod_{j=1}^J w_j^{\alpha-1} \cdot \prod_{j=1}^{J-1} K_{1}{\left(( w_{j+1} - w_j )_+\right)} \cdot K_2 ( |{\sum_{j=1}^J w_j - 1}|)
+\tilde\pi_{0, \mc D}(w_1,\ldots w_J) = \prod_{j=1}^J w_j^{\alpha-1} \cdot  \exp ( -  \frac{ \sum_{j=1}^J ( w_{j+1} - w_j )_+}{\lambda_1})
+ \exp ( -  \frac{|{\sum_{j=1}^J w_j - 1}|}{\lambda_2})
 \end{aligned}
 \end{equation*}
-where $K_{k}(x)=\exp(- \lambda_k x^2) \1_{x<4/\sqrt{2\lambda_k}}$ for  $k=1,2$. We use $\lambda_1 = 10^6$ to induce almost no relaxation on the ordering and $\lambda_2 = 10^3$ to allow efficient mixing in embedding a simplex in $\mathbb{R}^J$. For comparison, we also test with $\lambda_1=0$ to remove the order constraint and allow HMC to run on a canonical Dirichlet prior in \eqref{canonical_dp_prior}.
 
-We generate $n=100$ samples from $3$ components with true $\{w_1,w_2,w_3\}=\{0.6,0.3,0.1\}$, with corresponding two-dimensional means $\{\mu_1,\mu_2,\mu_3\} = \{[1,5], [3,3], [3,5]\}$ and identity covariance $\Sigma = I_2$. We assign informative priors $\No(0,10 I_2)$ for each $\mu_j$ and inverse Gamma prior for the digonal element in $\Sigma=\diag(\sigma_1^2,\sigma_2^2)$ with $\sigma^2_1, \sigma^2_2\sim IG(2,1)$.  
+We now adopt this simplex distribution in a normal mixture model with mixture means and common variance, for data $y_i\in \bb R^d$ indexed by $i=1,\ldots,n$:
 
-Figure~\ref{dirichlet} shows the contour of true posterior density of $\mu_j$'s and the traceplot of $w_j$'s in three approaches: standard Gibbs sampling with augmented component assignment \citep{diebolt1994estimation} under canonical prior \eqref{canonical_dp_prior}, HMC using extrinsic prior associated under canonical  prior \eqref{canonical_dp_prior} and and HMC using extrinsic prior under ordered prior \eqref{ordered_dp_prior}. Each approach runs $10,000$ iterations with first $5,000$ discarded as burn-in. For the posterior extrinsic collected under extrinsic prior, a simple projection $P(w^*)=w^*/||w^*||_1$ is used as proposal in M-H correction, yielding acceptance rate of $0.95$. Due to small sample size and relatively overlap of means, significant label-switching is shown in both Gibbs and HMC under canonical Dirichlet prior; while HMC with ordered Dirichlet prior does not suffer this issue.
+\begin{equation*}
+\begin{aligned}
+y_i &\stackrel{indep}{\sim} \No(\mu_i,\Sigma),\qquad
+\mu_i &\stackrel{iid}{\sim} G,\qquad
+G(.) & = \sum_{j=1}^{J} w_j \delta_{\mu_j}(.),
+\end{aligned}
+\end{equation*}
+where $\delta_{b}(a)=1$ if $a=b$ and $0$ otherwise.
 
+We generate $n=100$ samples from $3$ components with true $\{w_1,w_2,w_3\}=\{0.6,0.3,0.1\}$ and two-dimensional means $\{\mu_1,\mu_2,\mu_3\} = \{[1,5], [3,3], [3,5]\}$ with identity covariance $\Sigma = I_2$. We assign weakly informative priors $\No(0,10 I_2)$ for each $\mu_j$ and inverse Gamma prior for the digonal element in $\Sigma=\diag(\sigma_1^2,\sigma_2^2)$ with $\sigma^2_1, \sigma^2_2\sim IG(2,1)$. We use $\lambda_1 = 10^{-6}$ to induce almost no relaxation on the ordering and $\lambda_2 = 10^{-3}$ to allow efficient mixing in embedding a simplex in $(0,1)^J$. To illustrate the benefit of ordered Dirichlet, we also test Gibbs sampling and extrinsic prior method on canonical Dirichlet prior without order constraint.
+
+Figure~\ref{dirichlet}(a) shows the contour of true posterior density of $\mu_j$'s. The small component sample size leads to large overlap among the posterior of $\mu_j$'s, generting in significant label-switching in both Gibbs and HMC under canonical Dirichlet prior. Figure~\ref{dirichlet}(b,c,d) show the traceplot of $w$. Ordered Dirchlet has clearly better convergence due to the ordering.
 
 
 \begin{figure}[H]
@@ -377,71 +408,60 @@ Figure~\ref{dirichlet} shows the contour of true posterior density of $\mu_j$'s 
     \end{subfigure}
        \begin{subfigure}[b]{0.32\textwidth}
   \includegraphics[width=1\textwidth]{fmm_w_hmc_unordered.pdf}
-    \caption{HMC sampling under canonical Dirichlet, using extrinsic prior}
+    \caption{HMC sampling under canonical Dirichlet, with extrinsic prior}
       \end{subfigure}
        \begin{subfigure}[b]{0.32\textwidth}
  \includegraphics[width=1\textwidth]{fmm_w_hmc.pdf}
-     \caption{HMC sampling under ordered Dirichlet, using extrinsic prior}
+     \caption{HMC sampling under ordered Dirichlet, with extrinsic prior}
      \end{subfigure}
-\caption{Contour of the posterior density of component means and traceplot of the posterior sample for the component weights, in a 3-component normal mixture model. Panel (a) shows that there is significant overlap among component means, creating label-switching issues in both Gibbs sampling (b) and HMC sampling using canonical prior (c). The ordered Dirichlet prior, estimated under extrinsic prior and correcting projection, significantly reducing label-switching (d).}
+\caption{Contour of the posterior density of component means and traceplot of the posterior sample for the component weights $w$, in a 3-component normal mixture model. Panel (a) shows that there is significant overlap among component means $\mu_j$'s, creating label-switching issues in both Gibbs sampling (b) and HMC using canonical prior (c). The ordered Dirichlet prior significantly reducing label-switching (d).}
 \label{dirichlet}
 \end{figure}
 
 
-%{\bf Example 2: Orthonormal Gaussian Processes in Functional Principle Component Analysis}
-%
-%\leo{There are some issues with this model. Skip it for now.}
-%
-%We now consider functional principle component analysis. Letting $x_i$ be the input for $i=1,\ldots,n$ in functions $f_j(x_i)$ for $j=1,\ldots,p$. We observe functional data $y_{i,j}$ as noisy realizations of $f_j(x_i)$. Commonly, $p$ is very large and it is useful to view the functions as linear combination of $d$ functional factors $g_k$.
-%
-%\begin{equation*}
-%\begin{aligned}
-%y_{ij} & = f_j(x_i) + \epsilon_{ij},\\
-% f_j(x_i) & = \sum_{k=1}^{d} \eta_{jk} g_k(x_i),\\
-% \left [ g_k(x_1) , \ldots , g_k(x_n) \right] &\sim \No (0, \Sigma_k)\\
-%\Sigma_{k,(i,i')} &= \phi_k\exp( - \frac{||x_i-x_{i'}||^2}{2\rho_k^2})
-%\end{aligned}
-%\end{equation*}
-%for $k=1,\ldots d$ with $d<p$, and $\epsilon_{ij}\sim \No(0,\sigma^2)$ is the random measurement error; $\Sigma_{k,(i,i')}$ is the $(i,i')$th element in matrix $\Sigma_k$. Using matrix notation $G=[g_1, \ldots, g_d]$ and $\eta= [\eta_{.1},\ldots,\eta_{.d}]$, the $n\times p$ function matrix $[f_j(x_i)]_{ij}$ can be written as $G \eta'$. We utilize a squared exponential Gaussian process to model each latent factor $g_k$.
-%
-%We first assign a shrinkage prior on loadings $\eta_{jk}\sim \No(0,\tau_k)$, $\tau_k \sim IG(aq^{3(k-1)},q^{2(k-1)})$  with $q>1$. This prior ensures the shrinkage grows stronger as $k$ increases \citep{bhattacharya2011sparse}, avoiding arbitrary specification of $d$ and exchangability in permuting $k$. However, $G$ and $\eta$ are still not identifiable. Any orthonormal matrix $P$ that $P'P = I_d$ can produce another set of factors $G^*= GP'$ and loadings $\eta^* = P\eta$. Since this projection $P$ is associated with rotation, scaling or column-wise sign change, we apply the following constraint on $G$:
-%
-%\begin{equation*}
-%\begin{aligned}
-% \sum_{i=1}^n g_k(x_i) g_{k'}(x_i) &= \left\{ \begin{array}{cc}1 \text{ if } k=k' \\ 0 \text{ if } k \neq k'\end{array}\right. \\
-% g_k(x_1) \ge 0
-%<<<<<<< HEAD
-%\end{aligned}
-%\end{equation*}
-%for $k=1,\ldots d$. The orthonormailty restricts rotation and scaling and $g_k(x_1)\ge 0$ restricts column-wise sign change. 
-%
-%As the result, these constraints create a Gaussian process prior on a Stiefel manifold $\mc V(N,d)$. To our best knowledge, this is the first application of Gaussian process in this manifold. We approximate these constraints with extrinsic prior:
-%
-% \begin{equation*}
-%\begin{aligned}
-%\pi_{\mc K}(G) \propto   \prod_{k=1}^{d} K_{1}{\left((-g_k(x_1) )_+\right)} \cdot \prod_{k'=1}^{d}\prod_{k=1}^{k'} K_2 ( |\sum_{i=1}^n g_k(x_i) g_{k'}(x_i) - \delta_{k,k'}|)
-%\end{aligned}
-%\end{equation*}
-%where $K_{k}(x)=\exp(- \lambda_k x^2) \1_{x<4/\sqrt{2\lambda_k}}$ for  $k=1,2$. We use $\lambda_1 = 10^6$ to strongly enforce the sign of $g_k(x_1)$ to be positive, while $\lambda_2 = 10^3$ to allow efficient mixing in embedding Stiefel manifold in $\mathbb{R}^{N\times d}$. To compare with unconstrained Gaussian processes for $g_k$'s, we also test with $\lambda_1=0$ and $\lambda_2=0$.
-%
-%We generate $n=50$ inputs $x_i\sim \text{U}(0,1)$ from uniform $(0,1)$ and three smooth functions $g^*_1(x)= \sin(16 x)/x$, $g^*_2(x)= \sin(25 x)\cdot x$ and $g^*_3(x)= \cos(20 x)/x$. The functions are combined via $f_j(x_i)=\sum_{i=1}^3 \eta^*_{jk} g^*_k(x_i)$ with $\eta^*_{jk}\stackrel{iid}{\sim} \No(0,1)$ for $j=1,\ldots,20$ and $i=1,\ldots,n$. We add random noise to create a $50\times 20$ data points $y_{ij} \sim \No(f_j(x_i),0.1^2)$, and randomly remove $20\%$ of data to mimic the unbalanced data in real world. We set $a=q=2$ in the shrinkage prior for all $\eta_{jk}$'s, uniform prior $\text{U}(0,20)$ for all $\rho_k$'s, $\phi_k$'s and $\sigma^2$.
+{\bf Application 2: Orthonormal Tucker Factorization of Multiple Undirected Networks}
 
-{\bf Example 2: Orthonormal Tucker Factorization in Multiple Network Analysis}
+We now consider a real data application in brain network analysis. The brain connectivity structures are obtained in the data set KKI-42 (Landman et al. 2011), which consists of $21$ healthy subjects without any history of neurological disease. Each subject has two brain network observations from scan--rescan, yielding a total of n = 42. Each observation is a $V\times V$ symmetric network $A_i$, recorded as adjacency matrix $A_i$ for $i=1,\ldots,n$. For the $i$th matrix $A_i$, $A_{i,k,l} \in \{0,1\}$ is element on the $k$th row and $l$th column of $A_i$, with $A_{i,k,l}=1$ indicating there is an connection betwen $k$th and $l$th region, $A_{i,k,l}=0$ if there is no connection. The regions are constructed via the Desikan et al. (2006) atlas, for a total of V = 68 nodes.
 
-We now consider another application of constrained model in network analysis. What a a
+The ambient dimension of observation is large $V(V-1)/2=2,278$ compared to sample size $n$, with potential observational error in recording connectivity. The diagonal in each $A_{i}$ is missing due to the lack of meaning in self-connectivity in brain network. These facts merit using a low-rank Bayesian approach.
+
+% We first define an matrix operator that extracts its lower triangluar elements, for $V\times V$ matrix, $L(X)=\{X_{2,1}, X_{3,1}, \ldots X_{V,1}, X_{3,2}, X_{4,2}, \ldots X_{V,2},\ldots, X_{V,V-1}\}$. 
+
+We consider a symmetric Bernoulli Tucker decomposition model:
 
 
  \begin{equation*}
 \begin{aligned}
-& A_i \sim \text{Bern}( \frac{1}{1+ \exp(- \psi_i)})\\
-& \psi_i = UD_iU \\
-& D_i = \diag(d_{i1},d_{i2},d_{i3}) \\
-& vec(U) \sim N (vec (X), \sigma^2)\\
+& A_{i,k,l} \sim \text{Bern}( \frac{1}{1+ \exp(-\psi_{i,k,l}- Z_{k,l})})\\
+& \psi_{i,k,l} = \sum_{r_3=1}^{d1}\sum_{r_2=1}^{d1}\sum_{r_1=1}^{d3} D_{r_1,r_2,r_3} W_{i,r_1} U_{k,r_2} U_{l,r_3}  \\
 \end{aligned}
 \end{equation*}
-for $k=1,\ldots d$. The orthonormailty restricts rotation and scaling and $g_k(x_1)\ge 0$ restricts column-wise sign change. 
+for $k>l$, $k=2,\ldots, V$, $i=1,\ldots,n$; $U$ is $V\times d_1$ matrix, $W$ is $n\times d_2$ matrix. The symmetry of each network is induced by using $U$ twice in the decomposition. The core tensor $D$ is a $d_1\times d_1\times d_3$ array, whose entries correpond to the interaction between different factor; $D_{r_1,k,l}=D_{r_1,l,k}$ for all $r_1,k,l$. The  $V\times V$ matrix $Z$ is almost unstructural except symmetric $Z_{k,l}=Z_{l,k}$, which is commonly used to induce low-rank in the decomposition \citep{durante2016nonparametric}.
 
+The Tucker decomposition is more flexible than another routinely used decomposition, namely parallel factor analysis (PARAFAC). The PARAFAC assumes all ranks are equal and the core tensor $D$ only has non-zero value when all its sub-indices are equal. In this case, PARAFAC would assume $d_1=d_3$ and $D_{r_1,r_2,r_3}=0$ unless $r_1=r_2=r_3$. The additional flexibility in the Tucker is appealing, as one would utilize the varying rank over different sub-direction (mode) of the tensor. On the other hand, a completely unconstrained Tucker decomposition is not identifiable in the matrices and core tensor, due to rotation and scaling. For example, one can multiply a $d_1\times d_1$ orthonormal matrix $R$, to $U$ and obtain $U^*=UR$ and each slice of $D_{r_1,.,}$ to obtain $D^*_{r_1,.,}=R'D_{r_1,.,}R$. This leaves the likelihood unchanged.
 
+Therefore, we consider applying some constraint on the Tucker decomposition, while still maintaining its varying rank property over different modes. Motivated by high-order singular value decomposition, we first impose orthonormality constraints $U'U=I_{d_1}$ and $W'W=I_{d_3}$ and diagonal strucutre for all $D_{r_1,.,.}$, with $D_{r_1,r_2,r_3}=0$ unless $r_2=r_3$.
+% We further force the first slice of the core $D_{1,.,.}$ to be diagonal, with $D_{1,r_2,r_3}=0$ unless $r_2=r_3$. This condition is set based on the observation that one can obtain a set of $U^*D^*_{r_i,.,.}U^{*'}$ for $r_i=1,\ldots,d_3$ and then rotate $P$ to make the first slice diagonal, where  $D^*_{1,.,.}=PD_{1,.,.}P'$. Fixing the first slice to diagonal remove such rotation without affecting flexibility.
+
+We assign normal prior for $U_{k,r_2}\sim \No(0,\phi_{1})$, $W_{i,r_1}\sim \No(0,\phi_2)$, $Z_{k,l}\sim \No(0,\phi_3)$, $D_{r_1,r_2,r_2}\sim No(0, \phi_{4,r_1,r_2})$ for all $i,k,l,r_1,r_2$, and inverse-Gamma prior $\phi_1,\phi_2,\phi_3\stackrel{indep}{\sim} \text{IG}(2,1)$. For $\phi_{4,r_1,r_2}$, we assign multiplicative inverse gamma distribution \citep{bhattacharya2011sparse} $\phi_{4,r_1,r_2}= \prod_{m_1=1}^{r_1} \nu_{1,m_1} \prod_{m_2=1}^{r_2}  \nu_{2,m_2}$ with $\nu_{1,1},\nu_{2,1} \stackrel{indep}{\sim} \text{IG}(a_1,1)$ and $\nu_{1,m},\nu_{2,m}\stackrel{indep}{\sim} \text{IG}(a_2,1)$ for $m\ge 2$. This induces increasing concentration towards
+zero as $r_1,r_2$ increase, allowing adaptive choosing of latent dimensions. We set $a_1=a_2=5$ in this application.
+
+To allow estimation for model with orthonormality constraint, we use extrinsic prior with $\mc K(\theta) = \exp( - \frac{|U'U-I_{d_1}| + |W'W-I_{d_2}|  }{\lambda})$ and set $\lambda=10^{-3}$. To compare, we also test with the same model configuration without the orthonormality constraint, and refer to it as unconstrained model. We run both models for $10,000$ steps and discard the first $5,000$ steps. Figure~\ref{tucker} plots the traceplot and autocorrelation for matrix $U$. Unconstrained model has severe convergence issue due to the non-identifiability, while constrained model converges and show low autocorrelation for all the parameters.
+
+\begin{figure}[H]
+   \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=1\textwidth]{tucker_traceplot.pdf}
+    \caption{Traceplot of $U_{1,1}$.}
+    \end{subfigure}
+    \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=1\textwidth]{tucker_acf.pdf}
+    \caption{ACF of all elements in $U$}
+    \end{subfigure}
+\caption{Contour of the posterior density of component means and traceplot of the posterior sample for the component weights $w$, in a 3-component normal mixture model. Panel (a) shows that there is significant overlap among component means $\mu_j$'s, creating label-switching issues in both Gibbs sampling (b) and HMC using canonical prior (c). The ordered Dirichlet prior significantly reducing label-switching (d).}
+\label{tucker}
+\end{figure}
+
+Ignoring those $D_{r_1,r_2,r_3}$ corresponding to $\phi_{4,r_1,r_2}<10^{-3}$, the multiplicative prior results in effective $\tilde{d}_1=5$ and $\tilde{d}_3=3$ dimensions.
 
 \section{Discussion}
 

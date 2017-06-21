@@ -1,0 +1,73 @@
+\relax 
+\citation{boyd2004convex}
+\citation{gelfand1992bayesian}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
+\citation{khatri1977mises,hoff2009simulation}
+\citation{gelfand1992bayesian}
+\citation{dunson2003bayesian}
+\citation{gunn2005transformation}
+\citation{lin2014monogp}
+\citation{lin2016extrinsic}
+\citation{neal2011mcmc}
+\citation{pakman2014exact}
+\citation{girolami2011riemann,byrne2013geodesic}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Extrinsic Bayes Methodology}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Intrinsic Bayes}{3}}
+\newlabel{exact_prior1}{{1}{3}}
+\newlabel{exact_prior2}{{2}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Extrinsic Prior}{4}}
+\newlabel{extrinsic_prior}{{3}{4}}
+\newlabel{smoothing}{{4}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Unnormalized densities for truncated normal $\No  _{(-\infty ,5)}(0,5^2)$ under exact intrinsic prior and approximating extrinsic prior. Inside $(-\infty ,5)$, the priors are the same up to a constant difference. The intrinsic prior abruptly drops to $0$ on the boundary, while the approximating ones drop continuously. Intrinsic prior based on first-order $v(\theta )$ drops faster than the one based on second order when $v(\theta )\in (0,1)$.\relax }}{5}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{truncated_normal}{{1}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Property of Extrinsic Prior}{5}}
+\citation{zhang2012continuous,nishimura2017discontinuous}
+\citation{neal2011mcmc}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Posterior Computation}{7}}
+\newlabel{extrinsic_posterior}{{6}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Hamiltonian Monte Carlo for Extrinsic Posterior Sampling}{7}}
+\newlabel{hamiltonian}{{8}{7}}
+\citation{neal2011mcmc}
+\citation{liu2008monte}
+\citation{hoffman2014no}
+\citation{neal2011mcmc}
+\newlabel{leap-frog}{{9}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Optimizing Computing Efficiency}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Examples and Application}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Simulations}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces HMC Sampling on a unit circle, using extrinc prior with $\mathcal  {K}(\theta )=\qopname  \relax o{exp}(-\frac  {|\theta '\theta -1|}{\lambda })$, with $\lambda =0.001$, $0.0001$ and $0.00001$. Panel (a) shows the larger relaxation in the narrowest direction of support (orthogonal vector to the circle) can result in more efficient space exploration within $100$ leap-frog steps; panel (b) shows the autocorrelation of the posterior sample; panel (c) shows the posterior distribution of the distance to the constraint.\relax }}{10}}
+\newlabel{unit_circle}{{2}{10}}
+\citation{jasra2005markov}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Extrinsic posterior distribution of the normal mean $\theta $, with approximation to constraint $\theta _1+\theta _2\le 1$. Posterior is either loosely distributed near the center (panel (a)) or concentrated on the boundary (panel (b)) of the region. The extrinsic posterior has no samples outside of the region due to almost no relaxation.\relax }}{11}}
+\newlabel{linear_inequality}{{3}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Applications}{11}}
+\newlabel{ordered_dp_prior}{{10}{12}}
+\citation{durante2016nonparametric}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Contour of the posterior density of component means and traceplot of the posterior sample for the component weights $w$, in a 3-component normal mixture model. Panel (a) shows that there is significant overlap among component means $\mu _j$'s, creating label-switching issues in both Gibbs sampling (b) and HMC using canonical prior (c). The ordered Dirichlet prior significantly reducing label-switching (d).\relax }}{13}}
+\newlabel{dirichlet}{{4}{13}}
+\citation{bhattacharya2011sparse}
+\bibdata{reference}
+\bibcite{bhattacharya2011sparse}{{1}{2011}{{Bhattacharya et~al.}}{{Bhattacharya, Dunson, et~al.}}}
+\bibcite{boyd2004convex}{{2}{2004}{{Boyd and Vandenberghe}}{{Boyd and Vandenberghe}}}
+\bibcite{byrne2013geodesic}{{3}{2013}{{Byrne and Girolami}}{{Byrne and Girolami}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Contour of the posterior density of component means and traceplot of the posterior sample for the component weights $w$, in a 3-component normal mixture model. Panel (a) shows that there is significant overlap among component means $\mu _j$'s, creating label-switching issues in both Gibbs sampling (b) and HMC using canonical prior (c). The ordered Dirichlet prior significantly reducing label-switching (d).\relax }}{15}}
+\newlabel{tucker}{{5}{15}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Discussion}{15}}
+\bibcite{dunson2003bayesian}{{4}{2003}{{Dunson and Neelon}}{{Dunson and Neelon}}}
+\bibcite{durante2016nonparametric}{{5}{2016}{{Durante et~al.}}{{Durante, Dunson, and Vogelstein}}}
+\bibcite{gelfand1992bayesian}{{6}{1992}{{Gelfand et~al.}}{{Gelfand, Smith, and Lee}}}
+\bibcite{girolami2011riemann}{{7}{2011}{{Girolami and Calderhead}}{{Girolami and Calderhead}}}
+\bibcite{gunn2005transformation}{{8}{2005}{{Gunn and Dunson}}{{Gunn and Dunson}}}
+\bibcite{hoff2009simulation}{{9}{2009}{{Hoff}}{{Hoff}}}
+\bibcite{hoffman2014no}{{10}{2014}{{Hoffman and Gelman}}{{Hoffman and Gelman}}}
+\bibcite{jasra2005markov}{{11}{2005}{{Jasra et~al.}}{{Jasra, Holmes, and Stephens}}}
+\bibcite{khatri1977mises}{{12}{1977}{{Khatri and Mardia}}{{Khatri and Mardia}}}
+\bibcite{lin2014monogp}{{13}{2014}{{Lin and Dunson}}{{Lin and Dunson}}}
+\bibcite{lin2016extrinsic}{{14}{2016}{{Lin et~al.}}{{Lin, St~Thomas, Zhu, and Dunson}}}
+\bibcite{liu2008monte}{{15}{2008}{{Liu}}{{Liu}}}
+\bibcite{neal2011mcmc}{{16}{2011}{{Neal}}{{Neal}}}
+\bibcite{nishimura2017discontinuous}{{17}{2017}{{Nishimura et~al.}}{{Nishimura, Dunson, and Lu}}}
+\bibcite{pakman2014exact}{{18}{2014}{{Pakman and Paninski}}{{Pakman and Paninski}}}
+\bibcite{zhang2012continuous}{{19}{2012}{{Zhang et~al.}}{{Zhang, Ghahramani, Storkey, and Sutton}}}
+\bibstyle{chicago}
