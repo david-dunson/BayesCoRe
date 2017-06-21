@@ -461,8 +461,6 @@ To allow estimation for model with orthonormality constraint, we use extrinsic p
 \label{tucker}
 \end{figure}
 
-Ignoring those $D_{r_1,r_2,r_3}$ corresponding to $\phi_{4,r_1,r_2}<10^{-3}$, the multiplicative prior results in effective $\tilde{d}_1=5$ and $\tilde{d}_3=3$ dimensions.
-
 \section{Discussion}
 
 
@@ -471,25 +469,3 @@ Ignoring those $D_{r_1,r_2,r_3}$ corresponding to $\phi_{4,r_1,r_2}<10^{-3}$, th
 \bibliographystyle{chicago}
 
 \end{document}
-
-
-
-We now illustrate a curve fitting problem where the shape of curve is convex. Convexity is common in real life such as a trajectory of projectile or accelerated decreasing of organ functions in disase monitinoring. Consider a cubic spline function $f(t)$ for data $y_t$ with $t\in [0,1]$
-
-
-\begin{equation*}
-\begin{aligned}
-y_t & = f(t) + \epsilon_t,\\
-f(t) & = \beta_0 + \beta_1 t + \beta_2 t^2+ \beta_3 t^3+ \sum_{j=1}^J b_j (t- \tau_j)^3_+,\\
-\end{aligned}
-\end{equation*}
-where $\epsilon_t \sim \No(0, \sigma^2)$ and $\tau_j$'s are pre-specified knots in $(0,1)$. To induce the convexity, it suffices to have the second derivative:
-
-\begin{equation*}
-\begin{aligned}
-f''(t) & =  2\beta_2 + 6\beta_3 t+ \sum_{j=1}^J 6b_j (t- \tau_j)_+ \ge 0.\\
-\end{aligned}
-\end{equation*}
-
-Given data $y_t$ at observed time $t=t_1,\ldots, t_n$, the posterior estimation of $\beta_.$ and $b_.$ is estimated under $n$ linear inequality constraints.
-
