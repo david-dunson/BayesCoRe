@@ -12,11 +12,13 @@ data {
 parameters {
   matrix[N,d1] U;
   matrix[p,d2] V;
+  matrix[N,N] Z;
   real eta[d1,d1,d2];
 
   real<lower=0> tau[d1];
   real<lower=0> phi1;
   real<lower=0> phi2;
+  real<lower=0> phi3;
 
 }
 model {
@@ -28,6 +30,16 @@ model {
     matrix[d2,d2]  V2;
 
     matrix[d1,d1] eta1;
+    
+    matrix[N,N] Z1;
+
+    for(i in 1:N){
+        for(j in 1:i){
+          target +=  normal_lpdf(Z[i,j]| 0, sqrt(phi3));
+          Z1[i,j] = Z[i,j];
+          Z1[j,i] = Z[i,j];
+        }
+    }
 
 
     //tensor product
@@ -36,9 +48,17 @@ model {
       for(i in 1:d1){
         target +=  normal_lpdf(to_vector(eta[i,:,l]) | 0, sqrt(tau[i]));
         eta1[i,i] =eta[i,i,l];
-        for(j in 1:(i-1)){
-          eta1[i,j] = eta[i,j,l];
-          eta1[j,i] = eta[i,j,l];
+        if(l>1){
+          for(j in 1:(i-1)){
+            eta1[i,j] = eta[i,j,l];
+            eta1[j,i] = eta[i,j,l];
+          }
+        }
+        if(l==1){
+            for(j in 1:(i-1)){
+            eta1[i,j] = 0;
+            eta1[j,i] = 0;
+          }
         }
       }
       UDU[:,l] = to_vector(U * eta1 * U');
@@ -49,7 +69,7 @@ model {
     for(l in 1:p){
       for(i in 1:N){
         for(j in 1:(i-1)){
-          target += bernoulli_logit_lpmf(y[i,j,l] | UDUV[(i-1)*N+j,l]);
+          target += bernoulli_logit_lpmf(y[i,j,l] | UDUV[(i-1)*N+j,l]+ Z1[i,j]);
         }
       }
     }
@@ -64,6 +84,7 @@ model {
     target +=  gamma_lpdf( 1.0/phi1 | 2,1);
     target +=  normal_lpdf( to_vector(V) | 0, sqrt(phi2));
     target +=  gamma_lpdf( 1.0/phi2 | 2,1);
+    target +=  gamma_lpdf( 1.0/phi3 | 2,1);
 
     //constrain orthonormality in U
     U2 = U' * U - diag_matrix(rep_vector(1.0, d1));
@@ -73,10 +94,15 @@ model {
     V2 = V' * V - diag_matrix(rep_vector(1.0, d2));
     target += - lambda2* trace( V2 *V2);
   
-    //constrain first element in each factor to be positive
+    //constrain the sum in each factor to be positive
     for(m in 1:d1){
-      if( U[1,m] < 0){
-        target +=   -lambda3 * (-U[1,m]);
+      if( sum(U[:,m]) < 0){
+        target +=   -lambda3 * (-sum(U[:,m]));
+      }
+    }
+    for(m in 1:d2){
+      if( sum(V[:,m]) < 0){
+        target +=   -lambda3 * (-sum(V[:,m]));
       }
     }
 

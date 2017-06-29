@@ -38,34 +38,6 @@ extractPosterior3D<-function(varname, d1,d2,d3, stan_fit){
 
 
 #model
-ss_model = stan_model(file= "ortho_tensor.stan")
-
-##### Data ###
-
-if(FALSE){
-  N = 20
-  d1 = 5
-  d2 = 5
-  p = 20
-  
-  
-  U = matrix(rnorm(N*d1),N,d1)
-  U = qr.Q(qr(U))
-  y = array(0, c(N,N,p))
-  
-  
-  for(l in 1:p){
-    eta = rnorm(d1)
-    UDU = U%*%diag(eta)%*%t(U)
-    p_mat = 1/(1+exp(-UDU))
-    y_l = (matrix(runif(N*N),N)<p_mat)*1
-    Lower=lower.tri(y_l)
-    y_l[Lower] = t(y_l)[Lower]
-    y[,,l] = y_l
-  }
-
-}
-
 load("tensorA.RDa")
 y=A
 N = dim(A)[1]
@@ -73,64 +45,76 @@ p = dim(A)[3]
 
 d1 = 5
 d2 = 5
+  
+  
+load(file="network_real_data_constrained.RDa")
+trace1 = ss_fit
 
-lambda1=0   # ordering in tau
-lambda2=1E3  # orthonormality
-lambda3=0  # positive
+load(file="network_real_data_unconstrained.RDa")
+trace2 = ss_fit
 
-input_dat <- list(N=N, p=p,d1=d1,d2=d2 , y=y,lambda1 = lambda1, lambda2 = lambda2,lambda3= lambda3)
-
-n_steps = 1E4
-eps = 0.002
-L = 20
-
-ss_fit <- sampling(ss_model, data = input_dat, iter = n_steps, chains = 1
-                   ,algorithm="HMC",
-                   control = list(adapt_engaged = F, stepsize = eps, int_time=eps*L))
-
-
-L = 10
-ss_fit <- sampling(ss_model, data = input_dat, iter = n_steps, chains = 1
-                   ,algorithm="NUTS",
-                   control = list(adapt_engaged = T,  max_treedepth=L))
-
-
-# data = list("y"=y,"ss_fit"=ss_fit)
-# save(ss_fit,file="network1.RDa")
-# load(file="network1.RDa")
-
+n_steps=1E4
 sampling_idx<- c((n_steps/2+1):n_steps)
 
-post_U = extractPosteriorMat("U",N,d1,"ss_fit")
+post_tau = extract(trace1,"tau")
+ts.plot(post_tau[[1]])
+# post_eta = extract(ss_fit,"eta")
 
-acf(post_U[sampling_idx,1],lag.max = 40)
-acf(post_U[sampling_idx,N+1],lag.max = 40)
+post_U1 = extractPosteriorMat("U",N,d1,"trace1")
+# acf(post_U[sampling_idx,1],lag.max = 40)
+# acf(post_U[sampling_idx,N+1],lag.max = 40)
+# acf(post_U[sampling_idx,3*N+1],lag.max = 40)
+# ts.plot(post_U[sampling_idx,1])
 
-ts.plot(post_U[sampling_idx,1])
-ts.plot(post_U[sampling_idx,N+2])
+post_U2 = extractPosteriorMat("U",N,d1,"trace2")
+# acf(post_U[sampling_idx,1],lag.max = 40)
+# acf(post_U[sampling_idx,N+1],lag.max = 40)
+# ts.plot(post_U[sampling_idx,1])
+
+df = data.frame( step =c(1:5000),
+                 U=c(post_U1[sampling_idx,N+2], post_U2[sampling_idx,1]),
+                 Constraint =as.factor(rep(c("Constrained","Unconstrained"), each=5000)))
+
+pdf("../../draft/tucker_traceplot.pdf",8,3)
+ggplot(data=df) + geom_path( aes(x=step, y=U),alpha =0.8,size=.8) +
+  facet_wrap(~Constraint,scales = "free_y" )+ theme_bw()
+dev.off()
 
 
-post_V = extractPosteriorMat("V",p,d2,"ss_fit")
-
-acf(post_V[sampling_idx,1],lag.max = 40)
-acf(post_V[sampling_idx,N+1],lag.max = 40)
-
-ts.plot(post_V[sampling_idx,1])
-ts.plot(post_V[sampling_idx,N+2])
-
-post_eta = extractPosterior3D("eta",d1,d1,d2,"ss_fit")
-
-ts.plot(post_eta[sampling_idx,1])
-acf(post_eta[sampling_idx,2])
-
-
-d=d1
-
-U1 = matrix(0,N,d1)
-for(j in 1:d1){
-  U1[,j]=post_U[n_steps/2,((j-1)*N+1):(j*N)]
-}
-t(U1)%*%U1
+ts.plot(post_U1[sampling_idx,1])
 
 
 
+ts.plot(post_U1[,N-1])
+
+acf_U1<- apply(post_U1[sampling_idx,], 2, function(x) acf(x,plot = F,lag.max = 40)$acf )
+acf_U2<- apply(post_U2[sampling_idx,], 2, function(x)acf(x,plot = F,lag.max = 40)$acf)
+
+df1 = data.frame("ACF"=c(acf_U1),"Lag"=as.factor(c(0:40)),Constraint="Constrained")
+df2 = data.frame("ACF"=c(acf_U2),"Lag"=as.factor(c(0:40)),Constraint="Unconstrained")
+
+df=rbind(df1,df2)
+
+pdf("../../draft/tucker_acf.pdf",8,3)
+ggplot(data = df, aes(x=Lag, y=ACF)) + geom_boxplot(outlier.shape = NA)+
+ scale_y_continuous(limits = c(-0.2,1))+ scale_x_discrete(breaks = c(0:8)*5)+
+    facet_wrap(~Constraint)+ theme_bw()
+dev.off()
+
+
+
+ggplot(data = df, aes(x=Lag, y=ACF)) + geom_boxplot(outlier.shape = NA)+
+  scale_y_continuous(limits = c(-0.2,1))+ scale_x_discrete(breaks = c(0:8)*5)
+
+
+
+# dev.off()
+
+trace_eta = extract(trace1,"eta")
+eta =  trace_eta[[1]][5000,,]
+
+svd_eta = svd(eta)
+
+plot(svd_eta$v[,1])
+plot(svd_eta$v[,2])
+plot(svd_eta$v[,3])
