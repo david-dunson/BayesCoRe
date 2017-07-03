@@ -33,6 +33,9 @@
 \usepackage{subcaption}
 \usepackage{nicefrac}
 
+\usepackage{xcolor}
+\newcommand{\aki}[1]{\textcolor{red}{Aki: #1}}
+
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 \newtheorem{corollary}{Corollary}
@@ -91,7 +94,7 @@
 \section{Introduction}
 It is extremely common to have prior information available on parameter contraints in statistical models. For example, one may have prior knowledge that a vector of parameters lies on the probability simplex or satisfies a particular set of inequality constraints. Other common examples include shape constraints on functions, positive semidefiniteness of matrices and orthogonality. There is a very rich literature on optimization subject to parameter contraints. One common approach is to rely on Langrange and Karush-Kuhn-Tucker multipliers \citep{boyd2004convex}. However, simply producing a point estimate is often insufficient, as uncertainty quantification (UQ) is a key component of most statistical analyses. Usual large sample asymptotic theory, for example showing asymptotic normality of statistical estimators, tends to break down in constrained inference problems. Instead, limiting distributions may have a complex form that needs to be rederived for each new type of constraint, and may be intractable. An appealing alternative is to rely on Bayesian methods for UQ, including the constraint through a prior distribution having restricted support, and then applying Markov chain Monte Carlo (MCMC) to avoid the need for large sample approximations.
 
-Conceptually MCMC can be applied in a broad class of constrained parameter problems without complications \cite{gelfand1992bayesian}. However, in practice, a primary difficulty is designing a Markov transition kernel that leads to an MCMC algorithm with sufficient computational efficiency to be practically useful. Common default transition kernels correspond to Gibbs sampling, random walk Metropolis-Hastings, and (more recently) Hamiltonian Monte Carlo (HMC). Gibbs sampling relies on alternately sampling from the full conditional posterior distributions for the different parameters, ideally in blocks to improve mixing. Gibbs requires the conditional distributions to be available in a form that is tractable to sample from directly, limiting consideration to specialized models. In constrained problems, block updating is typically either not possible or very inefficient (e.g. relying on rejection sampling with a high rejection probability), and one-at-a-time updating can lead to extremely slow mixing. Random walk algorithms provide an alternative, but each step of the random walk must maintain the parameter constraint. A common approach is to apply a normal random walk and simply reject proposals that violate the constraint, but this can have very high rejection rates even if using an adaptive approach that learns the covariance based on the history of the chain. An alternative is to rely on HMC. In simple settings in which a reparameterization can be applied to remove the constraint, HMC can be applied easily. Otherwise, HMC will generate proposals that violate the constraint, and hence face problems with high rejection rates in heavily constrained problems.
+Conceptually MCMC can be applied in a broad class of constrained parameter problems without complications \cite{gelfand1992bayesian}. \aki{I think sampling from a constrained space, say a manifold, can be challenging even without the computational efficiency issues?} However, in practice, a primary difficulty is designing a Markov transition kernel that leads to an MCMC algorithm with sufficient computational efficiency to be practically useful. Common default transition kernels correspond to Gibbs sampling, random walk Metropolis-Hastings, and (more recently) Hamiltonian Monte Carlo (HMC). Gibbs sampling relies on alternately sampling from the full conditional posterior distributions for the different parameters, ideally in blocks to improve mixing. Gibbs requires the conditional distributions to be available in a form that is tractable to sample from directly, limiting consideration to specialized models. In constrained problems, block updating is typically either not possible or very inefficient (e.g. relying on rejection sampling with a high rejection probability), and one-at-a-time updating can lead to extremely slow mixing. Random walk algorithms provide an alternative, but each step of the random walk must maintain the parameter constraint. A common approach is to apply a normal random walk and simply reject proposals that violate the constraint, but this can have very high rejection rates even if using an adaptive approach that learns the covariance based on the history of the chain. An alternative is to rely on HMC. In simple settings in which a reparameterization can be applied to remove the constraint, HMC can be applied easily. Otherwise, HMC will generate proposals that violate the constraint, and hence face problems with high rejection rates in heavily constrained problems.
 
 Due to the above hurdles, most of the focus in the literature has been on customized solutions developed for specific constraints.
 One popular strategy is to carefully pick a prior and likelihood such that posterior sampling is tractable. For example, for modeling of data on manifolds, it is typical to restrict attention to specific models, such as the Bingham-von Mises-Fisher distribution for Stiefel manifolds \citep{khatri1977mises,hoff2009simulation}. For data on the probability simplex, one instead relies on the Dirichlet distribution. An alternative is to reparameterize the model to eliminate or simplify the constraint. For example, when faced with a monotonicity constraint, one may reparameterize in terms of differences as the resulting positivity constraint leads to much easier sampling (REFs). In the literature on modeling of data on manifolds, there are two strategies: (i) {\em intrinsic} methods that define a statistical model directly on the manifold, and (ii) {\em extrinsic} methods that indirectly induce a model on the manifold through embedding the manifold in a Euclidean space, defining a model in the Euclidean space, and then projecting back onto the manifold. Essentially all of the current strategies for Bayesian modeling with constraints take an intrinsic-style approach. However, by strictly maintaining the constraint at all stages of the modeling and computation process, one limits the possibilities in terms of defining general methods to deal with parameter constraints.
@@ -102,11 +105,13 @@ An alternative idea is to {\em relax} a sharp parameter constraint by defining a
 
 The goal of this article is to dramatically generalize these specific approaches to develop a broad class of {\em extrinsic priors} for parameter constrained problems. These priors are defined to place small probability outside of the constrained region, while permitting use of efficient and general use MCMC algorithms; in particular, HMC. When the constraints need to upheld strictly, the approximation can be corrected with a simple projection, followed by a Metropolis-Hastings step with high acceptance probability.
 Unlike intrinsic methods, such as Riemannian and geodesic HMC \citep{girolami2011riemann,byrne2013geodesic}, our approach is
-relatively efficient and simple to implement in general settings using automatic algorithms. The generality frees up a much broader spectrum of Bayesian models, as one no longer needs to focus on very specific computationally tractable models.
+relatively efficient and simple to implement in general settings using automatic algorithms. \aki{I am not sure the "relatively efficient" claim is warranted without some empirical comparisons. Perhaps better just to say "simpler and more generally applicable"?} The generality frees up a much broader spectrum of Bayesian models, as one no longer needs to focus on very specific computationally tractable models.
 Theoretic studies are conducted and original models are shown in simulations and data applications.
 
 \section{Extrinsic Bayes Methodology}
 \subsection{Intrinsic Bayes via Embedding}
+\aki{I am not sure if I totally understand the logic of this section. Would it not be more natural to induce a prior on a constrained space directly (rather than defining a prior on an unconstrained space and then constraining it)? It seems somewhat circular to define the intrinsic prior by constraining an unconstrained density and then obtain the extrinsic prior by relaxing it.}
+
 Let $\theta \in \mc D$ denote the parameters in likelihood function $L(\theta;y)$, with $y$ the data. The support $\mc D$ is a constrained space. The usual Bayesian approach assigns a prior density $\pi_{0,\mc D}(\theta)$ for $\theta$ having support $\mc D$. We assume an embedding that $\mc D \subset \mc R$, with $\mc R$ denoting a `less constrained' space. For example, if $\theta$ is a $p$-dimensional vector subject to an inequality constraint, then $\mc R$ may correspond simply to $p$-dimensional Euclidean space.
 
 Starting with an unconstrained prior $\pi_{0,\mc R}(\theta)$ on $\mc R$, it may or may not have zero measure in $\mc D$. When $ \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta >0$, the constrained prior can be obtained by applying the restriction through an indicator function $\mathbbm{1}_{\theta\in \mc D}$, and renormalizing:
@@ -124,7 +129,7 @@ When $ \int_{\mc D} \pi_{0,\mc R}(\theta)d\theta =0$, one may utilize a neighbor
 \int_{\mc A} \pi_{0,\mc D}(\theta) d\theta=\lim_{\epsilon\rightarrow 0^+} \frac{\int_{\mc A} \pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D_\epsilon^+} d\theta}{ \int_{\mc D_\epsilon^+} \pi_{0,\mc R}(\theta)d\theta },
 \end{aligned}
 \end{equation}
-provided the limit exists. Based on the probability, the density $\pi_{0,\mc D}(\theta)$ can then be derived. Similarly, the conditional expectation for any $f(\theta)$ is $\int f(\theta)\pi_{0,\mc D}(\theta) d\theta=\lim_{\epsilon\rightarrow 0^+} \frac{\int f(\theta) \pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D_\epsilon^+} d\theta}{ \int_{\mc D_\epsilon^+} \pi_{0,\mc R}(\theta)d\theta }$.
+provided the limit exists. \aki{This definition is good for intuition, but formally we should just use a result from geometric measure theory and define an intrinsic prior as a conditional distribution on a manifold. (We then don't have to worry about whether the limit exists or not.) See the paper by Diaconis et.\ al.\ I shared a while ago.} Based on the probability, the density $\pi_{0,\mc D}(\theta)$ can then be derived. Similarly, the conditional expectation for any $f(\theta)$ is $\int f(\theta)\pi_{0,\mc D}(\theta) d\theta=\lim_{\epsilon\rightarrow 0^+} \frac{\int f(\theta) \pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D_\epsilon^+} d\theta}{ \int_{\mc D_\epsilon^+} \pi_{0,\mc R}(\theta)d\theta }$.
 
 Letting the likelihood function be $L(y;\theta)$, the posterior of $\theta$ is ${\pi}_{\mc D}(\theta \mid y) = \frac{ L(y;\theta) \pi_{0,\mc D}(\theta)}{{\int_\mc D}L(y;\theta) \pi_{0,\mc D}(\theta)d\theta}$. When $\int_{\mc D} \pi_{0,\mc R}(\theta)d\theta >0$, substituting in \eqref{exact_prior1} yields:
 
@@ -185,7 +190,8 @@ $\mathbbm{1}_{\theta\in \mc D}$ with a {\em smooth} alternative having less cons
 \label{extrinsic_prior}
 	\tilde{\pi}_{0,\mc D}(\theta) = \frac{ \pi_{0,\mc R}(\theta) \mc{K}( \theta; \mc D) }{ \int_{\mc R} \pi_{0,\mc R}(\theta) \mc{K}(\theta; \mc D)d\theta }
 \end{equation}
-where $\mc K(\theta; \mc D)$ is an approximation to $\mathbbm{1}_{\theta\in \mc D}$ and satisfies  $ \int_{\mc R} \pi_{0,\mc R}(\theta) \mc{K}(\theta; \mc D)d\theta>0$. This approximation applies regardless if $\int_{\mc D} \pi_{0,\mc R}(\theta) d\theta>0$ or $\int_{\mc D} \pi_{0,\mc R}(\theta) d\theta=0$. For the latter, starting from $\mc K(\theta;  \mc D^+_\epsilon)$ an approximation to $\mathbbm{1}_{\theta\in  \mc D^+_\epsilon}$, the limit can be obtained $
+where $\mc K(\theta; \mc D)$ is an approximation to $\mathbbm{1}_{\theta\in \mc D}$ and satisfies  $ \int_{\mc R} \pi_{0,\mc R}(\theta) \mc{K}(\theta; \mc D)d\theta>0$. 
+This approximation applies regardless if $\int_{\mc D} \pi_{0,\mc R}(\theta) d\theta>0$ or $\int_{\mc D} \pi_{0,\mc R}(\theta) d\theta=0$. For the latter, starting from $\mc K(\theta;  \mc D^+_\epsilon)$ an approximation to $\mathbbm{1}_{\theta\in  \mc D^+_\epsilon}$, the limit can be obtained $
 	\int_{\mc A} \tilde{\pi}_{0,\mc D}(\theta) d \theta =  \lim_{\epsilon\rightarrow 0^+}\frac{\int_{\mc A}  \pi_{0,\mc R}(\theta) \mc{K}( \theta; \mc D^+_\epsilon)d\theta }{ \int_{\mc R} \pi_{0,\mc R}(\theta) \mc{K}(\theta; \mc D^+_\epsilon)d\theta } = 	\int_{\mc A} \frac{ \pi_{0,\mc R}(\theta) \mc{K}( \theta; \mc D) }{ \int_{\mc R} \pi_{0,\mc R}(\theta) \mc{K}(\theta; \mc D)d\theta } d\theta$.
 
 Its posterior, referred as extrinsic posterior from now on, takes the form
@@ -202,8 +208,7 @@ Assuming there are $m$ constraints with each defining a constrained subspace $\m
 \label{smoothing}
 \mc K(\theta; \mc D)= \prod_{k=1}^m K_k(v_k(\theta)),
 \end{equation}
-where $v_k: \mc R \rightarrow [0,\infty)$ is a measurable function and quantifies the distance to space $\mc D_k$. For example, one can use $v(\theta)=|f(\theta)|$ as a distance to equality-constrained space  $\{\theta:f(\theta)=0\}$; $v(\theta)=|f(\theta)|_+$, where $(x)_+ = \left\{\begin{array}{cc}  0 \text{ if } x\le 0 \\ x \text{ if } x> 0\end{array}\right.$ as a distance to inequality-constrained space  $\{\theta:f(\theta) \le 0\}$. The function $K_k:[0,\infty)\rightarrow [0,1]$ penalizes $v_k(\theta)>0$ and decreases in $v_k(\theta)$. For example, $K_k(v)=\exp(-v)$ or $K_k(v)=\frac{1}{1+v^2}$. For illustration simplicity, in this paper, we focus on exponential smoothing function $K_k(v(\theta))=\exp(-\frac{v(\theta)}{\lambda_k})$ with $\lambda_k>0$ as a tuning parameter. 
-
+where $v_k: \mc R \rightarrow [0,\infty)$ is a measurable function and quantifies the distance to space $\mc D_k$. For example, one can use $v(\theta)=|f(\theta)|$ as a distance to equality-constrained space  $\{\theta:f(\theta)=0\}$; $v(\theta)=|f(\theta)|_+$, where $(x)_+ = \left\{\begin{array}{cc}  0 \text{ if } x\le 0 \\ x \text{ if } x> 0\end{array}\right.$ as a distance to inequality-constrained space  $\{\theta:f(\theta) \le 0\}$. The function $K_k:[0,\infty)\rightarrow [0,1]$ penalizes $v_k(\theta)>0$ and decreases in $v_k(\theta)$. For example, $K_k(v)=\exp(-v)$ or $K_k(v)=\frac{1}{1+v^2}$. For illustration simplicity, in this paper, we focus on exponential smoothing function $K_k(v(\theta))=\exp(-\frac{v(\theta)}{\lambda_k})$ with $\lambda_k>0$ as a tuning parameter. \aki{We need to assume the growth rate on $v(\theta)$ to ensure that an extrinsic prior is integrable and proper. There can be a problem if $v(\theta) = \log \| \theta \|$ for example. In fact, the geometric ergodicity of HMC would require $- \log K(v(\theta)) = O(\| \theta \|^\alpha)$ for $1 \leq \alpha \leq 2$.} 
 
 This framework is applicable to a variety of complicated case. For example, $\theta$ can have only some of parameters constrained; parameters can be in multiple constraints simultaneously; constraints can be dependent. Regardless, it is generally simple to adapt \eqref{smoothing} via appropriate mapping through $v(\theta)$. 
 
@@ -250,7 +255,7 @@ proof:
 Using exponential smoothing function $\mc K(\theta; D) = \prod_{k=1}^m \exp( -v_k(\theta)/\lambda_k)$, as all $\lambda_k \rightarrow 0$, the total variation $||\Pi(.), \tilde{\Pi}(.) ||_{TV} \rightarrow 0$, if $\int_{\mc R} \pi_{\mc R}(\theta) d\theta<\infty$. This is a direct result of dominated convergence theorem and $\mc K(\theta; \mc D)\le 1$.
 
 
-With some mild conditions, we further quantify the non-asymptotic rate. Letting $\lambda = \sup_k \lambda_k$, $M= \int_{\mc R \setminus \mc D} \pi_{\mc R}(\theta) d\theta<\infty$. As a linear combination of measurable functions, $v(\theta)=\lambda\sum_{k=1}^m\frac{ v_k(\theta)}{\lambda_k}$ is measurable. Let $f(v)$ be the density of $v(\theta)$.
+With some mild conditions, we further quantify the non-asymptotic rate. Letting $\lambda = \sup_k \lambda_k$, $M= \int_{\mc R \setminus \mc D} \pi_{\mc R}(\theta) d\theta<\infty$. As a linear combination of measurable functions, $v(\theta)=\lambda\sum_{k=1}^m\frac{ v_k(\theta)}{\lambda_k}$ is measurable. Let $f(v)$ be the density of $v(\theta)$. \aki{The density of $v(\theta)$ crucially depends on the level set of $v(\theta)$ and is a pretty complicated (i.e.\ intractable) object in general.}
 
 \begin{remark}
 \label{convergence_rate}
@@ -258,6 +263,7 @@ If there exists a $t<\infty$ such that $f(v) < \infty$ for any $v<t$,
 $$\int_{\mc R \setminus \mc D} {\pi_{\mc R}(\theta)} \prod_{k=1}^m \exp( -v_k(\theta)/\lambda_k) d \theta \le 
  {M} \exp(-\frac{t}{\lambda}) + {M} \sup_{t^*\in(0,t)} {f(t^*)}\lambda 
 $$
+\aki{How is this bound based on $v(\theta) < t$ useful? We need $v(\theta) \to \infty$ as $\| \theta \| \to \infty$ for the extrinsic prior to be integrable. }
 \end{remark}
 proof:
 \begin{equation}
@@ -265,6 +271,7 @@ proof:
 \frac{1}{M}\int_{\mc R \setminus \mc D} {\pi_{\mc R}(\theta)} \prod_{k=1}^m \exp( -v_k(\theta)/\lambda_k) d \theta = & 
 \mathbb{E} \exp(- \frac{v}{\lambda}) \\
 = & \mathbb{E} \mathbbm{1}_{(0,t)} \exp(- \frac{v}{\lambda}) +  \mathbb{E} \mathbbm{1}_{(t,\infty)} \exp(- \frac{v}{\lambda}) \\
+& \text{\aki{the bound on the second term seems to use some implicit assumption.}} \\
 \le & \int_0^t f(v) \exp(- \frac{v}{\lambda}) dv + \exp(-\frac{t}{\lambda}) \\
 \le & \sup_{t^*\in(0,t)} f(t^*) \int_0^t \exp(- \frac{v}{\lambda}) dv + \exp(-\frac{t}{\lambda}) \\
 = & \sup_{t^*\in(0,t)} f(t^*)  \lambda (1- \exp(-t/\lambda)) + \exp(-\frac{t}{\lambda}) \\
@@ -312,6 +319,39 @@ We continue in Example 1, denoting the bivariate Gaussian distribution obtained 
 \end{figure}
 
 
+\subsection{\textcolor{red}{Approximation Error (Aki's proposal)}}
+
+\aki{The convergence in total variation is too strong, so I propose something like below.}
+\newcommand{\tilpi}{\tilde{\pi}}
+
+We establish that the inference based on an intrinsic prior is well approximated by the one based on an extrinsic prior for sufficiently small $\lambda$. In particular, for a posterior summary of interest $g(\theta)$, we have $\mathbb{E}_{\tilpi_{\mc D, \lambda}}[g(\theta)] \to \mathbb{E}_{\pi_{\mc D}}[g(\theta)]$ as $\lambda \to 0$ provided $g(\theta)$ is continuous and integrable under the extrinsic posterior for some $\lambda < \infty$. In case the constraint takes the form $\mc D = \{f(\theta) = 0\}$ and the extrinsic posterior is given by $\tilpi_{\mc D, \lambda}(\theta) = \pi_{\mc R}(\theta) \exp(- \lambda^{-1} |f(\theta)|) \, / \, Z_\lambda$, the proof is as follows. \aki{From the proof, it appears that we also need to choose the constraint so that  $\| \nabla f \| \equiv 1$ on $\mc D$. This makes sense from geometric intuition too, I think.}
+\begin{proof}[Proof]
+	By the co-area formula of Federer \citep{diaconis2013manifold}, we have
+	\begin{equation}
+	\lambda^{-1} Z_\lambda
+	= \lambda^{-1} \int_{\mathbb{R}^d} \pi_{\mc R}(\theta) \exp(- \lambda^{-1} |f(\theta)|)  d \theta
+	= \int_{-\infty}^{\infty}  \left[ \int_{f^{-1}(\alpha)} \frac{ g(\theta) \pi_{\mc R}(\theta) }{ \| \nabla f(\theta) \| } \mathcal{H}^{d-1}(d \theta) \right]  \lambda^{-1} \exp(- \lambda^{-1} |\alpha| ) d \alpha
+	\end{equation}
+	where $\mathcal{H}^{k}(d \theta)$ denotes a $k$-dimensional Hausdorff measure. Since the measure $\exp(- \lambda^{-1} |\alpha| ) d \alpha$ concentrates around $\alpha = 0$ as $\lambda \to 0$, we obtain
+	\begin{equation}
+	\lim_{\lambda \to 0} \lambda^{-1} Z_\lambda
+	= \int_{f^{-1}(0)} \frac{ \pi_{\mc R}(\theta) }{ \| \nabla f(\theta) \| } \mathcal{H}^{d-1}(d \theta) 
+	= \int_{f^{-1}(0)} \pi_{\mc D}(d \theta)
+	\end{equation}
+	by the assumption $\| \nabla f(\theta) \|  = 1$ and the fact that $\pi_{\mc D}(d \theta)$ coincides with the conditional density of $\pi_{\mc R}(\theta)$ on $\mc D$. Also by the co-area formula,
+	\begin{equation}
+	\int_{\mathbb{R}^d} g(\theta) \pi_{\mc R}(\theta) \exp(- \lambda^{-1} |f(\theta)|)  /  Z_\lambda d \theta
+	= \int_{-\infty}^{\infty}  \left[ \int_{f^{-1}(\alpha)} \frac{ g(\theta) \pi_{\mc R}(\theta) }{ \| \nabla f(\theta) \| } \mathcal{H}^{d-1}(d \theta) \right]  \exp(- \lambda^{-1} |\alpha| )  /  Z_\lambda d \alpha
+	\end{equation}
+	Again, since the measure $\exp(- \lambda^{-1} |\alpha| ) d \alpha$ concentrates around $\alpha = 0$ as $\lambda \to 0$, we obtain
+	\begin{equation}
+	\lim_{\lambda \to 0} \int_{\mathbb{R}^d} g(\theta) \pi_{\mc R}(\theta) \exp(- \lambda^{-1} |f(\theta)|)  /  Z_\lambda d \theta
+	= \int_{f^{-1}(0)} \frac{ g(\theta) \pi_{\mc R}(\theta) }{ \| \nabla f(\theta) \| } d \mathcal{H}^{d-1}(\theta) 
+	= \frac{\int_{f^{-1}(0)} g(\theta) \pi_{\mc D}(d \theta)}{\int_{f^{-1}(0)} \pi_{\mc D}(d \theta)} \qedhere
+	\end{equation}
+\end{proof}
+
+
 \section{Posterior Computation}
 
 One particular appeal of the extrinsic approach is its advantage in posterior computation. As it is supported on a less restrictive space $\mc R$, one can exploit conventional sampling tools such as slice sampling, adaptive Metropolis-Hastings and Hamiltonian Monte Carlo (HMC). In this section, we focus on HMC for its easiness to use and good performance in sampling with high-dimensional parameters.
@@ -320,19 +360,19 @@ One particular appeal of the extrinsic approach is its advantage in posterior co
 
 We provide a brief overview of HMC for continuous $\theta$ under extrinsic prior. Discrete extension is possible via recent work of \cite{nishimura2017discontinuous}.
 
-Assuming $\theta\in\mc R$ with $\mc R$ being a full or truncated Eucledean space $\mathbb R^d$, HMC augments a latent variable ``momentum'' $p\in \mathbb R^d$ (commonly generated from $\No(0, \Sigma)$ with $\Sigma$ pre-specified), ommiting constant, the negative log-posterior function based on \eqref{extrinsic_posterior} is
+In order to sample from $\theta\in\mc R \subset \mathbb R^d$, HMC introduces an auxillary momentum variable $p\in \mathbb R^d$ (commonly generated from $\No(0, \Sigma)$ with $\Sigma$ pre-specified), and sample from the joint target density $\pi(\theta, p) \propto \exp (- H(\theta, p))$ where, in the case of an extrinsic posterior \eqref{extrinsic_posterior}, 
 
 % To be clear, this is different from Riemannian HMC that requires specific accommodation and heavy computation. The algorithm we use is simply conventional HMC in Euclidean space. In this section, we study the effects of choosing $\lambda$ on efficiency of Hamiltonian dynamics.
 
 \begin{equation}
 \begin{aligned}
-H(\theta, p)& = U(\theta)+M(p),\\
+H(\theta, p)& = U(\theta)+K(p),\\
 \text{where } & U(\theta) = -\log\left\{ L(\theta;y)\pi_{0,\mc R}(\theta) \mc{K}(\theta;\mc D) \right\},\\
-& M(p) = \frac{p'\Sigma^{-1} p}{2}.
+& K(p) = \frac{p'\Sigma^{-1} p}{2}.
 \end{aligned}
 \end{equation}
 
-At the beginning of each iteration, from current state $(\theta^{(0)},p^{(0)})$, HMC updates $\theta$ and $p$ via Hamiltonian dynamics, defined by two partial differential equations:
+From the current state $(\theta^{(0)},p^{(0)})$, HMC generates a proposal for Metropolis-Hastings algorithm by simulating Hamiltonian dynamics, which is defined by a differential equation:
 
 \begin{equation}
 \begin{aligned}
@@ -342,23 +382,24 @@ At the beginning of each iteration, from current state $(\theta^{(0)},p^{(0)})$,
 \end{aligned}
 \end{equation}
 
-By evolving in $t>0$, this yields $(\theta^{(t)},p^{(t)})$. Since Hamiltonian system is symplectic, i.e. $H(\theta^{(t)},p^{(t)})=H(\theta^{(0)},p^{(0)})$, one can take $\theta^{(t)}$ as a new posterior sample. However, in most cases, \eqref{hamiltonian} lacks closed-form solution, one has to use an {\it integrator} that numerically approximates the exact evolution. With a reversible and volume-preserving  integrator (see \citep{neal2011mcmc} for details), an Metropolis-Hastings (M-H) step is taken to correct the approximation error, by accepting $(\theta^{(t)},p^{(t)})$ with probability 
-$$1\wedge \exp  \left( - H(\theta^{(t)},p^{(t)}) + H(\theta^{(0)},p^{(0)}))\right)$$
-
-One popular integrator with reversible and volume-preserving properties is the leap-frog algorithm \citep{neal2011mcmc}, which utilizes discrete time-step move $(\theta^{(T\eta)}, p^{(T\eta)}) \rightarrow (\theta^{((T+1)\eta)}, p^{((T+1)\eta)})$:
+The exact solution to \eqref{hamiltonian} is typically intractable but a valid Metropolis proposal can be generated by numerically approximating \eqref{hamiltonian} with a reversible and volume-preserving  integrator \citep{neal2011mcmc}. The standard choice is the \textit{leapfrog} integrator which approximates the evolution $(\theta^{(t)},p^{(t)}) \to (\theta^{(t + \eta)},p^{(t + \eta)})$ through the following update equations:
 
 \begin{equation}
 \begin{aligned}
 \label{leap-frog}
 p \leftarrow p - \frac{\eta}{2} \frac{\partial U}{\partial  \theta },\quad
- \theta \leftarrow  \theta  + \eta \Sigma^{-1}p,\quad
+\theta \leftarrow  \theta  + \eta \Sigma^{-1}p,\quad
 p \leftarrow p -  \frac{\eta}{2}  \frac{\partial U}{\partial  \theta } 
 \end{aligned}
 \end{equation}
-for $T=0,\ldots,(L-1)$; where $L$ is the number of leap-frog steps within one iteration and $t=L\eta$.
+\aki{$\eta$ is a really unusual notation an HMC integrator. We should plan to replace it with a more standard notation e.g.\ $\epsilon$ (most standard though already used elsewhere) or $\Delta t$.}
+Taking $L$ leapfrog steps from the current state $(\theta^{(0)},p^{(0)})$ generates a proposal $(\theta^{*},p^{*}) \approx (\theta^{(L \eta)},p^{(L \eta)})$, which is accepted with the probability 
+$$1\wedge \exp  \left( - H(\theta^{*},p^{*}) + H(\theta^{(0)},p^{(0)}))\right)$$
 
 
 \subsection{Support Expansion and Computing Efficiency}
+
+\aki{This section requires a major revision; many statements are not quite right. I would need some more time to work on it.}
 
 As a Markov chain Monte Carlo, one would hope to use HMC to build a chain that rapidly converges. The convergence rate is associated with the maximal correlation  \citep{liu2008monte}, $\gamma (\theta,\theta^*) = \sup_{g \in L^2(\Pi)} \mbox{corr}(g(\theta), g(\theta^*))
 $, where $L^2(\Pi)=\{g(\theta): \mbox{var}(g(\theta))<\infty\}$. Smaller $\gamma (\theta,\theta^*)$ corresponds to less correlation and faster convergence. Given $\eta$, one can adaptively choosing $L$ so that $\gamma (\theta,\theta^*)$ falls under certain desired rate \citep{hoffman2014no}.
