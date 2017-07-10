@@ -232,7 +232,7 @@ We now define $\mc K(\theta;\mc D)$. Assuming there are $m$ constraints with eac
 \label{smoothing}
 \mc K(\theta; \mc D)= \prod_{k=1}^m K_k(v_k(\theta)),
 \end{equation}
-where $v_k: \mc R \rightarrow [0,\infty)$ is a measurable function and quantifies the distance to space $\mc D_k$. For example, one can use $v(\theta)=|f(\theta)|$ as a distance to equality-constrained space  $\{\theta:f(\theta)=0\}$; $v(\theta)=|f(\theta)|_+$, where $(x)_+ = \left\{\begin{array}{cc}  0 \text{ if } x\le 0 \\ x \text{ if } x> 0\end{array}\right.$ as a distance to inequality-constrained space  $\{\theta:f(\theta) \le 0\}$. The function $K_k:[0,\infty)\rightarrow [0,1]$ penalizes $v_k(\theta)>0$ and decreases in $v_k(\theta)$. For example, $K_k(v)=\exp(-v)$ or $K_k(v)=\frac{1}{1+v^2}$. For illustration simplicity, in this paper, we focus on exponential smoothing function $K_k(v(\theta))=\exp(-\frac{v(\theta)}{\lambda_k})$ with $\lambda_k>0$ as a tuning parameter. \aki{We need to assume the growth rate on $v(\theta)$ to ensure that an extrinsic prior is integrable and proper. There can be a problem if $v(\theta) = \log \| \theta \|$ for example. In fact, the geometric ergodicity of HMC would require $- \log K(v(\theta)) = O(\| \theta \|^\alpha)$ for $1 \leq \alpha \leq 2$.} \leo{can you provide the justification or reference for this result?}
+where $v_k: \mc R \rightarrow [0,\infty)$ is a measurable function and quantifies the distance to space $\mc D_k$. For example, one can use $v(\theta)=|f(\theta)|$ as a distance to equality-constrained space  $\{\theta:f(\theta)=0\}$; $v(\theta)=|f(\theta)|_+$, where $(x)_+ = \left\{\begin{array}{cc}  0 \text{ if } x\le 0 \\ x \text{ if } x> 0\end{array}\right.$ as a distance to inequality-constrained space  $\{\theta:f(\theta) \le 0\}$. The function $K_k:[0,\infty)\rightarrow [0,1]$ penalizes $v_k(\theta)>0$ and decreases in $v_k(\theta)$. For example, $K_k(v)=\exp(-v)$ or $K_k(v)=\frac{1}{1+v^2}$. For illustration simplicity, in this paper, we focus on exponential smoothing function $K_k(v(\theta))=\exp(-\frac{v(\theta)}{\lambda_k})$ with $\lambda_k>0$ as a tuning parameter. \aki{We need to assume the growth rate on $v(\theta)$ to ensure that an extrinsic prior is integrable and proper. There can be a problem if $v(\theta) = \log \| \theta \|$ for example. In fact, the geometric ergodicity of HMC would require $- \log K(v(\theta)) = O(\| \theta \|^\alpha)$ for $1 \leq \alpha \leq 2$ \citep{livingstone2016geometric}.}
 
 This framework is applicable to a variety of complicated case. For example, $\theta$ can have only some of parameters constrained; parameters can be in multiple constraints simultaneously; constraints can be dependent. Regardless, it is generally simple to adapt \eqref{smoothing} via appropriate mapping through $v(\theta)$. 
 
@@ -295,8 +295,6 @@ proof:
 \frac{1}{M}\int_{\mc R \setminus \mc D} {\pi_{\mc R}(\theta)} \prod_{k=1}^m \exp( -v_k(\theta)/\lambda_k) d \theta = & 
 \mathbb{E} \exp(- \frac{v}{\lambda}) \\
 = & \mathbb{E} \mathbbm{1}_{(0,t)} \exp(- \frac{v}{\lambda}) +  \mathbb{E} \mathbbm{1}_{(t,\infty)} \exp(- \frac{v}{\lambda}) \\
-& \text{\aki{the bound on the second term seems to use some implicit assumption.}} \\
-& \text{\leo{this is a truncation trick, coupled with $E\mathbbm{1}_{(0,t)}<1$: $v\ge t$, $\exp(- \frac{v}{\lambda})\le \exp(- \frac{t}{\lambda})$.}}\\
 \le & \int_0^t f(v) \exp(- \frac{v}{\lambda}) dv + \exp(-\frac{t}{\lambda}) \\
 \le & \sup_{t^*\in(0,t)} f(t^*) \int_0^t \exp(- \frac{v}{\lambda}) dv + \exp(-\frac{t}{\lambda}) \\
 = & \sup_{t^*\in(0,t)} f(t^*)  \lambda (1- \exp(-t/\lambda)) + \exp(-\frac{t}{\lambda}) \\
@@ -349,6 +347,8 @@ We continue in Example 1, denoting the bivariate Gaussian distribution obtained 
 \aki{The convergence in total variation is too strong, so I propose something like below.}
 
 \leo{Aki, I like your use of Feder's co-area forumula, can we get some non-asympotic result when $\lambda>m$? The point of total variation being less ideal is that although it DOES work for $\lambda\rightarrow 0$ (Ramark 1 and 3) with almost no assumption, but doesn't work in non-asympotic case with $Z(\mc D)=0$.}
+
+\aki{A non-asymptotic result should hold as long as we put the right assumptions on $f(\theta)$. I'd think the key assumption is $\nabla f(\theta)$ to be a unit vector orthogonal to $\mc D$ whenever $\theta \in \mc D$. I don't know how to rigorously estimate the difference in the integrals over the surface $f^{-1}(0)$ and $f^{-1}(\alpha)$, however. (I can do it if $\mc D$ is a compact manifold, I think.) We may need help from an expert in geometric methods.}
 
 
 \newcommand{\tilpi}{\tilde{\pi}}
