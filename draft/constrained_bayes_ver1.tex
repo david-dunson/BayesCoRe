@@ -67,7 +67,7 @@
 \newcommand{\KL}[2]{\textnormal{KL}\left(#1 \parallel #2\right)}
 \DeclareMathOperator{\1}{\mathbbm{1}}
 \DeclareMathOperator{\bigO}{\mc O}
-\newcommand{\dt}{\eta} % Stepsize of leapfrog
+\newcommand{\dt}{\epsilon} % Stepsize of leapfrog
 \newcommand{\mass}{M} % Mass matrix
 \newcommand{\hess}{\mathbf{H}} % Hessian notation.
 
@@ -421,7 +421,6 @@ p \leftarrow p - \frac{\dt}{2} \frac{\partial U}{\partial  \theta },\quad
 p \leftarrow p -  \frac{\dt}{2}  \frac{\partial U}{\partial  \theta } 
 \end{aligned}
 \end{equation}
-\aki{$\eta$ is a really unusual notation an HMC integrator. We should plan to replace it with a more standard notation e.g.\ $\epsilon$ (most standard though already used elsewhere) or $\Delta t$.}
 Taking $L$ leapfrog steps from the current state $(\theta^{(0)},p^{(0)})$ generates a proposal $(\theta^{*},p^{*}) \approx (\theta^{(L \dt)},p^{(L \dt)})$, which is accepted with the probability 
 $$1\wedge \exp  \left( - H(\theta^{*},p^{*}) + H(\theta^{(0)},p^{(0)}))\right)$$
 
