@@ -105,11 +105,11 @@ An alternative idea is to {\em relax} a sharp parameter constraint by defining a
 
 The goal of this article is to dramatically generalize these specific approaches to develop a broad class of {\em extrinsic priors} for parameter constrained problems. These priors are defined to place small probability outside of the constrained region, while permitting use of efficient and general use MCMC algorithms; in particular, HMC. When the constraints need to upheld strictly, the approximation can be corrected with a simple projection, followed by a Metropolis-Hastings step with high acceptance probability.
 Unlike intrinsic methods, such as Riemannian and geodesic HMC \citep{girolami2011riemann,byrne2013geodesic}, our approach is
-relatively efficient and simple to implement in general settings using automatic algorithms. \aki{I am not sure the "relatively efficient" claim is warranted without some empirical comparisons. Perhaps better just to say "simpler and more generally applicable"?} The generality frees up a much broader spectrum of Bayesian models, as one no longer needs to focus on very specific computationally tractable models.
+relatively efficient and simple to implement in general settings using automatic algorithms. The generality frees up a much broader spectrum of Bayesian models, as one no longer needs to focus on very specific computationally tractable models.
 Theoretic studies are conducted and original models are shown in simulations and data applications.
 
 \section{Extrinsic Bayes Methodology}
-% \aki{I am not sure if I totally understand the logic of this section. Would it not be more natural to induce a prior on a constrained space directly (rather than defining a prior on an unconstrained space and then constraining it)? It seems somewhat circular to define the intrinsic prior by constraining an unconstrained density and then obtain the extrinsic prior by relaxing it.}
+
 
 \subsection{Conditioned Intrinsic Distribution}
 
@@ -130,7 +130,7 @@ In our case, recall $\omega=1$ if $\theta\in \mc D$ and equal $0$ otherwise. Let
 \label{rcp}
 	P(\omega) = w Z(\mc D)  + (1-w)(1-Z(\mc D)), \qquad  P(B \mid  \mathscr A)(\omega)={P({B\cap  \mc D} \mid \omega=1)} \omega +  {P({B\cap (\mc R \setminus \mc D})\mid \omega=0)}(1-\omega),
 \end{equation}
-where $P({B\cap (\mc R \setminus \mc D})\mid \omega=0)$ is a probability measure that we are not interested in. When $Z(\mc D)>0$, one can simply define:
+where $P({B\cap (\mc R \setminus \mc D})\mid \omega=0)$ is a probability measure that we are not interested in; rather, our focus is on ${P({B\cap  \mc D} \mid \omega=1)}$. When $Z(\mc D)>0$, one can simply define:
 
 \begin{equation}
 \begin{aligned}
@@ -145,23 +145,23 @@ Formally, for a set $\mc D$, if it is the Lipschitz image of a bounded subset in
 
 \begin{equation}
 \label{minkowski}
-	\mc M^m(\mc D)=\lim_{r\rightarrow 0_+}\frac{\lambda^n(D_r)}{\alpha_{n-m} r^{n-m}}
+	\mc M^m(\mc D)=\lim_{r\rightarrow 0_+}\frac{\lambda^n(\mc D_r)}{\alpha_{n-m} r^{n-m}}
 \end{equation}
-where $\alpha_t=\frac{\Gamma(\frac{1}{2})^{t}}{\Gamma(1+ \frac{t}{2})}$, with $D_r=\{x\in \mathbb{R}^n: \text{dist}(x,y)<r, y\in \mc D\}$ known as the open r-parallel set, $\text{dist}(.,.)$ is a distance; $\lambda^n(D_r)={ \int_{\mc D_r} \pi_{0,\mc R}(\theta)}d\theta$ is its Lebesgue measure in $\mathbb{R}^n$.
+where $\alpha_t=\frac{\Gamma(\frac{1}{2})^{t}}{\Gamma(1+ \frac{t}{2})}$, with $\mc D_r=\{x\in \mathbb{R}^n: \text{dist}(x,y)<r, y\in \mc D\}$ known as the open r-parallel set, $\text{dist}(.,.)$ is a distance; $\lambda^n(\mc D_r)={ \int_{\mc D_r} \pi_{0,\mc R}(\theta)}d\theta$ is its Lebesgue measure in $\mathbb{R}^n$. Due to the expansion, $\lambda^n(\mc D_r)>0$ for $r>0$.
 
 %Clearly, when $m=n$,  $\mc M^m(\mc D)=0$ if $\lambda^n(\mc D)=0$; when $m=0$, this reduces to counting measure. $\text{dim}_{\mc M}(\mc D)=\inf\{t; \mc M^t(\mc D)=0\}=\sup\{t; \mc M^t(\mc D)=\infty\}$ is called the Minkowski dimension.
 
-When $m$ is chosen such that $0<\mc M^m(\mc D)<\infty$, then $\mc D$ is called $m$-dimensional Minkowski measurable, and $\mc M^m(\mc D)$ is proportional to the Hausdorff measure $\mc H^{m}(\mc D)$ for $m$-rectifiable $\mc D$. Fortunately, we do not need to find $m$ in this case.
+When $m$ is chosen such that $0<\mc M^m(\mc D)<\infty$, then one calls $\mc D$ $m$-dimensional Minkowski measurable, and $\mc M^m(\mc D)$ is proportional to the Hausdorff measure $\mc H^{m}(\mc D)$ for $m$-rectifiable $\mc D$. Finding the appropriate $m$ can be challenging; however, we do not need $m$ for the relative measure between $B\cap  \mc D$ and $\mc D$.
 Letting $P({B\cap  \mc D} \mid \omega=1)\propto \mc M^m(B\cap\mc D)$ and $P({\mc D} \mid \omega=1)=1$ yields:
 
 \begin{equation}
 \label{exact_prior2}
-	\int_{B} \pi_{0,\mc D}(\theta) d\theta= P({B\cap  \mc D} \mid \omega=1)= \frac{\mc M^m(\mc B\cap D)}{\mc M^m(\mc D)}= \lim_{r\rightarrow 0_+}\frac{\lambda^n(B\cap \mc D_r)}{\lambda^n(\mc D_r)} 
+	\int_{B} \pi_{0,\mc D}(\theta) d\theta= P({B\cap  \mc D} \mid \omega=1)= \frac{\mc M^m(\mc B\cap \mc D)}{\mc M^m(\mc D)}= \lim_{r\rightarrow 0_+}\frac{\lambda^n(B\cap \mc D_r)}{\lambda^n(\mc D_r)} 
 =\lim_{r\rightarrow 0^+} \frac{\int_{ B} \pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D_r} d\theta}{ \int_{\mc D_r} \pi_{0,\mc R}(\theta)}
 \end{equation}
-where the terms involving $m$ are canceled, due to $\mc M^m(B\cap\mc D)=\lim_{r\rightarrow 0_+}\frac{\lambda^n(B\cap D_r)}{\alpha_{n-m} r^{n-m}}$ \citep{winter2016localization}. Clearly, this result is extensible to unbounded set $\mc D$ provided $0<\mc M^m(\mc D)<\infty$ for certain $m$, although the equivalence of Minkowski content and Hausdorff measure may not hold.
+where the terms involving $m$ are canceled, due to $\mc M^m(B\cap\mc D)=\lim_{r\rightarrow 0_+}\frac{\lambda^n(B\cap \mc D_r)}{\alpha_{n-m} r^{n-m}}$ \citep{winter2016localization}. This result is extensible to unbounded set $\mc D$ provided $0<\mc M^m(\mc D)<\infty$ for certain $m$, although the equivalence of Minkowski content and Hausdorff measure may not hold.
 
-Letting the likelihood function be $L(y;\theta)$, the posterior of $\theta$ is $\pi_{\mc D}(\theta \mid y)=\frac{ L(y;\theta) \pi_{0,\mc D}(\theta)}{{\int_\mc D}L(y;\theta) \pi_{0,\mc D}(\theta)d\theta}$. If $\int_{\mc D} \pi_{0,\mc R}(\theta)d\theta >0$ and $\int_{\mc R} L(y;\theta)\pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D}d\theta >0$,
+Similarly, letting the likelihood function be $L(y;\theta)$, the posterior of $\theta$ is $\pi_{\mc D}(\theta \mid y)=\frac{ L(y;\theta) \pi_{0,\mc D}(\theta)}{{\int_\mc D}L(y;\theta) \pi_{0,\mc D}(\theta)d\theta}$. If $\int_{\mc D} \pi_{0,\mc R}(\theta)d\theta >0$ and $\int_{\mc R} L(y;\theta)\pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D}d\theta >0$,
 
 \begin{equation}
 \label{exact_posterior1}
@@ -174,7 +174,7 @@ otherwise,
 	\int_{B} {\pi}_{\mc D}(\theta \mid y) d\theta = \lim_{r\rightarrow 0^+}  \frac{ \int_{B}  L(y;\theta)\pi_{0,\mc R}(\theta)\mathbbm{1}_{\theta\in \mc D_r}  d\theta }{ \int_{\mc R} L(y;\theta)\pi_{0,\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D_r}d\theta }.
 \end{equation}
 
-Therefore, both prior and posterior can be obtained intrinsically via this conditioning approach, although the posterior sampling is generally difficult and \eqref{exact_prior2}\eqref{exact_posterior2} may be intractable.
+Therefore, both prior and posterior can be obtained intrinsically via this conditioning approach, although the posterior sampling is generally difficult and \eqref{exact_prior2}\eqref{exact_posterior2} may become intractable.
 
 We now use an example to illustrate this strategy approach when $Z(\mc D)=0$.
 
@@ -204,7 +204,7 @@ Consider a bivariate Gaussian random vector $[\theta_1,\theta_2]' \sim \No(0,I)$
 \end{equation*}
 which corresponds to $\theta_1\mid (\theta_1+ \theta_2=1) \sim \No(1/2,1/2)$, $\theta_2\mid \theta_1 \sim \delta_{1-\theta_1}$ with $\delta_x$ denoting a point mass at $x$. Marginally, this is a degenerate bivariate Gaussian distribution:
 $$\begin{bmatrix} \theta_1 \\ \theta_2 \end{bmatrix} \sim
-\No \left(
+\No_{\text d} \left(
  \begin{bmatrix} \frac{1}{2} \\ \frac{1}{2} \end{bmatrix},
 \begin{bmatrix} \frac{1}{2} & -\frac{1}{2}  \\  -\frac{1}{2}  & \frac{1}{2} \end{bmatrix}
 \right).$$
@@ -232,7 +232,8 @@ We now define $\mc K(\theta;\mc D)$. Assuming there are $m$ constraints with eac
 \label{smoothing}
 \mc K(\theta; \mc D)= \prod_{k=1}^m K_k(v_k(\theta)),
 \end{equation}
-where $v_k: \mc R \rightarrow [0,\infty)$ is a measurable function and quantifies the distance to space $\mc D_k$. For example, one can use $v(\theta)=|f(\theta)|$ as a distance to equality-constrained space  $\{\theta:f(\theta)=0\}$; $v(\theta)=|f(\theta)|_+$, where $(x)_+ = \left\{\begin{array}{cc}  0 \text{ if } x\le 0 \\ x \text{ if } x> 0\end{array}\right.$ as a distance to inequality-constrained space  $\{\theta:f(\theta) \le 0\}$. The function $K_k:[0,\infty)\rightarrow [0,1]$ penalizes $v_k(\theta)>0$ and decreases in $v_k(\theta)$. For example, $K_k(v)=\exp(-v)$ or $K_k(v)=\frac{1}{1+v^2}$. For illustration simplicity, in this paper, we focus on exponential smoothing function $K_k(v(\theta))=\exp(-\frac{v(\theta)}{\lambda_k})$ with $\lambda_k>0$ as a tuning parameter. \aki{We need to assume the growth rate on $v(\theta)$ to ensure that an extrinsic prior is integrable and proper. There can be a problem if $v(\theta) = \log \| \theta \|$ for example. In fact, the geometric ergodicity of HMC would require $- \log K(v(\theta)) = O(\| \theta \|^\alpha)$ for $1 \leq \alpha \leq 2$ \citep{livingstone2016geometric}.}
+where $v_k: \mc R \rightarrow [0,\infty)$ is a measurable function and quantifies the distance to space $\mc D_k$. For example, one can use $v(\theta)=|f(\theta)|$ as a distance to equality-constrained space  $\{\theta:f(\theta)=0\}$; $v(\theta)=|f(\theta)|_+$, where $(x)_+ = \left\{\begin{array}{cc}  0 \text{ if } x\le 0 \\ x \text{ if } x> 0\end{array}\right.$ as a distance to inequality-constrained space  $\{\theta:f(\theta) \le 0\}$. The function $K_k:[0,\infty)\rightarrow [0,1]$ penalizes $v_k(\theta)>0$ and decreases in $v_k(\theta)$. For example, $K_k(v)=\exp(-v)$ or $K_k(v)=\frac{1}{1+v^2}$. For illustration simplicity, in this paper, we focus on exponential smoothing function $K_k(v(\theta))=\exp(-\frac{v(\theta)}{\lambda_k})$ with $\lambda_k>0$ as a tuning parameter. We assume that the extrinsic prior is proper $ \int_{\mc R} \pi_{0,\mc R}(\theta) \mc{K}(\theta; \mc D)d\theta <\infty$.
+
 
 This framework is applicable to a variety of complicated case. For example, $\theta$ can have only some of parameters constrained; parameters can be in multiple constraints simultaneously; constraints can be dependent. Regardless, it is generally simple to adapt \eqref{smoothing} via appropriate mapping through $v(\theta)$. 
 
@@ -260,9 +261,10 @@ $$\begin{bmatrix} \theta_1 \\ \theta_2 \end{bmatrix} \sim
 \right).$$
 As $\lambda\rightarrow 0$, the extrinsic prior becomes the same as the degenerate bivariate Gaussian in intrinsic approach.
 
-Obviously, the approximation based on extrinsic approach is much simpler to derive compared to the exact conditioned intrinsic distribution.
+Clearly the approximation based on extrinsic approach is much simpler to derive compared to the conditioned intrinsic distribution.
 
 \subsection{Approximation Error}
+\leo{We have asymptotic results on total variation distance going to 0, and non-asymptotic bound when $\lambda>m>0$, if  $\int_{\mc D} \pi_{\mc R}(\theta)d\theta>0$. But the non-asymptotic bound fails if  $\int_{\mc D} \pi_{\mc R}(\theta)d\theta=0$. If we are to bound distance between two measures, we might need to switch to Wasserstein distance with Eucledean norm in the whole section.}
 
 We now study the properties of the extrinsic prior and posterior. One important task is to quantify the difference between extrinsic and intrinsic ones. Due to similar reasoning for prior and posterior, we use some general notation. Let $\pi_{\mc R}(\theta)$ be an unnormalized density in $\mc R$, which is $\pi_{0,\mc R}(\theta)$ when studying prior and $L(y;\theta)\pi_{0,\mc R}(\theta)$ when studying posterior; $\Pi(.)$ and $\tilde\Pi(.)$ to represent the measures under intrinsic and extrisic methods associated with either prior or posterior distribution. 
 
@@ -279,7 +281,7 @@ proof:
 Using exponential smoothing function $\mc K(\theta; D) = \prod_{k=1}^m \exp( -v_k(\theta)/\lambda_k)$, as all $\lambda_k \rightarrow 0$, the total variation $||\Pi(.), \tilde{\Pi}(.) ||_{TV} \rightarrow 0$, if $\int_{\mc R} \pi_{\mc R}(\theta) d\theta<\infty$. This is a direct result of dominated convergence theorem and $\mc K(\theta; \mc D)\le 1$.
 
 
-With some mild conditions, we further quantify the non-asymptotic rate. Letting $\lambda = \sup_k \lambda_k$, $M= \int_{\mc R \setminus \mc D} \pi_{\mc R}(\theta) d\theta<\infty$. As a linear combination of measurable functions, $v(\theta)=\lambda\sum_{k=1}^m\frac{ v_k(\theta)}{\lambda_k}$ is measurable. Let $f(v)$ be the density of $v(\theta)$. \aki{The density of $v(\theta)$ crucially depends on the level set of $v(\theta)$ and is a pretty complicated (i.e.\ intractable) object in general.}
+With some mild assumptions, we further quantify the non-asymptotic rate. Letting $\lambda = \sup_k \lambda_k$, $M= \int_{\mc R \setminus \mc D} \pi_{\mc R}(\theta) d\theta<\infty$. As a linear combination of measurable functions, $v(\theta)=\lambda\sum_{k=1}^m\frac{ v_k(\theta)}{\lambda_k}$ is measurable. Let $f(v)$ be the density of $v(\theta)$.
 
 \begin{remark}
 \label{convergence_rate}
@@ -287,9 +289,12 @@ If there exists a $t<\infty$ such that $f(v) < \infty$, for any $t>0$,
 $$\int_{\mc R \setminus \mc D} {\pi_{\mc R}(\theta)} \prod_{k=1}^m \exp( -v_k(\theta)/\lambda_k) d \theta \le 
  {M} \exp(-\frac{t}{\lambda}) + {M} \sup_{t^*\in(0,t)} {f(t^*)}\lambda 
 $$
-\aki{How is this bound based on $v(\theta) < t$ useful? We need $v(\theta) \to \infty$ as $\| \theta \| \to \infty$ for the extrinsic prior to be integrable. }\leo{I rephrased the statement}
 \end{remark}
-proof:
+\aki{The density of $v(\theta)$ crucially depends on the level set of $v(\theta)$ and is a pretty complicated (i.e.\ intractable) object in general.}
+
+\leo{The point is that if the measure of $v$ is Lipschitz in a $t$-ball of $\mc D$, then $\sup_{t^*\in(0,t)} {f(t^*)}$ is bounded; $\exp(-\frac{t}{\lambda})$ goes to $0$ faster than $\lambda$, so the whole term goes to $0$ in $\mc O(\lambda)$.}
+
+\begin{proof}[Proof]
 \begin{equation}
 \begin{aligned}
 \frac{1}{M}\int_{\mc R \setminus \mc D} {\pi_{\mc R}(\theta)} \prod_{k=1}^m \exp( -v_k(\theta)/\lambda_k) d \theta = & 
@@ -301,7 +306,8 @@ proof:
 \le  & \sup_{t^*\in(0,t)} f(t^*)  \lambda  + \exp(-\frac{t}{\lambda}) \\
 \end{aligned}
 \end{equation}
-Rearranging terms yields the result.  $\blacksquare$
+Rearranging terms yields the result.
+\end{proof}
 
 For $\lambda$ close to $0$, the extrinsic measure approaches intrinsic one in total varation distance in $O(\lambda)$. This rate is quantified under very general assumption. We expect it can be sharpened under special cases.
 
@@ -309,24 +315,27 @@ We now examine the second case in \eqref{exact_prior2} and \eqref{exact_posterio
 
 
 \begin{remark}
-If $\lim_{r\rightarrow 0^+} \frac{\int_{\mc A} \pi_{\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D_r^+} d\theta}{ \int_{\mc D_r^+} \pi_{\mc R}(\theta)d\theta }$ and $ \lim_{r\rightarrow 0^+}\frac{\int_{\mc A} \pi_{\mc R}(\theta) \mc K({\theta; \mc D_r^+}) d\theta}{ \int_{\mc R} \pi_{\mc R}(\theta)  \mc K({\theta; \mc D_r^+}) d\theta }  $ converge uniformly in $\mc A$, the total variation distance between the measures of extrinsic and intrinsic distribution
+If both $\lim_{r\rightarrow 0^+} \frac{\int_{B} \pi_{\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D_r} d\theta}{ \int_{\mc D_r} \pi_{\mc R}(\theta)d\theta }$ and $ \lim_{r\rightarrow 0^+}\frac{\int_{B} \pi_{\mc R}(\theta) \mc K({\theta; \mc D_r}) d\theta}{ \int_{\mc R} \pi_{\mc R}(\theta)  \mc K({\theta; \mc D_r}) d\theta }  $ converge uniformly in $B$, the total variation distance between the measures of extrinsic and intrinsic distribution
 
 \begin{equation}
 	\begin{aligned}
 	||\Pi(.), \tilde{\Pi}(.) ||_{TV}
-	= &\sup_{\mc A} ||\Pi(\mc A)- \tilde{\Pi}(\mc A)||\\
-	= & \sup_{\mc A}|| \lim_{r\rightarrow 0^+} \frac{\int_{\mc A} \pi_{\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D_r^+} d\theta}{ \int_{\mc D_r^+} \pi_{\mc R}(\theta)d\theta }-  \lim_{r\rightarrow 0^+}\frac{\int_{\mc A} \pi_{\mc R}(\theta) \mc K({\theta; \mc D_r^+}) d\theta}{ \int_{\mc R} \pi_{\mc R}(\theta)  \mc K({\theta; \mc D_r^+}) d\theta } || \\
-	= & \lim_{r\rightarrow 0^+} \sup_{\mc A}|| \frac{\int_{\mc A} \pi_{\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D_r^+} d\theta}{ \int_{\mc D_r^+} \pi_{\mc R}(\theta)d\theta }-  \frac{\int_{\mc A} \pi_{\mc R}(\theta) \mc K({\theta; \mc D_r^+}) d\theta}{ \int_{\mc R} \pi_{\mc R}(\theta)  \mc K({\theta; \mc D_r^+}) d\theta } || \\
+	= &\sup_{B} ||\Pi(B)- \tilde{\Pi}(B)||\\
+	= & \sup_{B}|| \lim_{r\rightarrow 0^+} \frac{\int_{B} \pi_{\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D_r} d\theta}{ \int_{\mc D_r} \pi_{\mc R}(\theta)d\theta }-  \lim_{r\rightarrow 0^+}\frac{\int_{B} \pi_{\mc R}(\theta) \mc K({\theta; \mc D_r}) d\theta}{ \int_{\mc R} \pi_{\mc R}(\theta)  \mc K({\theta; \mc D_r}) d\theta } || \\
+	= & \lim_{r\rightarrow 0^+} \sup_{B}|| \frac{\int_{B} \pi_{\mc R}(\theta) \mathbbm{1}_{\theta\in \mc D_r} d\theta}{ \int_{\mc D_r} \pi_{\mc R}(\theta)d\theta }-  \frac{\int_{B} \pi_{\mc R}(\theta) \mc K({\theta; \mc D_r}) d\theta}{ \int_{\mc R} \pi_{\mc R}(\theta)  \mc K({\theta; \mc D_r}) d\theta } || \\
 	=& \lim_{r\rightarrow 0^+}  \frac{\int_{\mc R \setminus \mc \mc D_r} \pi_{\mc R}(\theta) \mc K(\theta;\mc D_r)d\theta}{\int_{\mc R \setminus \mc D} \pi_{\mc R}(\theta) \mc K(\theta;\mc D_r)d\theta}.
 	\end{aligned}
 \end{equation}
 \end{remark}
 
  Let $g(r,\lambda)=
-\frac{\int_{\mc R \setminus \mc \mc D_r} \pi_{\mc R}(\theta) \mc K(\theta;\mc D_r)d\theta}{\int_{\mc R \setminus \mc D} \pi_{\mc R}(\theta) \mc K(\theta;\mc D_r)d\theta}$, using exponential smoothing function and $\lambda = \sup_k\lambda_k$, $\lim_{\lambda\rightarrow 0^+}g(r,\lambda)=0$ pointwise in $r$. And we have  $||\Pi(.), \tilde{\Pi}(.) ||_{TV}\le \lim_{r\rightarrow 0^+}\frac{{M_r} \exp(-\frac{t}{\lambda}) + {M_r} \sup_{t^*\in(0,t)} {f(t^*)}\lambda }{\int_{\mc R  \setminus \mc D} \pi_{\mc R}(\theta) \mc K(\theta;\mc D_{r})d\theta}$ assuming $M_r= \int_{\mc R \setminus \mc D_{r}} \pi_{\mc R }(\theta) d\theta<\infty$. For every $r$, there is a small $\lambda$ to make the total variation distance  $0$. However, with $\lambda=\lambda_0$ fixed and non-negligble, $\lim_{r\rightarrow 0^+}g(r,\lambda)=1$. This is an inherent weakness of total variation distance in comparing continuous and degenerate distributions. Therefore, to quantify distance with non-zero $\lambda$, we use Wasserstein distance instead:
+\frac{\int_{\mc R \setminus \mc  D_r} \pi_{\mc R}(\theta) \mc K(\theta;\mc D_r)d\theta}{\int_{\mc R \setminus \mc D} \pi_{\mc R}(\theta) \mc K(\theta;\mc D_r)d\theta}$, using exponential smoothing function and $\lambda = \sup_k\lambda_k$, $\lim_{\lambda\rightarrow 0^+}g(r,\lambda)=0$ pointwise in $r$. And we have  $||\Pi(.), \tilde{\Pi}(.) ||_{TV}\le \lim_{r\rightarrow 0^+}\frac{{M_r} \exp(-\frac{t}{\lambda}) + {M_r} \sup_{t^*\in(0,t)} {f(t^*)}\lambda }{\int_{\mc R  \setminus \mc D} \pi_{\mc R}(\theta) \mc K(\theta;\mc D_{r})d\theta}$ assuming $M_r= \int_{\mc R \setminus \mc D_{r}} \pi_{\mc R }(\theta) d\theta<\infty$. For every $r$, there is a small $\lambda$ to make the total variation distance arbitrarily small. However, with $\lambda=\lambda_0$ fixed and non-negligble, $\lim_{r\rightarrow 0^+}g(r,\lambda)=1$. This is due to the over-sensitivity of total variation distance in comparing continuous and degenerate distributions. Therefore, to quantify distance with non-zero $\lambda$, we consider general Wasserstein distance:
 
-$$W_p(\Pi,\tilde\Pi)=\left(\underset{\gamma\in \Gamma(\Pi,\tilde\Pi)}{\inf}\int d(x,y)^p d\gamma(x,y)\right)^{1/p}$$
- where $ d(x,y)$ is the metric on $\mc R$ and $\Gamma(\Pi,\tilde\Pi)$ the set of couplings of $\Pi$ and $\tilde\Pi$.
+$$W_p(\Pi,\tilde\Pi)=\left(\underset{\gamma\in \Gamma(\Pi,\tilde\Pi)}{\inf}\int \text{dist}(x,y)^p d\gamma(x,y)\right)^{1/p}$$
+ where $ \text{dist}(x,y)$ is the metric on $\mc R$ and $\Gamma(\Pi,\tilde\Pi)$ the set of couplings of $\Pi$ and $\tilde\Pi$. The total variation distance is a special case with $p=1$ and $d(x,y)= \mathbbm{1}_{x \neq y}$. Instead we consider Eucledean norm $\text{dist}(x,y)=||x-y||$.
+
+
+{\bf Example 1C: Distance between intrinsic and extrinsic distributions} 
 
 We continue in Example 1, denoting the bivariate Gaussian distribution obtained extrinsically as $\No(\mu_\lambda, \Sigma_\lambda)$, the intrinsic one can be viewed as $\No(\mu_0, \Sigma_0)$. The Wasserstein distance between the intrinsic and extrinsic distributions in Example 1 \citep{dowson1982frechet} is $W_2 (\Pi,\tilde\Pi)= \left( ||\mu_\lambda - \mu_0||_2^2+ \text{tr}(\Sigma_\lambda+\Sigma_0- 2 (\Sigma_\lambda^{1/2}  \Sigma_0 \Sigma_\lambda^{1/2})^{1/2}) \right)^{1/2} $. Figure~\ref{two_normal_wass} plots $W_2$ under different values of $\lambda$, with $W_2\approx 0$ with $\lambda=10^{-3}$.
 
@@ -346,14 +355,17 @@ We continue in Example 1, denoting the bivariate Gaussian distribution obtained 
 
 \aki{The convergence in total variation is too strong, so I propose something like below.}
 
-\leo{Aki, I like your use of Feder's co-area forumula, can we get some non-asympotic result when $\lambda>m$? The point of total variation being less ideal is that although it DOES work for $\lambda\rightarrow 0$ (Ramark 1 and 3) with almost no assumption, but doesn't work in non-asympotic case with $Z(\mc D)=0$.}
+\leo{Aki, I like your use of Feder's co-area forumula, can we get some non-asympotic result when $\lambda>m$ (away from 0)?}
 
 \aki{A non-asymptotic result should hold as long as we put the right assumptions on $f(\theta)$. I'd think the key assumption is $\nabla f(\theta)$ to be a unit vector orthogonal to $\mc D$ whenever $\theta \in \mc D$. I don't know how to rigorously estimate the difference in the integrals over the surface $f^{-1}(0)$ and $f^{-1}(\alpha)$, however. (I can do it if $\mc D$ is a compact manifold, I think.) We may need help from an expert in geometric methods.}
+
 
 
 \newcommand{\tilpi}{\tilde{\pi}}
 
 We establish that the inference based on an intrinsic prior is well approximated by the one based on an extrinsic prior for sufficiently small $\lambda$. In particular, for a posterior summary of interest $g(\theta)$, we have $\mathbb{E}_{\tilpi_{\mc D, \lambda}}[g(\theta)] \to \mathbb{E}_{\pi_{\mc D}}[g(\theta)]$ as $\lambda \to 0$ provided $g(\theta)$ is continuous and integrable under the extrinsic posterior for some $\lambda < \infty$. In case the constraint takes the form $\mc D = \{f(\theta) = 0\}$ and the extrinsic posterior is given by $\tilpi_{\mc D, \lambda}(\theta) = \pi_{\mc R}(\theta) \exp(- \lambda^{-1} |f(\theta)|) \, / \, Z_\lambda$, the proof is as follows. \aki{From the proof, it appears that we also need to choose the constraint so that  $\| \nabla f \| \equiv 1$ on $\mc D$. This makes sense from geometric intuition too, I think.}
+
+\leo{I'm not sure if $\| \nabla f \| \equiv 1$ is easy to have, for example how to scale $f(x,y)=x^3+y^3 -1$ uniformly to have $\| \nabla f \| \equiv 1$?}
 \begin{proof}[Proof]
 	By the co-area formula of Federer \citep{diaconis2013manifold}, we have
 	\begin{equation}
@@ -436,12 +448,12 @@ For simplicity, the following discussions assume the mass matrix $\mass$ is take
 \label{eq:stability_condition}
 \omega_U(\theta)^{1/2} \dt < 2
 \end{equation} 
-must hold on most regions of the parameter space $\theta$ \citep{hairer06}. When the target distribution $\pi(\theta)$ is Gaussian, we have $\omega_U^{-1} = \min_{\| u \| = 1} \textrm{var}(\langle \theta, u \rangle)$ and the stability condition \eqref{eq:stability_condition} reduces to $\eta < 2 \sigma_{\min}$ where $\sigma_{\min}$ is the scale of $\theta$ in the most constrained direction. (The stability analysis in this special case is also discussed in \cite{neal2011mcmc}.) In the case of an extrinsic posterior, the Hessian $\hess_U(\theta)$ is given by
+must hold on most regions of the parameter space $\theta$ \citep{hairer06}. When the target distribution $\pi(\theta)$ is Gaussian, we have $\omega_U^{-1} = \min_{\| u \| = 1} \textrm{var}(\langle \theta, u \rangle)$ and the stability condition \eqref{eq:stability_condition} reduces to $\epsilon < 2 \sigma_{\min}$ where $\sigma_{\min}$ is the scale of $\theta$ in the most constrained direction. (The stability analysis in this special case is also discussed in \cite{neal2011mcmc}.) In the case of an extrinsic posterior, the Hessian $\hess_U(\theta)$ is given by
 \begin{equation}
 \label{eq:hessian_extrinsic}
 \hess_U(\theta) = -\hess_{\log \pi_{\mc R}}(\theta)  - \sum_k \lambda_k^{-1} \hess_{v_k}(\theta).
 \end{equation}
-The largest eigenvalue of $\hess_U(\theta)$ becomes dominated by the second term of \eqref{eq:hessian_extrinsic} and grows proportional to $\max_k \lambda_k^{-1}$ in the limit $\lambda_k \to 0$. In this asymptotic regime, according to the condition \eqref{eq:stability_condition}, the leapfrog stepsize $\dt$ needs to scale proportional to $\min_k \lambda_k^{1/2}$ for a stable approximation. Backward error analysis for the stability and approximation error similarly suggests the need for $\dt$ to scale proportional to $\min_k \lambda_k^{1/2}$ \citep{skeel2001modified}.
+The largest eigenvalue of $\hess_U(\theta)$ becomes dominated by the second term of \eqref{eq:hessian_extrinsic} and grows proportional to $\max_k \lambda_k^{-1}$ in the limit $\lambda_k \to 0$. \leo{we should add that this only applies when $\theta \not \in \mc D$}. In this asymptotic regime, according to the condition \eqref{eq:stability_condition}, the leapfrog stepsize $\dt$ needs to scale proportional to $\min_k \lambda_k^{1/2}$ for a stable approximation. Backward error analysis for the stability and approximation error similarly suggests the need for $\dt$ to scale proportional to $\min_k \lambda_k^{1/2}$ \citep{skeel2001modified}.
 
 The purpose of our extrinsic approach is to approximate the intrinsic posterior with a sufficiently small $\lambda_k$'s. However, the above analysis reveals that, as $\lambda_k \to 0$'s, the stepsize and hence the computational cost of HMC becomes dominated by the extrinsic constraint rather than the structure of the intrinsic posterior. A reasonable choice of $\lambda_k$'s should therefore balance the computational cost of HMC and  proximity of the extrinsic posterior to the intrinsic one. Since $- \hess_{\log \pi}^{-1}$ roughly represents a local covariance structure of a density $\pi$, the square root $\omega^{-1 / 2}$ of its smallest eigenvalue can be thought of as the (local) scale of the density in its most constrained direction. In order for the second term of \eqref{eq:hessian_extrinsic} not to completely dominate the computational cost of HMC, therefore, $\min_k \lambda_k^{1/2}$ should scale proportional to the scale of the intrinsic posterior in its most constrained direction along $\mc D$.
 
@@ -449,9 +461,18 @@ The purpose of our extrinsic approach is to approximate the intrinsic posterior 
 
 \aki{The story here does not sound very well: ``$\lambda$ needs to be small to approximate the intrinsic posterior well, but the computational costs grows like $\lambda^{-1/2}$''. It seems important to characterize that the computational cost (hopefully) grows slower than the approximation error. I conjecture that this is indeed true if $\nabla v(\theta)$ is orthogonal to $\mc D$ in which case the leading order error term is a function of the curvature of $\mc D$.}
 
+
+\leo{One thing to note is that, small $\lambda_k$ is not an issue when $\theta\in \mc D$, since $\sum_k \lambda_k^{-1} \hess_{v_k}(\theta)=0$. That means if $\omega_U^{-1}$ is reasonably large for $\pi_{\mc R}(\theta)\mathbbm{1}_{\theta \in \mc D}$, we can use large $\lambda_k^{-1}$ to force $\theta\in \mc D$ for most of time. On the other hand, if $\omega_U^{-1}$ is small (without extrinsic approximation), we need smaller $\lambda_k^{-1}$ to increase $\omega_U^{-1}$, that's where the trade-off applies.}
+
+\leo{More generally speaking, recall $\mc D= \cap_k \mc D_k$, where each $\mc D_k$ is a constrained space. It is possible that $\pi_{\mc R}(\theta)\mathbbm{1}_{\theta \in \cap A_k}$ does not have small $\omega_U^{-1}$, for a subset of constraints $\{A_k\}\subset\{\mc D_k\}$; but the overall $\pi_{\mc R}(\theta)\mathbbm{1}_{\theta \in \cap \mc D_k}$ does have this problem. Therefore, we can use large $\lambda_k^{-1}$ over the index of $\{A_k\}$ and smaller ones over $\{\mc D_k\}\setminus \{A_k\}$. The overall computational cost should be controled by $\underset{k:\{\mc D_k\}\setminus \{A_k\}}{\max} \lambda_k^{-1}$. Perhaps we can formalize on this, although I'm not sure how to incorporate Hessian with space truncation at this point.}
+
 \aki{Another possibility is to start with $\lambda$ for which the mixing seems good enough and sequentially ``tighten'' the constraint. For example, we can do something like 1. Collect HMC samples with some fixed $\lambda$, 2. Reduce $\lambda$ and (independently) update the previous samples with a few iterations MCMC (say MALA or HMC) with this new posterior, 3. Repeat 2.}
 
-\aki{I don't find Example 3 below particularly informative; the mixing will obviously suffer if you reduce the stepsize but keep the number of steps constant. I think the mixing should be similar if you keep $L \dt$ fixed. } 
+\leo{Yes, that is one possibility. David and I talked about this a while ago. We didn't go in this direction because we want to keep the algorithm as simple as possible, provided the approximation error is reasonably bounded, then we can suggest projection or adaptive algorithm as follow-up remedy. I think a non-asymptotic bound on approximation error and some numeric Wasserstein/ TV distances on the examples below should suffice; but I'm open to new algorithm if really necessary.}
+
+
+
+
 
 \section{Simulated Examples and Application}
 
@@ -494,7 +515,7 @@ where $\theta \in \mc D$ is assigned a von Mises--Fisher prior $\pi_{0,\mc D}(\t
 
  To generate data, we use $\theta= (\sqrt 3/2, 1/2)$, $\sigma^2=0.5^2$ and small $n=5$, in order to induce widely spread-out posterior $\theta$ on the manifold. We then use $F=(1,1)$ to induce a weakly informative prior for $\theta$ and an inverse-Gamma prior $\text{IG}(2,1)$ for $\sigma^2$ . To assign extrinsic prior, we use $v(\theta)=|\theta'\theta -1|$ as the distance to circle and extrinsic prior $\tilde\pi_{0,\mc D}(\theta)= \exp(F'\theta_i) \exp(-\frac{|\theta'\theta -1|}{\lambda})$.
 
-We test $\lambda = 0.001$, $0.0001$ and $0.00001$ in three experiments. We run each algorithm for $20,000$ steps, with first $10,000$ discarded. To compare the computing efficiency, we restrict the maximum leap-frog steps $L$ to be $100$ and visualize how much space each algorithm can explore within one HMC iteration. Figure~\ref{unit_circle}(a) plots the path of $L=100$ leap-frog steps. Larger $\lambda$ leads to wider support expansion and larger stability bound $\eta_{max}$. This makes $\theta^{(\eta L)}$  much less correlated with $\theta^{(0)}$ at each iteration, measured by autocorrelation (ACF) based on the posterior sample of $\theta_1$ (Figure~\ref{unit_circle}(b)). Even though we use somewhat small $\lambda$, the posterior distance $v(\theta)$ is small for all three settings (Figure~\ref{unit_circle}(c)), with smaller $\lambda$ associated with smaller $v(\theta)$ but lower computing efficiency.
+We test $\lambda = 0.001$, $0.0001$ and $0.00001$ in three experiments. We run each algorithm for $20,000$ steps, with first $10,000$ discarded. To compare the computing efficiency, we restrict the maximum leap-frog steps $L$ to be $100$ and visualize how much space each algorithm can explore within one HMC iteration. Figure~\ref{unit_circle}(a) plots the path of $L=100$ leap-frog steps. Larger $\lambda$ leads to wider support expansion and larger stability bound $\epsilon_{max}$. This makes $\theta^{(\epsilon L)}$  much less correlated with $\theta^{(0)}$ at each iteration, measured by autocorrelation (ACF) based on the posterior sample of $\theta_1$ (Figure~\ref{unit_circle}(b)). Even though we use somewhat small $\lambda$, the posterior distance $v(\theta)$ is small for all three settings (Figure~\ref{unit_circle}(c)), with smaller $\lambda$ associated with smaller $v(\theta)$ but lower computing efficiency.
 
 \begin{figure}[H]
 \centering
