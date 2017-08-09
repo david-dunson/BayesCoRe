@@ -106,34 +106,251 @@ An alternative idea is to {\em relax} a sharp parameter constraint by defining a
 The goal of this article is to dramatically generalize these specific approaches to develop a broad class of {\em extrinsic priors} for parameter constrained problems. These priors are defined to place small probability outside of the constrained region, while permitting use of efficient and general use MCMC algorithms; in particular, HMC. Unlike intrinsic methods, such as Riemannian and geodesic HMC \citep{girolami2011riemann,byrne2013geodesic}, our approach is simple to implement in general settings using automatic algorithms. The generality frees up a much broader spectrum of Bayesian models, as one no longer needs to focus on very specific computationally tractable models.
 Theoretic studies are conducted and original models are shown in simulations and data applications.
 
-\section{Extrinsic Bayes Methodology}
+\section{Conditional Constrained Bayes Methodology}
 
-\subsection{Intrinsic Distribution Based on Conditional Probability}
+\subsection{Deriving Constrained Distribution via Conditioning}
 
-Let $\theta \in \mc D$ denote the parameters in likelihood function $L(\theta;y)$, with $y$ the data. The support $\mc D$ is a constrained space. The usual Bayesian approach assigns a prior density $\pi_{0,\mc D}(\theta)$ for $\theta$ having support $\mc D$.  A common strategy is to reparameterize the model in terms of unconstrained parameters $\theta^*$, with the constraint induced in transforming back to the $\theta$ parameterization.  Although this strategy often works, such a convenient reparameterization is not always available.  
+Let $\theta \in \mc D$ denote the parameters of interests. The support $\mc
+D$ is a constrained space. The usual Bayesian approach assigns a prior
+density $\pi_{0,\mc D}(\theta)$ for $\theta$ only having support $\mc D$. A
+simple strategy is to reparameterize the constrained space in terms of
+parameters $\theta^*$ in a less constrained space (such as Euclidean space),
+with the constraint induced. The reparameterization 
+$\theta\rightarrow\theta^*$ is often known as
+`embedding' in manifold literature \citep{nash1954c1,nash1956imbedding}.
+Although this strategy often works, reparameterization makes it difficult
+to maintain certain property in $\mc D$, such as uniformity on a manifold as described
+by \cite{diaconis2013manifold}; also, such a convenient reparameterization is
+not always available, especially when $\mc D$ is the intersection of two or
+more different types of constrained space.
 
-We present a more general construction by inducing intrinsic distribution using a conditional density. Starting from a prior $\pi_{0,\mc R}(\theta)$ on a `less constrained' space $\mc R\supset \mc D$, we constrain it on $\mc D$ by inducing its conditional density given $\theta\in \mc D$, $\pi_{0,\mc D}(\theta)=\pi_{0}(\theta\mid \theta\in\mc D)$. For simplicity, we focus on $\mc R$ being Eucledean space $\mathbb{R}^{p}$ or its truncated subspace. 
+On the other hand, in un/less-constrained space, there is a large family of
+distributions  with well-studied properties. We present a new strategy to
+adapt them into the constrained space. Starting with a distribution of
+density $\pi_{\mc R}(\theta)$ on a encompassing space $\mc R\supset \mc D$,
+we focus on constrained space that can be defined as $\mc D =\{\theta:
+v(\theta)={\bf 0}\}$ with $v: \bb{R}^p\rightarrow \bb  R^d$
+Lipschitz and measurable with respect to $\pi_{\mc R}(\theta)$. Although
+this imposes a restriction, there is a rich class within this category. For
+each measurable function $f:\mc R\rightarrow \bb R$, one can use
+$v(\theta)=f(\theta)$ for equality
+constraint $f(\theta)=0$, and $v(\theta)=|f(\theta)|_+=\left\{\begin{array}{cc}  0 \text{ if } f(x)\le 0
+	\\ f(x) \text{ if } f(x)> 0\end{array}\right.$ for inequality
+	constraint $f(\theta)<0$.
 
-It is possible that $\mc D$ has exactly $\mu^{p}(0)=0$, where $\mu^{p}$ denotes the $p$-dimensional Lebesgue measure. To circumvent the definition difficulty, {\it regular conditional probability} (r.c.p.) is commonly used \citep{kolmogorov1950foundations}. For this article to be self-contained, we list the definition as below.
+The constrained density can then be derived as the conditional density given the
+value of $v(\theta)$ equal to $\bf 0$
 
-Let $(\Omega, \mathscr B, P)$ be a probability space and sub-$\sigma$-field $\mathscr A\subseteq \mathscr B$, the function $P(\cdot\mid \mathscr A)$ is a regular conditional probability on $\mathscr B$ given $\mathscr A$, if:
+\be
+\pi_{\mc D}(\theta)=\pi_{\mc R}(\theta\mid v(\theta)={\bf 0})\propto \pi_{\mc R}(\theta) \mathbbm{1}_{\theta\in \mc
+D}/J(v(\theta))
+\ee
+where $\mathbbm{1}(\theta\in\mc D)$ is an indicator function equal $1$ when
+$\theta\in \mc D$ and $0$ otherwise; $J(v(\theta))$ is induced by the
+transformation, which equals to
+the Euclidean norm of the partial derivative vector $\|\nabla v(\theta)\|$
+if it is non-zero, otherwise a positive constant. This is based on the area
+formula in \citep{federer2014geometric} and a more rigorous justification
+is deferred to the theory section.
+
+We now provide some concrete illustration of this approach. Consider prescribing
+a distribution on a unit hypersphere $\{\theta:
+\theta'\theta=1\}$ inside $\bb R^p$. We start with a familiar
+location-scale distribution Gaussian distribution with diagonal
+covariance $\theta \in \No(F,I\sigma^2)$ as $\pi_{\mc
+R}$ ($F\in \bb R^p$). Conditioning on $v(\theta)=\theta'\theta-1=0$ yields
+
+\be
+\pi_{\mc D}(\theta) &\propto
+\exp(-\frac{\theta'\theta}{2\sigma^2}+\frac{F'\theta}{\sigma^2})
+ \mathbbm{1}_{\theta'\theta=1}/2 \\
+ & \propto
+\exp(\frac{F'}{\sigma^2}\theta)
+ \mathbbm{1}_{\theta'\theta=1}
+\ee
+where the quadratic term of $\theta$ is left out as a constant under
+the constraint; $J(v(\theta))=2$. This gives rise to the famous von
+Mises--Fisher distribution \citep{khatri1977mises}. As the center and
+concentration is determined by the location $F$ and scale-inverse
+$\sigma^{-2}$ in Gaussian $\pi_{\mc
+	R}(\theta)$, this pattern is inherited in the conditional
+	(Figure~\ref{sphere_examples}(a)); in directional statistics, the
+normalized ${F}/{\|F\|}$ is called the mean
+direction (when $\|F\|\neq \bf 0$) and $\|F\|/\sigma^2$ is called
+concentration parameter \citep{khatri1977mises}.
+
+This immediately suggests one can choose different $\pi_{\mc R}(\theta)$
+based on its properties in unconstrained space $\mc R$, and induce similar behavior on the $\mc D$. Starting from
+correlated Gaussian $\theta \in \No(F,\Sigma)$, one obtains 
+\be
+\pi_{\mc
+D}(\theta) & \propto\exp(-\frac{1}{2}\theta'\Sigma^{-1}\theta+
+{F'}{\Sigma^{-1}}\theta) \mathbbm{1}_{\theta'\theta=1} \\
+& \propto \exp(\sum_{k=2}^p(-\frac{1}{2}w_k)\theta'\Psi_k'\Psi_k\theta
++ (-\frac{1}{2}w_1)\theta' \Psi_1\Psi'_1\theta+
++ \sum_{k=1}^p w_k F'\Psi_k\Psi'_k\theta ) \mathbbm{1}_{\theta'\theta=1} \\
+& \propto \exp(-\frac{1}{2}\sum_{k=2}^p( w_k - w_1)\theta'\Psi_k'\Psi_k\theta
++ \sum_{k=1}^p w_k F'\Psi_k\Psi'_k\theta )\mathbbm{1}_{\theta'\theta=1}
+\ee
+where $\Psi_k$ and $w_k$ are the $k$th eigenvector and eigenvalue of $\Sigma^{-1}$. This is the $p$-dimensional generalization of the Fisher-Bingham distribution
+\citep{mardia1975statistics}, which has $p=3$. Similar to their roles in Gaussian covariance,
+the eigenvectors control axes of the ellipse on the sphere
+\citep{kent1982fisher}. An illustration with correlated $x$ and $y$ axes is shown in
+Figure~\ref{sphere_examples}(b).
+
+Alternatively, one can start from a
+multivariate $t$-distribution $t_m(F,I\sigma^2)$ with $m$ degrees of freedom,
+mean $F$ and variance $I\sigma^2$, and obtain constrained density 
+\be
+\pi_{\mc
+D}(\theta)\propto
+(1+\frac{1+F'F}{m\sigma^2}-\frac{2F'\theta}{m\sigma^2})^{-{(m+p)}/{2}}\mathbbm{1}_{\theta'\theta=1}
+\ee
+Similar to the relation between $t$-distribution and Gaussian, at small
+$m$, the induced distribution (Figure~\ref{sphere_examples}(c) with $m=3$) exhibits less concentration than von
+Mises--Fisher on the sphere.
+
+\begin{figure}[H]
+   \begin{subfigure}[b]{0.30\textwidth}
+    \includegraphics[width=1\textwidth]{sphere_vmf}
+     \caption{$\pi_{\mc R}(\theta)$ independent Gaussian}
+	\end{subfigure}
+    \begin{subfigure}[b]{0.30\textwidth}
+     \includegraphics[width=1\textwidth]{sphere_fb}
+     \caption{$\pi_{\mc R}(\theta)$ correlated Gaussian}
+     	\end{subfigure}
+    \begin{subfigure}[b]{0.30\textwidth}
+     \includegraphics[width=1\textwidth]{sphere_t}
+     \caption{$\pi_{\mc R}(\theta)$ independent $t_3$}
+     	\end{subfigure}
+\caption{Sectional view of random sample on a 3-dimensional unit sphere from the constrained distribution by conditioning unconstrained density of (a) $\No( F, \diag\{0.1\})$, (b) $\No(F, \left[\protect\begin{smallmatrix} 0.1 & 0.09 & 0 \\ 0.09 & 0.1 & 0 \\ 0 & 0 &0.1  \protect\end{smallmatrix}\right])$, (c) $t_3(F,\diag\{0.1\} )$, where $F=[1/\sqrt{3},1/\sqrt{3},1/\sqrt{3}]'$.}
+\label{sphere_examples}
+\end{figure}
+
+\subsection{Constraint Relaxation for Posterior Inference}
+
+When the constrained distribution in last section is used as a prior,
+one can obtain posterior:
+\be
+\label{exactPosterior}
+\pi(\theta\mid y) & \propto L(y;\theta)\pi_{\mc D}(\theta) \\
+				       & \propto L(y;\theta) \pi_{\mc
+R}(\theta) /J(v(\theta))\mathbbm{1}_{\theta\in \mc D},
+\ee
+where $L(y;\theta)$ denotes the likelihood with $y$ the data. As the
+normalizing term in prior is canceled, the posterior takes a simple form
+with the unconstrained density and $J(v(\theta))$. On the other hand, the posterior also has support only inside $\mc D$ due to the inheritance of
+$\mathbbm{1}_{\theta\in \mc D}$ from $\pi_{\mc D}(\theta)$. Unfortunately, the indicator often poses a challenge for posterior inference. 
+
+We now present an approximation that relaxes the sharp indicator into a
+neighbor surrounding $\mc D$,
+
+\be
+\label{approximatePosterior}
+\tilde{\pi}(\theta\mid y)  & = \frac{1}{m(\lambda)} L(y;\theta) \pi_{\mc
+R}(\theta) /J(v(\theta)) \exp (- \sum_{k=1}^K |v_k(\theta)|^\alpha/\lambda_k),
+\ee
+where $v_k$ is the $k$th equation in $v(\theta)$, $\lambda_k\ge 0$ is a
+tuning parameter that controls the amount of relaxation, $\alpha$ is
+typically chosen as $1$ or $2$, $m(\lambda)$ is an unknown normalizing
+constant such that $\int_{\mc R} \tilde{\pi}(\theta\mid y) d\theta=1$.
+When $\theta\in \mc D$, \eqref{approximatePosterior} is proportional to
+\eqref{exactPosterior}; when $\theta\not\in \mc D$,
+\eqref{approximatePosterior} has positve density, providing constraint
+relaxation. When $\lambda_k=0$ for all $k$, \eqref{exactPosterior} and
+\eqref{approximatePosterior} are equal.
+
+To illustrate this relaxation, consider a posterior from a sum-constrained
+bivariate Gaussian random vector $[\theta_1,\theta_2]' \mid y \sim \No(0,I)
+\mathbbm{1}_{\theta_1+\theta_2-1=0}$. Using
+$v(\theta)=\theta_1+\theta_2-1=0$ for the
+constraint, $J(v(\theta))=\sqrt 2$, \eqref{exactPosterior} is proportional to 
+$$
+\phi(\theta_1)
+\phi(\theta_2)\mathbbm{1}_{v(\theta)=0}
+$$
+where $\phi(.)$ is the standard
+normal density. In this simple example, the exact posterior density has closed-form
+as
+
+$$
+\pi(\theta\mid y)=\frac{\sqrt{2}}{\sqrt{2\pi}} \exp(-\frac{(\theta_1-\frac{1}{2})^2}{2/2})
+\mathbbm{1}_{\theta_2=1-\theta_1}
+$$
+corresponding to $\theta_1\mid (\theta_1+ \theta_2=1) \sim
+\No(1/2,1/2)$, $\theta_2\mid \theta_1 \sim \delta_{1-\theta_1}(.)$.
+Equivalently, it follows a degenerate bivariate Gaussian distribution:
+$$\begin{bmatrix} \theta_1 \\ \theta_2 \end{bmatrix} \sim
+\No_{\text d} \left(
+ \begin{bmatrix} \frac{1}{2} \\ \frac{1}{2} \end{bmatrix},
+\begin{bmatrix} \frac{1}{2} & -\frac{1}{2}  \\  -\frac{1}{2}  & \frac{1}{2} \end{bmatrix}
+\right).$$
+
+Using constraint relaxation $ \exp( - (\theta_1+\theta_2-1)^2/\lambda)$ to
+replace $\mathbbm{1}_{v(\theta)=0}$, we obtain approximation $\theta_1 \sim \No(\frac{2}{\lambda+4},\frac{\lambda+2}{\lambda+4})$, $\theta_2\mid \theta_1 \sim \No(\frac{2}{\lambda+2}(1-\theta_1),\frac{\lambda}{\lambda+2})$. Marginally, 
+
+$$\begin{bmatrix} \theta_1 \\ \theta_2 \end{bmatrix} \sim
+\No \left(
+ \begin{bmatrix} \frac{2}{\lambda+4} \\ \frac{2}{\lambda+4} \end{bmatrix},
+\begin{bmatrix} \frac{\lambda+2}{\lambda+4} & -\frac{2}{\lambda+4}  \\  -\frac{2}{\lambda+4}  &\frac{\lambda+2}{\lambda+4} \end{bmatrix}
+\right).$$
+Clearly the approximation becomes exact when $\lambda\rightarrow 0$.
+
+\subsection{Properties}
+
+We now present the properties of the proposed approach. We first establish
+that the conditioning approach yields valid probability measure.
+
+We focus on $\mc R$ being a $p$-dimensional Euclidean space and the
+intrinsic dimension of $\mc D$, $\mbox{dim}(\mc D)=d\le p$ and is integer.
+When $d<p$, the
+$p$-dimensional Lebesgue measure $\mu^p(\mc D)=0$. To maintain the definition
+of conditional probability, we utilize the concept of {\it regular
+conditional probability} (r.c.p.)
+\citep{kolmogorov1950foundations}. For this article to be self-contained, we list the definition as below.
+
+Let $(X, \mathscr A, \mu)$ be a probability space and $(Y, \mathscr B)$ a measurable space. With a measurable function $v:X\rightarrow Y$, $v^{-1}(\mathscr B)\in \mathscr A$.
+A r.c.p is a function
+$f: Y\times \mathscr A \rightarrow[0,1]$ satisfying:
+
 \begin{enumerate}
-	\item For each $\omega\in  \Omega$, $P(\cdot\mid \mathscr A)(\omega)$ is a probability measure on $\mathscr B$.
-	\item For each $B\in \mathscr B$, the mapping $P(B\mid \mathscr A)(.)$ is $\mathscr A$- measurable.
-	\item For each $A \in \mathscr A$, $B\in \mathscr B$, $P(A\cap B)=\int_{A} P(B\mid \mathscr A)(\omega)P(d\omega)$.
+	\item $f(y, .)$ is a measure on $(X,\mathscr A)$ for each $y \in
+		Y$;
+	\item $f(., E)$ is a measurable function on $(Y,\mathscr B)$ for each $E\in \mathscr A$;
+	\item For each $E \in \mathscr A$, $F\in \mathscr B$,
+		$\mu(E \cap v^{-1}(F))=\int_{F} f(y, E) \mu_y(dy)$, with
+		$\mu_y$ the induced measure on $(Y,\mathscr B)$.
 \end{enumerate}
+
+Using the previous notation, we write $f(y,E)= \int_E \pi(\theta
+\mid v(\theta)=y) d\theta$
+
+\begin{remark}
+	Assuming $\|\nabla v(\theta)\|\neq 0$, then
+\begin{equation}
+	P(E\mid v(\theta)=\beta)= \frac{1}{m(\beta)}\int_{E} \frac{\pi_{\mc
+	R}(\theta) \mathbbm{1}_{v({\theta})=\beta}}{\|\nabla v(\theta)\|}d\theta
+\end{equation}
+is a valid r.c.p., where the integral is taken with respect to
+$(p-d)$-dimensional Lebesgue measure and ${m(\beta)}=\int \frac{\pi_{\mc
+	R}(\theta) \mathbbm{1}_{v({\theta})=\beta}}{\|\nabla v(\theta)\|}d\theta
+$.
+	\end{remark}
+	\begin{proof}
+		\end{proof}
+
+
 where $\omega$ represents a random variable on $(\Omega, \mathscr B)$.  Therefore, one can have $P(A)=0$ but a valid $P(B\mid \mathscr A)(\omega)\in [0,1]$. Using conventional statistical notation, the above definition is commonly written as $P(B\mid \omega = \omega_0)$, given specific value $\omega_0$.
 
-In our case, we need to define a random variable $\omega$ associated with $\theta\in \mc D$ and $\theta \not\in \mc D$. Letting  $v: \bb{R}^p\rightarrow \bb [0,\infty)^d$ Lipschitz with $p>d$ define a measurable distance to the constrained space $\mc D$, then $v(\theta)=\bf 0$ is equivalent to $\theta\in \mc D$, otherwise $\| v(\theta)\|>0$ indicates $\theta\not\in \mc D$. Taking $\omega= v(\theta)$, a regular conditional probability of $\theta\in B$ given $\theta\in D$ is:
+The Hausdorff measure is defined as $\mc H^k(A)= \underset{\delta\rightarrow 0}\lim \inf \{ \sum \frac{\Gamma(\frac{1}{2})^k}{\Gamma(\frac{k}{2}+1)} \left[\frac{\text{diam}(S_i)}{2}\right]^k: {A\subseteq \cup S_i, \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in S}\|x-y\|\}$. Geometrically, it is the volume of minimum covering of $A$ formed by countably many balls with a uniform diameter $\delta$. Depending on $k$, $\mc H^k(A)$ can vary from $0$ in high dimesion to possibly $\infty$ in low dimension (at $k=0$, it is a re-scaling of counting measure). The reduced dimension $p-d$ makes $0<m({\bf 0})<\infty$, hence a valid conditional density can be formed. \leo{we may need more justification on why $p-d$ is a perfect dimension to have finite, positve $\mc H$ measure.} Despite the geometric formulation, \eqref{intrinsicPrior} can be computed by substituting  $\mc H^k(d\theta)=\frac{\Gamma(\frac{k}{2}+1)}{\Gamma(\frac{1}{2})^k}  d\theta$, since Hausdorff measure  is a rescaling of Lebesgue measure when $k$ is an integer \citep{federer2014geometric}.
 
-\begin{equation}
-\label{intrinsicPrior}
-	P(B\mid v(\theta)={\bf 0})=\int_{B}\pi_{0,\mc D}(\theta)d\theta= \frac{1}{m(\bf 0)}\int_{B} \frac{\pi_{0,\mc R}(\theta) \mathbbm{1}_{v({\theta})={\bf 0}}}{J_p v(\theta)}\mc H^{p-d}(d\theta)
-\end{equation}
+
+
+
+In our case, we need to define a random variable $\omega$ associated with $\theta\in \mc D$ and $\theta \not\in \mc D$.. Taking $\omega= v(\theta)$, a regular conditional probability of $\theta\in B$ given $\theta\in D$ is:
+
 where $J_p v(\theta) = \sqrt{\det (D\theta' D\theta)}$  with $D\theta$ as the derivative matrix if $\det (D\theta' D\theta)>0$, or $J_p v(\theta) =1$ if $\det (D\theta' D\theta)=0$; $m(x)= \int \frac{\pi_{0,\mc R}(\theta)\mathbbm{1}_{v({\theta})=x}}{J_p v(\theta)}\mc H^{p-d}(d\theta)$ is the marginal density of $v$, as the result of $p$-to-$d$ transform using co-area formula \citep{federer2014geometric}; The notation $\mc H^{k}(.)$ denotes a $k$-dimensional Hausdorff measure. The definition \eqref{intrinsicPrior} is a special case of the regular conditional probability proposed by \cite{diaconis2013manifold}, which is derived based on conditioning a subset $A$ inside a manifold $\mc M$. In our case, we take $\mc M=\mc R$ and $A=\mc D$.
 
-
-The Hausdorff measure is defined as $\mc H^k(A)= \underset{\delta\rightarrow 0}\lim \inf \{ \sum \frac{\Gamma(\frac{1}{2})^k}{\Gamma(\frac{k}{2}+1)} \left[\frac{\text{diam}(S_i)}{2}\right]^k: {A\subseteq \cup S_i, \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in S}\|x-y\|\}$. Geometrically, it is the volume of minimum covering of $A$ formed by countably many balls with a uniform diameter $\delta$. Depending on $k$, $\mc H^k(A)$ can vary from $0$ in high dimesion to possibly $\infty$ in low dimension (at $k=0$, it is a re-scaling of counting measure). The reduced dimension $p-d$ makes $0<m({\bf 0})<\infty$, hence a valid conditional density can be formed. \leo{we may need more justification on why $p-d$ is a perfect dimension to have finite, positve $\mc H$ measure.} Despite the geometric formulation, \eqref{intrinsicPrior} can be computed by substituting  $\mc H^k(d\theta)=\frac{\Gamma(\frac{k}{2}+1)}{\Gamma(\frac{1}{2})^k} \mu^k (d\theta)$, since Hausdorff measure  is a rescaling of Lebesgue measure when $k$ is an integer \citep{federer2014geometric}.
 
 
 Given data $y$, the posterior probability of set $B$ is
@@ -144,31 +361,6 @@ Given data $y$, the posterior probability of set $B$ is
 if $0<m({\bf 0} \mid y)<\infty$, $m(x\mid y)= \int \frac{L(\theta;y)\pi_{0,\mc R}(\theta)\mathbbm{1}_{v({\theta})=x}}{J_p v(\theta)}\mc H^{p-d}(d\theta)$ is the marginal density of $v$ given $y$.
 
 In general, \eqref{intrinsicPrior} and \eqref{intrinsicPosterior} are analytically intractable and difficult to approximate with Monte Carlo sampling, due to the indicator function $\mathbbm{1}_{v({\theta})={\bf 0}}$ that constrains $\theta\in \mc D$; although closed-form may exist for some simple case. To illustrate, we use one toy example throughout this section.
-
-{\bf Example 1A: Two Gaussians with Sum Constraint (Intrinsic Approach)}
-
-Consider a bivariate Gaussian random vector $[\theta_1,\theta_2]' \sim \No(0,I)$ in constrained space $\mc D=\{(\theta_1,\theta_2):\theta_1+\theta_2-1=0\}$. Denoting $\phi(x)= \frac{1}{\sqrt{2\pi}} \exp(-\frac{x^2}{2})$, for set $B= \{(\theta_1,\theta_2): \theta_1< x, \theta_2\in \mathbb R\}$, $J_2v(\theta)=2$.
-
-\begin{equation*}
-	\begin{aligned}
-\int_{B} \pi_{0,\mc D}(\theta) d\theta= 
-& \frac{
-\int_{-\infty}^{x} \frac{1}{2}\phi(\theta_1)\phi(\theta_2)\mathbbm{1}_{\theta_1+\theta_2-1=0} \frac{\Gamma(\frac{1}{2}+1)}{\Gamma(\frac{1}{2})}  d\theta_1  
-}{\int_{-\infty}^{\infty}\frac{1}{2}\phi(\theta_1)\phi(\theta_2) \mathbbm{1}_{\theta_1+\theta_2-1=0}  \frac{\Gamma(\frac{1}{2}+1)}{\Gamma(\frac{1}{2})}   d\theta_1} \\ 
-=& \frac{
-\int_{-\infty}^{x}\frac{1}{2}\phi(\theta_1)\phi(1-\theta_1)d\theta_1  
-}{
-\int_{-\infty}^{\infty}\frac{1}{2}\phi(\theta_1)\phi(1-\theta_1)d\theta_1  } \\ 
-= & \int_{-\infty}^{x} \frac{\sqrt{2}}{\sqrt{2\pi}} \exp(-\frac{(\theta_1-\frac{1}{2})^2}{2/2}) d\theta_1,
-\end{aligned}
-\end{equation*}
-which corresponds to $\theta_1\mid (\theta_1+ \theta_2=1) \sim \No(1/2,1/2)$, $\theta_2\mid \theta_1 \sim \delta_{1-\theta_1}(.)$. Marginally, this is a degenerate bivariate Gaussian distribution:
-$$\begin{bmatrix} \theta_1 \\ \theta_2 \end{bmatrix} \sim
-\No_{\text d} \left(
- \begin{bmatrix} \frac{1}{2} \\ \frac{1}{2} \end{bmatrix},
-\begin{bmatrix} \frac{1}{2} & -\frac{1}{2}  \\  -\frac{1}{2}  & \frac{1}{2} \end{bmatrix}
-\right).$$
-
 
 
 \subsection{Extrinsic Bayes}
@@ -205,22 +397,6 @@ To summarize, $\theta\in \mc D$ $\Leftrightarrow$ all $v_k(\theta)=0$ $\Leftrigh
 \label{truncated_normal}
 \end{figure}
 
-We now return to the previous example of two Gaussians under sum constraint, applying extrinsic Bayes technique.
-
-{\bf Example 1B: Two Gaussians with Sum Constraint (Extrinsic Approach)}
-
-We use extrinsic prior $\tilde\pi_{0,\mc D}(\theta) \propto \exp(-\frac{\theta_1^2+\theta_2^2}{2})\exp(-\frac{v(\theta)}{\lambda})$. Choosing $v(\theta)= (\theta_1+\theta_2-1)^2$ allows us to obtain closed-form for the extrinsic prior $\theta_1 \sim \No(\frac{2}{\lambda+4},\frac{\lambda+2}{\lambda+4})$, $\theta_2\mid \theta_1 \sim \No(\frac{2}{\lambda+2}(1-\theta_1),\frac{\lambda}{\lambda+2})$. Marginally, 
-
-$$\begin{bmatrix} \theta_1 \\ \theta_2 \end{bmatrix} \sim
-\No \left(
- \begin{bmatrix} \frac{2}{\lambda+4} \\ \frac{2}{\lambda+4} \end{bmatrix},
-\begin{bmatrix} \frac{\lambda+2}{\lambda+4} & -\frac{2}{\lambda+4}  \\  -\frac{2}{\lambda+4}  &\frac{\lambda+2}{\lambda+4} \end{bmatrix}
-\right).$$
-As $\lambda\rightarrow 0$, the extrinsic prior becomes the same as the degenerate bivariate Gaussian in intrinsic approach.
-
-For more general cases, \eqref{extrinsicPrior} and \eqref{extrinsicPosterior} do not have closed-form; however, it is now easy to use conventional Monte Carlo techniques since $\mc K(\theta;\mc D)$ expands the space from $\mc D$ to $\mc R$.
-
-\subsection{Approximation Error}
 We now quantify approximation error of extrinsic distribution. Due to similar form in prior and posterior, we now introduce some general notation. Let $\pi_{\mc R}(\theta)$ be the normalized density in $\mc R$ such that $\int \pi_{\mc R}(\theta)=1$, which is $\pi_{0,\mc R}(\theta)$ for prior and $L(y;\theta)\pi_{0,\mc R}(\theta)$ for posterior; $\Pi(.)$ and $\tilde\Pi(.)$ to represent the measures under intrinsic and extrisic distributions. 
 
 Suppose $\Phi:\mathbb R^p \rightarrow \mathbb R^d$ with $p>d$ is Lipschitz, then the co-area formula \citep{federer2014geometric} is,
