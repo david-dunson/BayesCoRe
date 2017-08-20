@@ -313,7 +313,7 @@ constant such that $\int_{\mc R} \tilde{\pi}(\theta^*\mid y) d\theta^*=1$;
 tuning parameter controling the concentration around $v(\theta^*)=\bf 0$.
 When $\lambda_k=0$ for all $k$, 
 \eqref{approximatePosterior} becomes exact; using small $\lambda_k>0$, \eqref{approximatePosterior}
- conventional Monte Carlo approach can be carried.
+ conventional Monte Carlo approach can be exploited directly.
 
 We use a toy example with closed-form posterior to illustrate the effect of approximation. Consider a posterior from a sum-constrained
 bivariate Gaussian random vector $[\theta_1,\theta_2]' \mid y \sim \No(0,I)
@@ -351,34 +351,68 @@ As approximation, one can sample from the non-degenerate distribution using smal
 smaller, and becomes exact when $\lambda\rightarrow 0$. We will formalize
 this notion in the theory section.
 
-\subsubsection{Exact CORE}
+\subsubsection{Data Augmentation CORE}
 
-The previous strategy is generally applicable for approximating the indicator. In some cases, when the constraint function $v(\theta)$ takes simple form, one can easily project the relaxed parameter $\theta^*\in \mc R$ back into $\mc D$ and use them to reparameterize the exact posterior density. This avoids the approximation error.  Although this is more limited than the previous one, it still covers a large range of useful constraints, such as norm constraint (e.g. $v(\theta)=\|\theta\|_m-1$,  with $m=1$ in simplex modeling, $m=2$ in hypersphere modeling), in which the projection is simply a re-normalization.
+The previous strategy is generally applicable. In some less general but
+still common cases, one can relax constraint through some function
+$g$ first, and there is an inverse function $g^{-1}$ to project it back to
+$\mc D$. We now exploit this to reparameterize $\pi_{\mc D}(\theta\mid y)$.
 
-Our goal is to use variable transformation to derive a density for $\theta^*\in \mc R$ based on $\pi_{\mc D}(\theta)$, sample $\theta^*$, and use its projection for posterior inference. One thing we need is to make the projection invertiable. Observing the projection is from $\{\theta^*: v(\theta^*)=w\}$ to $\{\theta:v(\theta)=\bf 0 \}$ using $\theta=g(\theta^*;w)$ with $w=v(\theta^*)$, one can augment the density of $w$ to $\theta$, so that $\theta^*=g^{-1}(\theta;w)$, leading to
+The relaxation $\theta^*=g(\theta;w)$ often requires an auxillary parameter
+$w$ independent of $\theta$. Treating $w$ as a latent variable from $\pi(w)$ with $\int_{\mc W} \pi(w) dw =1$ and $\mc W$ as
+its support, one uses $g^{-1}(\theta^*;w)$ to reparameterize the exact posterior $\pi_{\mc D}(\theta\mid y)$
+Using variable transformation, the density under new parameterization is
+
 
 \be
-\label{reparametrizedPosterior}
-P(\theta\in A\mid y) = & 
- \int_{\mc W}\int_A  \pi_{\mc D}(\theta\mid y)  \pi(w)  d\theta dw 
-\\ 
-= & 
-\int_{\mc W} \int_{g(\theta^*; w)\in A} \pi(\theta^*,w \mid y ) d\theta^* dw, \qquad
- \pi(\theta^*,w \mid y) = \pi_{\mc D}(g(\theta^*;w)\mid y) J(g(\theta^*;w)) \pi(w)  ,
+\label{reparameterization}
+\pi(\theta^*\mid y,w)\pi(w) & =\pi_{\mc D}(g^{-1}(\theta^*;w)\mid y) \frac{1}{J(g(\theta;w))}  \pi(w) \\
+&\propto \frac{\pi_{\mc R}(g^{-1}(\theta^*;w)\mid y) }{ J(v(\theta))\mid_{\theta=g^{-1}(\theta^*;w)} } \frac{1}{J(g(\theta;w))} \pi(w) 
 \ee
-for measure over $A\subset\mc D$, where $\mc W$ is the support of $w$, $\int_{\mc W} \pi(w) dw =1$, $J(g(\theta^*;w))$ is the Jacobian. Since $J(g(\theta^*;w))=\frac{1}{J(g^{-1}(\theta;w))}$, it is easy to verify the second line can transform back to first line. Since $w$ is independent of $\theta$, $\pi(w)$ can take any distribution as long as its support agrees with the one of $v(\theta^*)$. This is very similar to the parameter expansion strategy used in augmenting probit regression \citep{liu1999parameter}, except they relax the variance of the latent variable from $1$ to a redundant parameter, and we relax the constraint function $v(\theta)$ from $\bf 0$.
+where   $J(g(\theta;w))$ is the Jacobian of $g$ with respect to $\theta$.
+The indicator function disappears since $g^{-1}(\theta^*;w)\in \mc
+D$ always holds. It can be verified that transforming $\theta^*=g(\theta;w)$  yields $\pi_{\mc D}(\theta\mid y) \pi(w)$, which is the exact posterior augmented
+with latent variable $w$. Therefore, we refer this strategy as data augmentation
+constraint relaxation (DA-CORE). Using DA-CORE, one can directly sample $\theta^*$ and $w$ in less constrained
+space, and apply $\theta=g^{-1}(\theta^*;w)$ in the end to obtain the $\theta$-marginal.
 
-To provide concrete illustration of \eqref{reparametrizedPosterior}, we consider a toy example $(p-1)$-simplex 
-$\{\theta:  \sum_{i=1}^p\theta_k=1, \theta_i\in(0,1) \text{ for } i=1,\ldots,p\}$, using Dirichlet distribution $\theta\mid y\in \text{Dir}(\alpha)$
-\be
-\pi_{\mc D}(\theta \mid y)\propto \prod_{i=1}^p \left(\theta_i^{\alpha-1}\mathbbm{1}_{\theta_i\in(0,1)} \right)\mathbbm{1}_{\sum_{i=1}^p\theta_i=1}.
-\ee
-Relaxing simplex into space $\mc R=[0,1]^p$, one would have $\sum_{i=1}^p\theta^*_k-1=w$. A viable projection is simply re-scaling $\theta^*$ by  $1/{(w+1)}$. Noticing $\theta_p$ and $\theta_p^*$ are deterministic given $w$ and other $\{\theta_i,\theta^*_i\}_{i=1,\ldots,(p-1)}$, we drop these two. Using \eqref{reparametrizedPosterior} without the integration,
-\be
-\pi(\theta^*,w\mid y) \propto (1-\frac{\sum_{i=1}^{p-1} \theta^*_i}{w+1})       \prod_{i=1}^{p-1} (\frac{\theta_i^*}{(w+1)})^{\alpha-1}  (w+1)^{-(p-1)}\mathbbm{1}_{(w+1)>\sum_{i=1}^{p-1}\theta_i   } \pi(w)
-\ee
-where $(w+1)^{-(p-1)}$ is $J(g(\theta^*;w))$. Therefore, one can sample $\theta^*_1,\ldots \theta^*_{p-1}$ and $w$ directly for this distribution. This relaxation is particularly useful when the posterior is not conjugate on the simplex, such
-as hyper-Dirichlet distribution CITES.
+One simple example of relaxation would be scaling of $\theta$ under  norm constraint. For example, $(p-1)$-simplex ,
+$\|\theta\|_1=\sum_{i=1}^p\theta_1=1$ with $\theta\in \mc R=[0,\infty]^p$, one
+can augment an independent latent variable $w\in [0,\infty)$ have
+$\theta_i^*=\theta_i w$, and the inverse $\theta_i=\theta_i^*/w$ with
+$w=\|\theta^*\|_1$. Suppose exact posterior is a Dirichlet distribution 
+$\theta\mid y\sim \text{Dir}(\alpha)$
+, 
+$$
+\pi_{\mc D}(\theta \mid y)\propto \prod_{i=1}^p \theta_i^{\alpha-1}\mathbbm{1}_{\sum_{i=1}^p\theta_i=1},$$
+then the relaxed parameterization is $$
+\pi(\theta^*,w\mid y) \propto  \prod_{i=1}^{p-1} (\frac{\theta_i^*}{w})^{\alpha-1}  w^{-(p-1)} \pi(w), \quad w=\sum_{i=1}^p \theta^*_i, \quad \theta^*\in(0,\infty)^p.$$
+
+One can often design the relaxation $g$ if there is a known projection $g^{-1}$ that produces $\theta\in \mc D$. To illustrate, we consider the random variable
+$\theta$, a $n$-by-$k$ matrix in the Stiefel manifold $\theta\in \mc V(n,k)=\{\theta\in \bb R^{n\times
+k}: \theta'\theta=I\}$, where $n\ge k$. The QR-decomposition produces such
+a orthonormal matrix, for which a $n$-by-$k$ matrix $X=QR$,
+with $Q\in \mc V(n,k)$ and $R$ $k$-by-$k$ upper triangular and diagonal positive;
+ the
+QR decomposition is unique if $X$ is of rank $k$ CITES, which allows us to
+use it as $g^{-1}$. Letting $w$ be a random matrix, $k$-by-$k$, upper triangular and diagonal positive, we have $\theta^*=\theta w$, with $\theta^*$ in rank
+$k$. Suppose $\theta$ is $n$-by-$k$ and from the Matrix Bingham--von Mises--Fisher distribution
+\citep{hoff2009simulation},
+$$\pi_{\mc D}(\theta\mid y)\propto \text{etr}(C'\theta+B\theta'A\theta)  \mathbbm{1}_{\theta'\theta=I_k}$$
+where $\text{etr}$ represents the exponential of trace, $A$ is symmetric $n$-by-$n$, $B$ is symmetric $k$-by-$k$ and $C$ is $n$-by-$k$. The relaxed
+parameterization is
+
+$$\pi(\theta^*, w\mid y)\propto \text{etr}(C'\theta^*w^{-1}+B(\theta^*w^{-1})'A\theta^*w^{-1} \text{det}^{-1}(w), \quad \text{rank}(\theta^*)=k, \quad w= \text{QR.R}(\theta^*)$$
+where $\text{ QR.R}$ denotes the function that outputs $R$ matrix in QR decomposition.
+
+In other reparameterization, such as coordinate system, one often
+needed to use equal or less parameters to satisfy the constraint, which is
+often difficult and yields complex parameterization. In DA-CORE, it is generally
+easy to reparameterize, since it meets the constraint with more parameters, thanks to data augmentation. Since $w$ is independent of $\theta$, one can
+assign $\pi(w)$ to allow greater relaxation, which is commonly associated
+with better performance in posterior sampling. More will be illustrated in
+the following sections.
+
 
  \subsection{Properties}
 
@@ -386,9 +420,9 @@ We now present the properties of the proposed approach. We first establish
 that the conditioning approach yields valid probability measure.
 
 We focus on $\mc R$ being a $p$-dimensional Euclidean space and the
-intrinsic dimension of $\mc D$, $\mbox{dim}(\mc D)=d\le p$ and is integer.
-When $d<p$, although the
-$p$-dimensional Lebesgue measure $\mu^p(\mc D)=0$, it is still possible to define a conditional probability given the event $\theta\in \mc D$ (i.e. ${v(\theta)=\bf 0}$). We utilize the concept of {\it regular
+intrinsic dimension of $\mc D$, $\mbox{dim}(\mc D)=s\le p$ and is integer.
+When $s<p$, although the
+$p$-dimensional Lebesgue measure $\mu^p(\mc D)=0$, it is still possible to define a conditional probability given the event ${v(\theta)=\bf 0}$. We utilize the concept of {\it regular
 conditional probability} (r.c.p.)
 \citep{kolmogorov1950foundations}. For this article to be self-contained,
 we list the definition as below (a more complete review can be found in \cite{leao2004regular}).
@@ -412,17 +446,17 @@ v(\theta)=y)=\int_E \pi_{\mc R}(\theta
 
 \begin{remark}
 Assuming $J(v(\theta))> 0$ and there is a finite and
-non-negtive integer $s$ such
+non-negative integer $s$ such
 that, for some $y\in Y$,
 \be
-m_s(y)=\int_{\bb R^s} \frac{\pi_{\mc
+m_s(y)=\int \frac{\pi_{\mc
 R}(\theta)
-\mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}d\theta\in(0,\infty),
+\mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}\mu^s(d\theta)\in(0,\infty),
 \ee
 then
 \begin{equation}
-P(E\mid v(\theta)=y)=\left\{\begin{array}{ll}  \frac{1}{m_s(y)}\int_{E \cap \bb R^s} \frac{\pi_{\mc
-R}(\theta) \mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}d\theta
+P(E\mid v(\theta)=y)=\left\{\begin{array}{ll}  \frac{1}{m_s(y)}\int_{E } \frac{\pi_{\mc
+R}(\theta) \mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}\mu^s(d\theta)
 & \text{  , if }m_s(y)\in(0,\infty) \\
 \delta_{x^*}(E) \text{ with fixed } x^*\in \bb R^p
 & \text{  , if }m_s(y)\in\{0,\infty\} \\
@@ -430,27 +464,27 @@ R}(\theta) \mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}d\theta
 \end{equation}
 is a valid r.c.p..
 \end{remark}
-\begin{proof} The first two crieria for r.c.p are trivally satisfied. Hausdorff measure is the standard tool for geometric measure theory \citep{federer2014geometric}, defined as $\mc H^{s}(A)= \underset{\delta\rightarrow 0}\lim \inf \{ \sum \left[{\text{diam}(S_i)}\right]^s: {A\subseteq \cup S_i, \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in S}\|x-y\|\}$. We denote the normalized Hausdorff measure as $\bar{\mc H}^{s}(A) =\frac{\Gamma(\frac{1}{2})^{s}}{2^s \Gamma(\frac{s}{2}+1)} \mc H^{s}(A)$. When $s$ is an integer, Lebesgue and normalized Hausdorff measures coincide  $\mu(A)= \bar{\mc H}^{s}(A)$ \citep{evans2015measure}.
+\begin{proof} The first two crieria for r.c.p are trivally satisfied. Hausdorff measure is the standard tool for geometric measure theory \citep{federer2014geometric}, defined as $\mc H^{s}(A)= \underset{\delta\rightarrow 0}\lim \inf \{ \sum \left[{\text{diam}(S_i)}\right]^s: {A\subseteq \cup S_i, \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in S}\|x-y\|\}$. We denote the normalized Hausdorff measure as $\bar{\mc H}^{s}(A) =\frac{\Gamma(\frac{1}{2})^{s}}{2^s \Gamma(\frac{s}{2}+1)} \mc H^{s}(A)$. When $s$ is an integer, Lebesgue and normalized Hausdorff measures coincide  $\mu^{s}(A)= \bar{\mc H}^{s}(A)$ \citep{evans2015measure}.
 
 Similar to the proof of (2) of Proposition 2 of \cite{diaconis2013manifold}, using co-area formula \citep{federer2014geometric}:
 
 \be
-\mu(E\cap v^{-1}(F))= & \int_{\bb R^p} \mathbbm{1}_{\theta \in E} \mathbbm{1}_{\theta \in v^{-1}(F)}\pi_{\mc R}(\theta) d\theta \\
-= & \int_{\bb R^{p-s}} \left[ \int_{v^{-1}(y)} \mathbbm{1}_{\theta \in E} \mathbbm{1}_{v(\theta) \in F}  \frac{ \pi_{\mc R}(\theta)}{J(v(\theta))} \bar{\mc H}^{s}(d\theta)\right] dy \\
-= & \int_{F\cap \bb R^{p-s}} \left [ \int_{ E \cap \bb R^{s}}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} d\theta  \right] dy \\
+\mu(E\cap v^{-1}(F))= & \int \mathbbm{1}_{\theta \in E} \mathbbm{1}_{\theta \in v^{-1}(F)}\pi_{\mc R}(\theta)\mu^p(d\theta) \\
+= & \int \left[ \int_{v^{-1}(y)} \mathbbm{1}_{\theta \in E} \mathbbm{1}_{v(\theta) \in F}  \frac{ \pi_{\mc R}(\theta)}{J(v(\theta))} \bar{\mc H}^{s}(d\theta)\right] \mu^{p-s}(dy) \\
+= & \int_{F} \left [ \int_{ E \cap \bb R^{s}}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} \mu^{s}(d\theta)  \right] \mu^{p-s}(dy) \\
 \ee
 
 
-For $y\in \{y':m(y')=0\}$, $\int_{ E \cap \bb R^{s}}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} d\theta \le \int_{ \bb R^{s}}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} d\theta =0$; for $y\in \{y':m(y')=\infty\}$, since $\mu(\bb R^p)=\int \mathbbm{1}_{m(y)=\infty}m(y) dy + \int  \mathbbm{1}_{m(y)<\infty}m(y)  dy=1$, one must have $\int \mathbbm{1}_{m(y)=\infty} dy=0$. Combining parts yields
+For $y\in \{y':m(y')=0\}$, $\int_{ E}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} \mu^s(d\theta) \le \int_{ \bb R^{s}}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} \mu^s(d\theta) =0$; for $y\in \{y':m(y')=\infty\}$, since $\mu ^{p}(\bb R^p)=\int \mathbbm{1}_{m(y)=\infty}m(y) dy + \int  \mathbbm{1}_{m(y)<\infty}m(y)  dy=1$, one must have $\int \mathbbm{1}_{m(y)=\infty} dy=0$. Combining parts yields
 \be
 \mu(E\cap v^{-1}(F)) & = \int_{F} \mathbbm{1}_{m(y)\in (0,\infty)}\left[
 \int_{E} \frac{\pi_{\mc
 R}(\theta) \mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}
-d\theta \right] dy \\
+\mu^{s}(d\theta) \right] \mu^{p-s}(dy) \\
 & = \int_{F} \mathbbm{1}_{m(y)\in (0,\infty)}
 \left[ \int_{E}  \frac{1}{m(y)}  \frac{\pi_{\mc
 R}(\theta) \mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}
-d\theta \right ]  m(y) dy\\
+\mu^{s}(d\theta) \right ]  m(y)\mu^{p-s}(dy)\\
 & =\int_F f(y,E) \mu_y(dy) 
 \ee
 
@@ -464,17 +498,17 @@ The above remark gives the definition of r.c.p given all $v(\theta)\in Y$. Since
 R}(\theta) \mathbbm{1}_{v({\theta})={\bf 0}}}{J(v(\theta))}
 \ee 
 
-The dimension $s$ is often refered as `intrinsic' dimension of $\mc D$. Formallly, one would use a standard concept in geometric measure theory named Hausdorff measure,  \citep{federer2014geometric}. The $d$-dimensional Hausdorff measure is the limit total volume of the $d$-dimenional balls covering $A$, $\mc H^{d}(A)= \underset{\delta\rightarrow 0}\lim \inf \{ \sum \left[{\text{diam}(S_i)}\right]^d: {A\subseteq \cup S_i, \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in S}\|x-y\|\}$. Then the intrinsic dimension is equal to Hausdorff dimension $s=\inf_{d\ge 0}\{H^d(\mc D)=0\}=\sup_{d\ge 0}\{H^d(\mc D)=\infty\}$, at which the Hausdorff measure transitions from $0$ to $\infty$. Although finding $s$ can be challenging \citep{mardia1975statistics,bowen1979hausdorff}, one could could heuristically test $s\in \{p,p-1,\ldots, 0\}$ if $s$ is known to be an integer. Fortunately, for posterior estimation, there is no need for estimating $s$ or the normalizing constant $m_s(\bf 0)$ in Monte Carlo sampling.
+The dimension $s$ is often referred as `intrinsic' dimension of $\mc D$. Formally, one would use a standard concept in geometric measure theory named Hausdorff measure,  \citep{federer2014geometric}. The $d$-dimensional Hausdorff measure is the limit total volume of the $d$-dimenional balls covering $A$, $\mc H^{d}(A)= \underset{\delta\rightarrow 0}\lim \inf \{ \sum \left[{\text{diam}(S_i)}\right]^d: {A\subseteq \cup S_i, \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in S}\|x-y\|\}$. Then the intrinsic dimension is equal to Hausdorff dimension $s=\inf_{d\ge 0}\{H^d(\mc D)=0\}=\sup_{d\ge 0}\{H^d(\mc D)=\infty\}$, at which the Hausdorff measure transitions from $0$ to $\infty$. Although finding $s$ can be challenging \citep{mardia1975statistics,bowen1979hausdorff}, one could could heuristically test $s\in \{p,p-1,\ldots, 0\}$ if $s$ is known to be an integer. Fortunately, for posterior estimation, there is no need for estimating $s$ or the normalizing constant $m_s(\bf 0)$ in Monte Carlo sampling.
 
-We now quantify the approximation error of the exponential approximation \eqref{approximatePosterior} in constraint relaxing. 
+We now quantify the approximation error of the approximate-CORE \eqref{approximatePosterior}. 
 We use $\Pi(.)$ and $\tilde\Pi(.)$ to represent the measures under exact and approximating distributions. 
- For easier notation, we re-parameterize the approximating part as $\exp(-\lambda^{-1}  v(\theta))$ where $\lambda=\max_k \lambda_k$ and $v(\theta)=\sum_{k=1}^d\frac{|v_k(\theta)|^{\alpha}}{\lambda^*_k}$ with $\lambda^*_k=\lambda_k/\lambda$ and define a conditional expectation, $\mathbb{E}(g(\theta) \mid v(\theta)=x)=  \int_{\bb R^s } \frac{ g(\theta) \mathbbm{1}_{v(\theta)=x} \pi_{\mc R}(\theta)}{ J v(\theta) } d \theta$
+ For easier notation, we re-parameterize the approximating part as $\exp(-\lambda^{-1}  v(\theta))$ where $\lambda=\max_k \lambda_k$ and $v(\theta)=\sum_{k=1}^d\frac{|v_k(\theta)|^{\alpha}}{\lambda^*_k}$ with $\lambda^*_k=\lambda_k/\lambda$ and define a conditional expectation, $\mathbb{E}(g(\theta) \mid v(\theta)=x)=  \int_{\bb R^s } \frac{ g(\theta) \mathbbm{1}_{v(\theta)=x} \pi_{\mc R}(\theta)}{ J v(\theta) } d \theta.$
 
  We now assess the behavior of approximation error in terms of 1-Wasserstein distance, as $\lambda$ decreases towards $0$. The 1-Wasserstein distance $W_1(\Pi,\tilde\Pi)$ represents the minimal amount of transport needed to transform one distribution to another. Formally, it is defined as
 
 $$W_1(\Pi,\tilde\Pi)=\underset{\gamma\in \Gamma(\Pi,\tilde\Pi)}{\inf}\int \|\theta-\theta^*\| d\gamma(\theta,\theta^*)$$ 
-where $\Gamma(\Pi,\tilde\Pi)$ is the family of all joint measures of with $\Pi$ and $\tilde\Pi$ as the marginals.
-
+where $\Gamma(\Pi,\tilde\Pi)$ is the family of all joint measures of with $\Pi$ and $\tilde\Pi$ as the marginals, and $\|\theta-\theta^*\|$ is the
+Euclidean distance.
 
 
 
@@ -567,7 +601,7 @@ letting $q_\lambda=       \underset{g:\|g\|_L\le 1}\sup \|\mathbb{E}(g(\theta) \
 \begin{equation}
 \underset{\lambda \rightarrow 0}\lim W_1(\Pi,\tilde\Pi)=0.        \end{equation}
 
-2. Non-asympotic result:
+2. Non-asymptotic result:
 
 
 \begin{equation}
@@ -614,11 +648,12 @@ The first part shows the asymptotic accuracy of the approximation. The second pa
 
 \section{Posterior Computation}
 
-Conditioning the unconstrained density onto $\mc D$ often disrupts the posterior conjugacy. Thanks to the constraint relaxation via approximation or reparameterization, we can sample the posterior directly inside $\mc R$. One can exploit conventional sampling tools such as slice sampling, adaptive Metropolis-Hastings and Hamiltonian Monte Carlo (HMC). In this section, we focus on HMC for its easiness to use and good performance in block sampling with relatively high dimension.
+Adapting  unconstrained density into space $\mc D$ often disrupts its posterior conjugacy. Since one can sample the posterior directly inside $\mc R$ using
+ CORE, one can exploit conventional sampling tools such as slice sampling, adaptive Metropolis-Hastings and Hamiltonian Monte Carlo (HMC). In this section, we focus on HMC for its easiness to use and good performance in block updating of parameters in relatively high dimension.
 
 \subsection{Hamiltonian Monte Carlo under Constraint Relaxation}
 
-We provide a brief overview of HMC for continuous $\theta^*$ under constraint relaxation. Discrete extension is possible via recent work of \cite{nishimura2017discontinuous}. For easy notation, we use $q$ to represent $\theta^*$ under approximation \eqref{approximatePosterior}, and $\{\theta^*, w\}$ under reparameterization \eqref{reparametrizedPosterior}.
+We provide a brief overview of HMC for continuous $\theta^*$ under constraint relaxation. Discrete extension is possible via recent work of \cite{nishimura2017discontinuous}. For easy notation, we use $q$ to represent $\theta^*$ under approximation-CORE \eqref{approximatePosterior}, and $\{\theta^*, w\}$ under DA-CORE \eqref{reparameterization}.
 
 In order to sample $q$, HMC introduces an auxillary momentum variable $p \sim \No(0, \mass)$. The covariance matrix $\mass$ is referred to as a \textit{mass matrix} and is typically chosen to be the identity or adapted to approximate the inverse covariance of $q$. HMC then sample from the joint target density $\pi(q, p) = \pi(q) \pi(p) \propto \exp (- H(q, p))$ where, in the case of the posterior under relaxation, 
 
@@ -630,7 +665,7 @@ H(q, p)& = U(q)+K(p),\\
 & K(p) = \frac{p'\mass^{-1} p}{2}.
 \end{aligned}
 \end{equation}
-with $\pi(q)$ is the unnormalized density in \eqref{approximatePosterior} or \eqref{reparametrizedPosterior}. %$L(\theta^*;y)\pi_{0,\mc R}(\theta^*) \exp( - \sum_k\frac{|v_k(\theta^*)|^\alpha}{\lambda_k}) / J(v(\theta^*))$ based on \eqref{approximatePosterior} and $f(q)= L(g(\theta^*;w);y)\pi_{0,\mc R}(g(\theta^*;w))J(g(\theta^*;w)) / J(v(g(\theta^*;w)))$ based on \eqref{reparametrizedPosterior}. 
+with $\pi(q)$ is the unnormalized density in \eqref{approximatePosterior} or \eqref{reparameterization}. %$L(\theta^*;y)\pi_{0,\mc R}(\theta^*) \exp( - \sum_k\frac{|v_k(\theta^*)|^\alpha}{\lambda_k}) / J(v(\theta^*))$ based on \eqref{approximatePosterior} and $f(q)= L(g(\theta^*;w);y)\pi_{0,\mc R}(g(\theta^*;w))J(g(\theta^*;w)) / J(v(g(\theta^*;w)))$ based on \eqref{reparametrizedPosterior}. 
 
 From the current state $(q^{(0)},p^{(0)})$, HMC generates a proposal for Metropolis-Hastings algorithm by simulating Hamiltonian dynamics, which is defined by a differential equation:
 
@@ -659,7 +694,7 @@ $$1\wedge \exp  \left( - H(q^{*},p^{*}) + H(q^{(0)},p^{(0)}))\right)$$
 \subsection{Computing Efficiency and Support Expansion}
 
 Since constraint relaxation expands the support from $\mc D$ to $\mc
-R$, it is useful to study the effect of space expansion on the computing efficiency. In this section, we provide some heuristic quantification of the effects and provide a practical guidance on choosing $\pi(w)$ or $\lambda$ in the two constraint relaxation strategies.
+R$, it is useful to study the effect of space expansion on the computing efficiency. In this section, we provide some  quantification of the effects and provide a practical guidance on choosing $\pi(w)$ or $\lambda$ in the two constraint relaxation strategies.
 
 
 In understanding the computational efficiency of HMC, it is useful to
@@ -687,39 +722,41 @@ is close to $0$, the upper bound would be too low to obtain efficient computatio
 In constrained model, the parameter space $\mc D$ can have very small $\eta(\theta;\mc D)$. Constraint relaxation can reduce this problem as it provides support
 expansion. 
 
-For approximation \eqref{approximatePosterior}, to minimize approximation
-error, one can choose to relax a subset of constraints. Observing  $\mc D=\cap D_k$,
-each approximation $\exp(-\frac{|v_k(\theta^*)|^\alpha}{\lambda_k})$ corresponds to a constrained space $\mc D_k$.  The practical strategy is that, for $\mc D_k$'s with $\eta(\theta;\mc D_k)\approx 0$, one use moderate $\lambda_k$ to induce some support expansion (denoted by $\lambda_k\ge \zeta$ with $\zeta$ moderately small but not very close to $0$);  for $\mc D_k$'s without this issue, one uses very small $\lambda_k\approx 0$ to almost always uphold the constraint.
-The latter was also suggested by \cite{neal2011mcmc} as creating a high `energy wall'. To reduce the inaccuracy of HMC near the boundary with $\lambda_k\approx 0$, we use random step size $\epsilon$ at each iteration.
+For approximation-CORE \eqref{approximatePosterior}, to minimize approximation
+error, one can choose to relax a subset of constraints. Observing  $\mc D=\cap_{k} D_k$,
+each approximation $\exp(-\frac{|v_k(\theta^*)|^\alpha}{\lambda_k})$ corresponds to a constrained space $\mc D_k$.  One practical strategy is that, for $\mc D_k$'s with $\eta(\theta;\mc D_k)\approx 0$, one uses moderate $\lambda_k$ to induce some support expansion (denoted by $\lambda_k\ge \zeta$ with $\zeta$ moderately small but not too close to $0$);  for $\mc D_k$'s without this issue, one uses very small $\lambda_k\approx 0$ to almost always uphold the constraint.
+The latter was also suggested by \cite{neal2011mcmc} as creating a high `energy wall'. This could create  inaccuracy of HMC near the boundary with $\lambda_k\approx 0$ under fixed step size, therefore we use random step size $\epsilon$ at each iteration.
 
 
-The Hessian $\hess_U(q)$ under this strategy is given by
+The Hessian $\hess_U(q)$ under approximation-CORE is given by
 \begin{equation}
 \label{eq:hessian_extrinsic}
 \hess_U(q) = -\hess_{\log L(y;\theta^*) \pi_{\mc
 R}(\theta^*) /J(v(\theta^*)) }(\theta^*)+\sum_k \lambda_k^{-1} \hess_{|v_k|^\alpha}(\theta^*) \mathbbm{1}_{\theta\not\in \mc D_k},
 \end{equation}
-where the second term $\lambda_k^{-1} \hess_{v_k}(\theta) \mathbbm{1}_{\theta\not\in \mc D_k}$ is $0$ unless $\theta\not\in \mc D_k$. Since $\lambda^{-1}_k$'s
+where the second term $\lambda_k^{-1} \hess_{v_k}(\theta) \mathbbm{1}_{\theta\not\in \mc D_k}$ is $0$ unless $\theta\not\in \mc D_k$. Since the $\lambda^{-1}_k$'s
 in the second term often dominate the eigenvalue, hence $\xi^{-1/2}_1(\theta^*)\approx
 \underset{\lambda_k\ge \zeta}{\min}\lambda_k^{1/2}$. A trade-off between approximation accuracy and computational efficiency is involved. Fortunately, the approximation error $\mc O( \underset{\lambda_k\ge \zeta}{\max}\lambda_k)$ decreases faster than the efficiceny cap $\mc O( \underset{\lambda_k\ge \zeta}{\min}\lambda_k^{1/2})$. In our experiment, we did find changing from $\lambda_{k}=10^{-4}$ to $10^{-5}$ requires approximately $3$ times of computing budget, due the effect on stability
 bound.
 
 
-On the other hand, since reparameterization  \eqref{reparametrizedPosterior} does not involve such trade-off, it is more preferrable despite its less
-general application. Letting $\mc Q_\theta\subset \mc D$ denote the support for the constrained $\theta\in \mc D$, the reparameterization changes the support to $Q_{\theta^*}=\{g^{-1}(\theta;w):\theta\in \mc Q\}$. Therefore, one could choose $\pi(w)$ to substantially increase $\eta(\theta^*; Q_{\theta^*})$, provided it does not significantly reduce $\xi^{-1/2}_1(\theta^*)$. In literature related to parameter expansion Gibbs sampling \citep{liu1999parameter}, it was suggested to use flat improper prior for $\pi(w)$; instead, since HMC
-is used, we suggest assigning $\pi(w)$ loosely centered at $\bf 0$ (corresponding to $\theta^*=\theta$), which makes $\theta^*$ a mild relaxation of $\theta$
-and ensures no substantial change in $\xi^{-1/2}_1(\theta^*)$. More will be illustrated in the next section.
+On the other hand, since DA-CORE \eqref{reparameterization} does not involve such trade-off, it can be more preferrable despite its less
+general application. Letting $\mc Q_\theta\subset \mc D$ denote the support for the constrained $\theta\in \mc D$, the reparameterization changes the support to $Q_{\theta^*}=\{g(\theta;w):\theta\in \mc Q\}$. Therefore, one could choose $\pi(w)$ to substantially increase $\eta(\theta^*; Q_{\theta^*})$.
+Since the augmented variable $w$ is independent from $\theta$, DA-CORE can
+be considered as a parameter expansion  \citep{liu1999parameter}, which originally
+focused on accelerating  Gibbs sampling of probit regression. Although  it is possible to use diffuse or even improper prior for $\pi(w)$ on $Q_{\theta^*}$,
+ we recommend assigning $\pi(w)$ loosely centered at $w_0:g(\theta;w_0)=\theta$ (corresponding to $\theta^*=\theta$), which makes $\theta^*$ a mild relaxation of $\theta$
+and ensures no substantial change in $\xi^{-1/2}_1(\theta^*)$ in HMC.
 
 \section{Simulations}
-
-In this section, we run simulations on several toy examples, mainly to compare with existing approaches on computing efficiency and provide empirical evidence
-supporting our previous result.
-
+In order to compare with existing approaches on computing efficiency and provide empirical evidence
+supporting our previous result, we run simulations on several toy examples
+ in this section.
+   
 \subsection{Gaussian  under Linear Inequality}
 We first consider linear models under linear inequality constraints. Although
-recent work proposed a new class of prior with posterior conjugacy \citep{danaher2012minkowski} , one can simply use consider Gaussian prior under our framework. To illustrate
-the computing performance, we sample a bivariate Gaussian $\theta \sim \No \left( \mu, I\sigma^2\right)$ subject to linear inequality $\theta\in(0,1)^2,\theta_1+\theta_2<1$,
-which is a triangle. In two separate settings, choosing $(\mu, \sigma^2)$ as $([0.3,0.3],1/{10})$  induces a wide-spread distribution centered in the interior of $\mc D$, while $([0.7,0.3]',1/10^4)$  induces a  distribution concentrated on the boundary of $\mc D$. For constraint relaxation, we use the approximation form \eqref{approximatePosterior} with $\exp(-\frac{|v(\theta)|}{\lambda})$, with $v(\theta)=|\theta_1+\theta_2-1|_+ + |-\theta_1|_+ + |-\theta_2|_ + + |\theta_1-1|_+ + |\theta_2-1|_+$.  Since the triangle has $\eta(\theta;\mc D)$ away from $0$, small $\lambda=10^{-8}$
+recent work proposed a new class of prior with posterior conjugacy \citep{danaher2012minkowski} , one can simply use Gaussian prior under our framework. We sample a bivariate Gaussian $\theta \sim \No \left( \mu, I\sigma^2\right)$ subject to linear inequality $\theta\in(0,1)^2,\theta_1+\theta_2<1$,
+which is a triangle. In two separate settings, choosing $(\mu, \sigma^2)$ as $([0.3,0.3],1/{10})$  induces a wide-spread distribution centered in the interior of $\mc D$, while $([0.7,0.3]',1/10^4)$  induces a  distribution concentrated on the boundary of $\mc D$. We use the approximation-CORE  \eqref{approximatePosterior} with $\exp(-\frac{|v(\theta)|}{\lambda})$, with $v(\theta)=|\theta_1+\theta_2-1|_+ + |-\theta_1|_+ + |-\theta_2|_ + + |\theta_1-1|_+ + |\theta_2-1|_+$.  Since the triangle has $\eta(\theta;\mc D)$ away from $0$, small $\lambda=10^{-8}$
  allows almost no approximation error. Figure~\ref{linear_inequality} plots the posterior sample and its contour. To compare, we ran simple rejection sampling with untruncated normal proposal $\No ( \mu, I\sigma^2)$. It  suffers from a rapidly growing rejection rate from $12\%$ to $51\%$, as $\mu$ moves further away from the center of $\mc D$.
 
 \begin{figure}[H]
@@ -736,24 +773,24 @@ which is a triangle. In two separate settings, choosing $(\mu, \sigma^2)$ as $([
 \end{figure}
 
 \subsection{von Mises--Fisher on Unit Circle}
-To illustrate equality constraint relxation, we generate a simple von Mises--Fisher distribution $\pi_{\mc D}(\theta) \propto \exp(F'\theta)$ on a unit circle $\{(\theta_1,\theta_2):\theta_1^2+\theta_2^2=1\}$. We use $F=(5,5)$ to induce a relatively spread-out  $\theta$ on the manifold.
+To illustrate equality constraint relxation, we generate a simple von Mises--Fisher distribution $\pi_{\mc D}(\theta) \propto \exp(F'\theta)$ on a unit circle $\{(\theta_1,\theta_2):\theta_1^2+\theta_2^2=1\}$. We use $F=(5,5)$ to induce a relatively spreaded-out  $\theta$ on the manifold.
 For sampling,
-we compare three strategies: approximate  constraint relaxation using $\exp(-\frac{|\theta'\theta -1|}{\lambda})$ for the indicator, reparameterization   constraint relaxation
-using $\theta_1 = \frac{\theta_1^*}{w+1}, w+1= \sqrt{(\theta_1^*)^2+ (\theta_2^*)^2}$ and $\pi(w)\sim \No(0,1)$ and  exact  von Mises--Fisher obtained using `movMF' package.
+we compare three strategies: approximate-CORE using $\exp(-\frac{|\theta'\theta -1|}{\lambda})$ for approximating the indicator, DA-CORE
+using $\theta_1 = \frac{\theta_1^*}{w}, w= \sqrt{(\theta_1^*)^2+ (\theta_2^*)^2}$ and $\pi(w)\sim \No(1,1)\mathbbm{1}_{w>0}$ and  exact  von Mises--Fisher obtained using `movMF' package.
 
-Unlike the previous linear inequality constraint, the unit circle has $\eta(\theta;\mc D)=0$ for all $\theta\in \mc D$, therefore, some support expansion is needed
-for HMC. We test $\lambda = 10^{-3}$, $10^{-4}$ and $10^{-5}$ for approximation
-constraint relaxation. To compare the efficiency of HMC, we fix the number of leap-frog steps to $20$ within one iteration HMC, and let software STAN
-automatically tune for stable step size. Table~\ref{table_circle} shows the effective sample size per $1000$ iterations, the effective `violation' $|v(\theta)|=|\theta_1+\theta_2-1|$ and the 1-Wasserstein distance $W_1$ as the approximation error. As $W_1$ is numerically computed, to provide a baseline error, we also calculate the average $W_1$ comparing two independent samples from the same exact distribution. The approximation error $W_1$ based on $\lambda= 10^{-5}$ approximation is indistinguishable from this low numerical error, while the other approximations  have slightly larger error but more effective samples.
-
+Unlike the previous linear inequality constraint, the unit circle has narrow
+$\eta(\theta;\mc D)=0$ for all $\theta\in \mc D$, therefore, some support expansion is needed
+for HMC. We test $\lambda = 10^{-3}$, $10^{-4}$ and $10^{-5}$ for approximation-CORE. To compare the efficiency of HMC, we fix the number of leap-frog steps to $20$ within one iteration HMC, and let software STAN
+automatically tune for stable step size. Table~\ref{table_circle} shows the effective sample size per $1000$ iterations, the effective `violation' $|v(\theta)|=|\theta_1+\theta_2-1|$ and the 1-Wasserstein distance $W_1$ as the approximation error. As $W_1$ is numerically computed, to provide a baseline error, we also calculate the average $W_1$ comparing two independent samples from the same exact distribution. The approximation error $W_1$ based on $\lambda= 10^{-5}$ approximation is indistinguishable from this low numerical error, while the other approximations  have slightly larger error but more effective samples. As expected, the DA-CORE is exact
+and has high effective sample size. 
    \begin{table}[H]
    \begin{center}
    \tiny
    \begin{tabular}{ c| c | c| c |c | c}
    \hline     
-    & \multicolumn{4}{c|}{Constraint Relaxation HMC}     & Exact  \\   
+    & \multicolumn{4}{c|}{ HMC based on CORE}     & Exact  \\   
        \hline     
-        & \multicolumn{3}{c|}{Approximation}     & Reparameterization  \\           
+        & \multicolumn{3}{c|}{Approximation}     & DA-CORE  \\           
        \hline           
      &  $\lambda=10^{-3}$ & $\lambda=10^{-4}$ & $\lambda=10^{-5}$ &  
      &  \\
@@ -774,40 +811,37 @@ automatically tune for stable step size. Table~\ref{table_circle} shows the effe
    \hline  
    \end{tabular}
    \end{center}
-   \caption{Benchmark of constraint relaxation methods on sampling von--Mises Fisher distribution on a unit circle. For each approximation, average approximation error (with 95\% credible interval, out of $10$ repeated experiments) is computed, and numeric error of $W_1$ is shown under column `exact' as comparing two independent copies from the exact distribution.\label{table_circle}.
-Effective sample size shows reparameterization and approximation with relatively large $\lambda$ have high computing efficiency.
+   \caption{Benchmark of constraint relaxation methods on sampling von--Mises Fisher distribution on a unit circle. For each approximation CORE, average approximation error (with 95\% credible interval, out of $10$ repeated experiments) is computed, and numeric error of $W_1$ is shown under column `exact' as comparing two independent copies from the exact distribution.\label{table_circle}.
+Effective sample size shows DA-CORE and approximation-CORE with relatively large $\lambda$ have high computing efficiency.
 }
    \end{table}
 
 \subsection{Dirichlet on a Simplex}
 Lastly, we experiment with a particularly challenging distribution on a 
-$(p-1)$-simplex, defined by $\{\theta: \theta\in(0,1)^p,\sum_{i=1}^p \theta_i=1\}$. We consider Dirichlet distribution $\text{Dir}(\alpha)$, with
+$(p-1)$-simplex, defined by $\{\theta: \theta\in(0,\infty)^p,\sum_{i=1}^p \theta_i=1\}$. We consider Dirichlet distribution $\text{Dir}(\alpha)$, with
 $\pi_{\mc D}(\theta)\propto \prod_{i=1}^p\theta_i^{\alpha-1}$. When the concentration
 parameter $\alpha<1$, $\text{Dir}(\alpha)$ exhibits sparse property that some $\theta_i$'s become very close to $0$, which is exploited in many modeling
 approaches CITES. Despite the simple form, the computation can be quite difficult
  if there is large uncerntainty associated with $\theta$ on top of sparsity.
  The distribution will be multi-modal with distribution scattered along the boundary of the simplex (Figure~\ref{simplex}(a)).
 
-To illustrate, we consider $p=3$ and various values of $\alpha\in \{1,0.5,0.1,0.01\}$. We test the performance of constraint relaxation under approximation
-and reparameterization. To compare, we also test the standard HMC using coordinate
+To illustrate, we consider $p=3$ and various values of $\alpha\in \{1,0.5,0.1,0.01\}$. We test the performance of approximation-CORE and DA-CORE. To compare, we also test the standard HMC using coordinate
 system $\theta_1=\cos^2(\theta_1^*), \theta_2=\sin^2(\theta_1^*)\cos^2(\theta_2^*), \theta_3=\sin^2(\theta_1^*)\sin^2(\theta_2^*)$ for $\theta^*\in [0,2\pi)^2$,
 which is equivalent to stick-breaking representation CITES; and the geodesic
 HMC utilizing the geometric flow directly on the simplex \citep{byrne2013geodesic}.
-For all HMCs, we fix the number of steps in each iteration to be $30$ and
-tune the step size.
-
+For all HMCs, we fix the number of steps in each iteration to be $30$ and tune the step size to have the best effective sample size.
 
 Table~\ref{simplex_tb} lists the effective sample sizes under different $\alpha$'s.
-As $\alpha$ becomes smaller than $1$, approximation HMC based on constraint relaxation and geodesic HMC become worse in performance, while reparameterizations
-based on constraint relaxation or coordinate system are much less impacted.
-Figure~\ref{simplex}(b) shows at $\alpha=0.01$, the approximate HMC and geodesic
-HMC are stuck for a long time, while reparameterizations
-based on constraint relaxation works substantially better. As a well-tested reparameterization, it is not surprising that HMC based on coordinate system still works acceptably well in this case.
+As $\alpha$ becomes smaller than $1$, approximation-CORE and geodesic HMC become worse in performance, while DA-CORE
+ and coordinate system are much less impacted.
+Figure~\ref{simplex}(b) shows at $\alpha=0.01$, the approximation-CORE and geodesic
+HMC are stuck for a long time, while DA-CORE works substantially better. As a well-tested reparameterization,  HMC based on coordinate system still works acceptably well in this case.
 
-The difficulty that approximate HMC based on constraint relxation encountered is well anticipated. \cite{byrne2013geodesic} have previously reported similar
-slow-down of geodesic HMC computing on hyper-Dirichlet  distribution CITES with $\alpha<1$.
-And our approximate HMC can also be viewed as an  approximation
-to the exact geodesic HMC, with the metric tensor product replaced by our exponential function.
+The difficulty that approximation-CORE encountered was  anticipated. \cite{byrne2013geodesic} have previously reported similar
+slow-down of geodesic HMC computing on hyper-Dirichlet  distribution CITES with $\alpha<1$. Comparing these two approaches, geodesic HMC relies on restricting the kinetic flow on $\mc D$ via its product with the metric tensor, and approximation-CORE relies
+on creating high energy wall in the potential energy part. The latter can
+be as an approximation
+to the former, which explains the similarity in performance.
 
 
 \begin{figure}[H]
@@ -821,9 +855,7 @@ to the exact geodesic HMC, with the metric tensor product replaced by our expone
 \end{subfigure}
 \caption{Sampling of Dirichlet on an simplex with distribution concentrated on the boundaries.
 Panel(a) illustrates the distribution under $\text{Dir}(0.01)$; Panel(b)
-compares the traceplots of 4 different types of HMCs, which are based on: approximation using constraint
-relaxation with $\lambda=10^{-3}$, reparameterization using constraint
-relaxation, geodesic flow on simplex \citep{byrne2013geodesic} and coordinate
+compares the traceplots of 4 different types of HMCs, which are based on: approximation-CORE with $\lambda=10^{-3}$, DA-CORE, geodesic flow on simplex \citep{byrne2013geodesic} and coordinate
 system.}
 \label{simplex}
 \end{figure}
@@ -835,8 +867,9 @@ system.}
    \tiny
    \begin{tabular}{ l| r | r| r |r | r}
    \hline     
-    & \multicolumn{3}{c|}{Constraint Relaxation HMC}     & Geodesic HMC  & Coordinate HMC \\   
-        & {Approx $\lambda=10^{-3}$} & {Approx $\lambda=10^{-4}$}      & Reparameterization
+    & \multicolumn{3}{c|}{HMC based on CORE}     & Geodesic HMC  & Coord
+    System HMC \\   
+        & {Approx $\lambda=10^{-3}$} & {Approx $\lambda=10^{-4}$}      & DA
         &  \\  \hline         
    ESS /1000 Iter. ($\alpha=1$) & 511.43   & 146.07  & 947.53 &  174.14
    & \bf 961.08     \\
