@@ -1,0 +1,117 @@
+\relax 
+\citation{boyd2004convex}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
+\citation{nash1954c1,do2016differential}
+\citation{diaconis2013manifold}
+\citation{khatri1977mises,hoff2009simulation}
+\citation{gelfand1992bayesian}
+\citation{dunson2003bayesian}
+\citation{gunn2005transformation}
+\citation{lin2014monogp}
+\citation{lin2016extrinsic}
+\citation{girolami2011riemann}
+\citation{byrne2013geodesic}
+\citation{federer2014geometric}
+\citation{do2016differential}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Constrained Relaxation Methodology}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Deriving Constrained Distribution via Conditioning}{3}}
+\citation{khatri1977mises}
+\newlabel{constrainedDensity}{{2}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Sectional view of random samples from constrained distributions on a unit sphere inside $\mathbb  {R}^3$. The distributions are derived through conditioning on $\theta '\theta =1$ based on unconstrained densities of (a) $\No  ( F, \diag  \{0.1\})$, (b) $t_3(F,\diag  \{0.1\} )$, where $F=[1/\sqrt  {3},1/\sqrt  {3},1/\sqrt  {3}]'$.\relax }}{5}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{sphere_examples}{{1}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2} Constraint Relaxation for Posterior Inference}{5}}
+\newlabel{exactPosterior}{{5}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.1}Approximation CORE}{5}}
+\newlabel{approximatePosterior}{{6}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.2}Data Augmentation CORE}{6}}
+\citation{hoff2009simulation}
+\newlabel{reparameterization}{{7}{7}}
+\citation{kolmogorov1950foundations}
+\citation{leao2004regular}
+\citation{federer2014geometric}
+\citation{evans2015measure}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Properties}{8}}
+\citation{diaconis2013manifold}
+\citation{federer2014geometric}
+\citation{federer2014geometric}
+\citation{mardia1975statistics,bowen1979hausdorff}
+\newlabel{wass0}{{17}{11}}
+\newlabel{wass1}{{20}{12}}
+\newlabel{wass2}{{21}{12}}
+\citation{nishimura2017discontinuous}
+\citation{neal2011mcmc}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Posterior Computation}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Hamiltonian Monte Carlo under Constraint Relaxation}{13}}
+\newlabel{hamiltonian}{{24}{13}}
+\newlabel{leap-frog}{{25}{13}}
+\citation{betancourt17}
+\citation{beskos13,betancourt14}
+\citation{neal2011mcmc}
+\citation{beskos13}
+\citation{hairer06}
+\citation{neal2011mcmc}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Computing Efficiency and Support Expansion}{14}}
+\citation{liu1999parameter}
+\citation{danaher2012minkowski}
+\newlabel{eq:hessian_extrinsic}{{26}{15}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Simulations}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Gaussian under Linear Inequality}{15}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Posterior sample of bivariate normal distribution subject to linear inequality constraints $\theta \in (0,1)^2,\theta _1+\theta _2<1$, using HMC with constraint relaxation. Posterior is spread out around the center (panel (a)) or concentrated on the boundary (panel (b)) of the region.\relax }}{16}}
+\newlabel{linear_inequality}{{2}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}von Mises--Fisher on Unit Circle}{16}}
+\citation{byrne2013geodesic}
+\citation{byrne2013geodesic}
+\citation{byrne2013geodesic}
+\citation{byrne2013geodesic}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Benchmark of constraint relaxation methods on sampling von--Mises Fisher distribution on a unit circle. For each approximation CORE, average approximation error (with 95\% credible interval, out of $10$ repeated experiments) is computed, and numeric error of $W_1$ is shown under column `exact' as comparing two independent copies from the exact distribution.. Effective sample size shows DA-CORE and approximation-CORE with relatively large $\lambda $ have high computing efficiency. \relax }}{17}}
+\newlabel{table_circle}{{1}{17}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Dirichlet on a Simplex}{17}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Sampling of Dirichlet on an simplex with distribution concentrated on the boundaries. Panel(a) illustrates the distribution under $\text  {Dir}(0.01)$; Panel(b) compares the traceplots of 4 different types of HMCs, which are based on: approximation-CORE with $\lambda =10^{-3}$, DA-CORE, geodesic flow on simplex \citep  {byrne2013geodesic} and coordinate system.\relax }}{18}}
+\newlabel{simplex}{{3}{18}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Average effective sample size per $1000$ iterations in $\text  {Dir}(\alpha )$, under different $\alpha $.  \relax }}{18}}
+\newlabel{simplex_tb}{{2}{18}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Application: Sparse Basis Learning in Network Analysis}{18}}
+\citation{zou2006sparse}
+\citation{armagan2013generalized}
+\citation{armagan2013generalized}
+\citation{hoff2016equivariant}
+\citation{lin2016extrinsic}
+\citation{rao2016data,stoehr2017noisy}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Orthonormality constraint in the tensor decomposition modelallows convergence and rapid mixing on the factor matrix (left column); whereas unconstrained model does not converge due to free scaling. Traceplot for one parameter in factor matrix $U$ and boxplot for autocorrelations of all parameters are shown.\relax }}{21}}
+\newlabel{tucker}{{4}{21}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion}{21}}
+\bibdata{reference}
+\bibcite{armagan2013generalized}{{1}{2013}{{Armagan et~al.}}{{Armagan, Dunson, and Lee}}}
+\bibcite{beskos13}{{2}{2013}{{Beskos et~al.}}{{Beskos, Pillai, Roberts, Sanz-Serna, and Stuart}}}
+\bibcite{betancourt17}{{3}{2017}{{Betancourt}}{{Betancourt}}}
+\bibcite{betancourt14}{{4}{2014}{{Betancourt et~al.}}{{Betancourt, Byrne, and Girolami}}}
+\bibcite{bowen1979hausdorff}{{5}{1979}{{Bowen}}{{Bowen}}}
+\bibcite{boyd2004convex}{{6}{2004}{{Boyd and Vandenberghe}}{{Boyd and Vandenberghe}}}
+\bibcite{byrne2013geodesic}{{7}{2013}{{Byrne and Girolami}}{{Byrne and Girolami}}}
+\bibcite{danaher2012minkowski}{{8}{2012}{{Danaher et~al.}}{{Danaher, Roy, Chen, Mumford, and Schisterman}}}
+\bibcite{diaconis2013manifold}{{9}{2013}{{Diaconis et~al.}}{{Diaconis, Holmes, Shahshahani, et~al.}}}
+\bibcite{do2016differential}{{10}{2016}{{Do~Carmo}}{{Do~Carmo}}}
+\bibcite{dunson2003bayesian}{{11}{2003}{{Dunson and Neelon}}{{Dunson and Neelon}}}
+\bibcite{evans2015measure}{{12}{2015}{{Evans and Gariepy}}{{Evans and Gariepy}}}
+\bibcite{federer2014geometric}{{13}{2014}{{Federer}}{{Federer}}}
+\bibcite{gelfand1992bayesian}{{14}{1992}{{Gelfand et~al.}}{{Gelfand, Smith, and Lee}}}
+\bibcite{girolami2011riemann}{{15}{2011}{{Girolami and Calderhead}}{{Girolami and Calderhead}}}
+\bibcite{gunn2005transformation}{{16}{2005}{{Gunn and Dunson}}{{Gunn and Dunson}}}
+\bibcite{hairer06}{{17}{2006}{{Hairer et~al.}}{{Hairer, Lubich, and Wanner}}}
+\bibcite{hoff2009simulation}{{18}{2009}{{Hoff}}{{Hoff}}}
+\bibcite{hoff2016equivariant}{{19}{2016}{{Hoff et~al.}}{{Hoff et~al.}}}
+\bibcite{khatri1977mises}{{20}{1977}{{Khatri and Mardia}}{{Khatri and Mardia}}}
+\bibcite{kolmogorov1950foundations}{{21}{1950}{{Kolmogorov}}{{Kolmogorov}}}
+\bibcite{leao2004regular}{{22}{2004}{{Leao~Jr et~al.}}{{Leao~Jr, Fragoso, and Ruffino}}}
+\bibcite{lin2014monogp}{{23}{2014}{{Lin and Dunson}}{{Lin and Dunson}}}
+\bibcite{lin2016extrinsic}{{24}{2016}{{Lin et~al.}}{{Lin, St~Thomas, Zhu, and Dunson}}}
+\bibcite{liu1999parameter}{{25}{1999}{{Liu and Wu}}{{Liu and Wu}}}
+\bibcite{mardia1975statistics}{{26}{1975}{{Mardia}}{{Mardia}}}
+\bibcite{nash1954c1}{{27}{1954}{{Nash}}{{Nash}}}
+\bibcite{neal2011mcmc}{{28}{2011}{{Neal}}{{Neal}}}
+\bibcite{nishimura2017discontinuous}{{29}{2017}{{Nishimura et~al.}}{{Nishimura, Dunson, and Lu}}}
+\bibcite{rao2016data}{{30}{2016}{{Rao et~al.}}{{Rao, Lin, and Dunson}}}
+\bibcite{stoehr2017noisy}{{31}{2017}{{Stoehr et~al.}}{{Stoehr, Benson, and Friel}}}
+\bibcite{zou2006sparse}{{32}{2006}{{Zou et~al.}}{{Zou, Hastie, and Tibshirani}}}
+\bibstyle{chicago}
