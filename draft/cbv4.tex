@@ -1,6 +1,6 @@
 %&latex
 \documentclass[10pt,fleqn]{article}
-\pdfoutput=1
+%\pdfoutput=1
 
 \addtolength{\oddsidemargin}{-.875in}
 \addtolength{\evensidemargin}{-.875in}
@@ -79,7 +79,7 @@
 \baselineskip=28pt
 
 \title{\textbf{Constraint Relaxation for Bayesian Modeling with Parameter Constraints}}
-\author{Leo Duan, Akihiko Nishimura, David Dunson}
+\author{Leo Duan,Akihiko Nishimura,  Alex Young,  David Dunson}
 \date{}
 \begin{document}
 
@@ -884,81 +884,144 @@ system.}
 }
    \end{table}
 
-   \section{Application: Sparse Basis Learning in Network Analysis}
+   \section{Application: Finding Sparse Basis in a Population of Networks}
 
  We now consider a real data application in brain network analysis. 
  The brain connectivity structures are obtained in the data set KKI-42 (Landman et al. 2011), which consists of $n=21$ healthy subjects without any history of neurological disease. We take the first scan out of the scan-rescan data
 as the input. Each observation is a $V\times V$ symmetric network $A_i$, recorded as adjacency matrix $A_i$ for $i=1,\ldots,n$. The regions are constructed via the Desikan et al. (2006) atlas, for a total of V = 68 nodes.
-For the $i$th matrix $A_i$, $A_{i,k,l} \in \{0,1\}$ is the element on the $k$th row and $l$th column of $A_i$, with $A_{i,k,l}=1$ indicating there is an connection betwen $k$th and $l$th region, $A_{i,k,l}=0$ if there is no connection. The matrix is symmetric due to the undirectedness of the network,
-but the diagonal records $A_{i,k,k}$ for all $i$ and $k$ are missing due
-to the lack of meaning in self-connectivity. For this reason, in addition
-to the sample size $n$ much smaller
-than the ambient space $p=\frac{V(V-1)}{2}$, a probabilistic Bayesian model can be parituclarly
-useful for uncertainty quantification.
-
-One scientific interest in neuroscience is to identify the important regions
-(nodes) in the formation of the average brain network. Although probabilistic
-principal component analysis (PPCA) are routinely used for  extracting the first few important bases, it does not selectively identify the important nodes. To
-achieve this goal, one natural way is to apply shrinkage on the elements
-of principal components.
+For the $i$th matrix $A_i$, $A_{i,k,l} \in \{0,1\}$ is the element on the $k$th row and $l$th column of $A_i$, with $A_{(i,k,l)}=1$ indicating there is an connection between $k$th and $l$th region, $A_{(i,k,l)}=0$ if there is no connection. The matrix is symmetric due to the undirectedness of the network,
+but the diagonal records $A_{(i,k,k)}$ for all $i$ and $k$ are missing due
+to the lack of meaning for self-connectivity. 
 
 
-Geometrically, the principle components denoted by $\{U_1,\ldots,U_d\}$ reside on a Stiefel manifold $\mc V(d,n)=\{U: U'U=I_d\}$, where $U=[U_1,\ldots,U_d]$ is the $n\times d$ matrix. Using $r$ to index $1,\ldots,d$, each $U_r$ represents a $(n-1)$-hypersphere. Applying shrinkage forces some of its sub-coordinates to be close to $0$, which
-is approximately reducing $U_r$ to a lower-dimensional hyper-sphere.
-Although there was previous work using sparse PCA \citep{zou2006sparse} on
-continuous outcome, little work has been done on a probabilistic model for
-binary outcome.
+One scientific interest in neuroscience is to quantify the variation of brain networks and identify the  regions
+(nodes) that contribute to it. Extending 
+factor analysis to multiple matrices, one appealing approach
+is to have the networks share a common factor matrix but let the  loadings
+vary across subjects. This
+can be considered as a simplified probabilistic factorization of a three-way
+tensor \citep{kolda2009tensor}. Then to selectively identify the important nodes, one natural way is to apply shrinkage on the elements
+of factor matrix.
 
 
+Geometrically, the factor matrix, denoted by $\{U_1,\ldots,U_d\},$ reside on a Stiefel manifold $\mc V(n,d)=\{U: U'U=I_d\}$, where $U=[U_1,\ldots,U_d]$ is the $n\times d$ matrix. Using $r$ to index $1,\ldots,d$, each frame $U_r$ represents a $(n-1)$-hypersphere. Applying shrinkage forces some of its sub-coordinates to be close to $0$, which
+is  reducing each $U_r$ onto a lower-dimensional hypersphere.
+Although previous work was done using sparse PCA \citep{zou2006sparse} for
+continuous outcome,  little work has been done in a probabilistic model for
+multiple matrices.
 
-For shrinkage, we utilize the double Pareto prior \citep{armagan2013generalized} as unconstrained distribution
-$\pi_{\mc R}$ and adapt it onto Stiefel manifold via \eqref{constrainedDensity}. For simplicity, we consider a probabilistic PCA model with a random intercept ,
+To apply shrinkage, we adopt the global-local shrinkage prior  as common in Bayesian  literature (reviewed by
+\cite{polson2012local}), which usually takes the form hierarchical structure $\theta_i\mid
+\kappa_i  ,\sigma\sim \No(0,\kappa_i \sigma), \quad \kappa_i\sim G_1, \quad \sigma \sim G_2$ with
+$\kappa_i$, $\sigma$ as the local and global scale parameters.  However,
+when constraining $\theta_i$, one caveat would be only using the conditional density $\No(\theta_i;\kappa_i \sigma)$, which  yields intractable normalizing constant involving $\kappa_i \sigma$ in the conditional. This difficulty can be avoided by
+reparameterizing\ $\theta_i=\eta_i\kappa_i\sigma$ with $\eta_i\sim\No(0,1)$, and applying constraint {\it jointly} on $\{\eta_i,\kappa_i,\sigma\}$ instead. The
+joint density will not have intractable constant if the hyper-parameters in $G_1$ and $G_2$ are fixed.
 
+We now
+take Dirichlet-Laplace prior \citep{bhattacharya2015dirichlet} as unconstrained distribution
+$\pi_{\mc R}$ and adapt it onto Stiefel manifold via \eqref{constrainedDensity}.
    \begin{equation*}
    \begin{aligned}
-   & A_{i,k,l} \sim \text{Bern}( \frac{1}{1+ \exp(-\psi_{k,l}- Z_{i})})\\
-   & \psi_{k,l} = \sum_{r=1}^{d}  v_{r} u_{k,r} u_{l,r}  \\
-   & U'U=I \text{ with } U=\{u_{k,r}\}_{k=1,\ldots,n; r=1,\ldots,d}\\
-   & \pi(u_{k,r})  \propto  \frac{1}{2(1+ |u_{k,r}|)^{2}} \\
-   & Z_{i} \sim \No(0,\sigma^2_z), \quad  \sigma^2_z \sim \text{IG}(2,1)
+   & A_{(i,k,l)} \sim \text{Bern}( \frac{1}{1+ \exp(-\psi_{(i,k,l)}- z_{(k,l)})})\\
+   & \psi_{(i,k,l)} = \sum_{r=1}^{d}  v_{(i,r)} u_{(k,r)} u_{(l,r)}  \\
+   & U'U=I_{d} \text{ with } U=\{u_{(k,r)}\}_{k=1,\ldots,n; r=1,\ldots,d}\\
+           & u_{(k,r)}= \eta_{(k,r)}\kappa_{(k,r)}\sigma_{u} \\
+   & \eta_{(k,r)}\sim \text{Lap}(0,1), \quad \{\kappa_{(1,r)}\ldots \kappa_{(V,r)}\} \sim \text{Dir}(\alpha),
+    \quad \sigma^2_{u}\sim \text{IG}(2,1)\\   
+   & z_{(k,l)} \sim \No(0,\sigma^2_z), \quad  \sigma^2_z \sim \text{IG}(2,1)
    \\
-   & v_{r} \sim \No(0,\sigma^2_v), \quad  \sigma^2_v \sim \text{IG}(2,1)
+   & v_{(i,r)} \sim \No(0,\sigma^2_{v,(r)}), \quad  \sigma^2_{v,(r)} \sim \text{IG}(2,1)
    \end{aligned}
    \end{equation*}
-   for $k>l$, $k=2,\ldots, V$, $i=1,\ldots,n$. We adapt $\pi_{\mc R}(u)$ as the standard double Pareto prior \citep{armagan2013generalized}, to avoid
-dealing with the normalizing constant due to constraint; $Z_i$ is a scalar
-used as random intercept; for scale parameter, we
-choose weakly informative prior inverse Gamma $\text{IG}(2,1)$, as appropriate for the scale under the logistic link.
+   for $k>l$, $k=2,\ldots, V$, $i=1,\ldots,n$;  $\text{Lap}(0,1)$ denotes
+   the Laplace distribution centered at $0$ with scale $1$; $Z=\{z_{(k,l)}\}_{k=1,\ldots,V;l=1,\ldots,V}$ is a symmetric unstructured matrix that serves as the latent mean; $\{ v_{(i,r)}\}_{r=1,\ldots,d}$
+is the loading for the $i$th network, with each $v_{(i,r)}>0$; for all other scale parameters $\sigma^2_.$, we
+choose weakly informative prior inverse Gamma $\text{IG}(2,1)$, as appropriate for the scale under the logistic link. To induce sparsity in each Dirichlet,
+we use $\alpha=0.1$ as suggested by 
+\cite{bhattacharya2015dirichlet}.
 
-   This model is a special Tucker decomposition with a sparse core tensor, whose diagonal plane is equal to $D$ and $0$ for other elements. The Tucker decomposition is more flexible than another routinely used decomposition, namely parallel factor analysis (PARAFAC). The PARAFAC assumes all ranks are equal and the core tensor $D$ only has non-zero value when all its sub-indices are equal. In this case, PARAFAC would assume $d_1=d_2$. The additional flexibility in the Tucker is appealing, as one could utilize the varying rank over different sub-direction (mode) of the tensor. On the other hand, a completely unconstrained Tucker decomposition is not identifiable in the matrices and core tensor, due scaling. For example, one can multiply a $d_1\times d_1$ non-zero diagonal matrix $R$, to $U$ and obtain $U^*=UR$ obtain $D^{*}_{.,r_2,.}=R^{-1}D_{.,r_2,.}R^{-1}$ for $r_2=1,\ldots,d_2$. This leaves the likelihood unchanged, creating identifiability issue. 
+ 
+There are two types of constraints in the model,  $U'U=I_d$ and $\sum_{k=1}^V \kappa_{(k,r)}=1$ for $r=1,\ldots,d$. Taking $v_1(U)= U'U-I_d$ and $v_2(\kappa_{(k,r)})=\sum_{k=1}^V \kappa_{(k,r)}-1$ for each $r$, the Jacobian is  constant in \eqref{constrainedDensity}. For posterior computation, we use DA-CORE
+as described above.
+Using latent variable $w_U$ $d$-by-$d$ upper triangular and positive diagonal
+matrix, and $w_{\kappa,{(r)}}>0$  for $r=1,\ldots ,d$, we relax the parameters
+to
+$$U^*=U w_U, \quad \kappa^*_{(k,r)}=\kappa_{(k,r)} w_{\kappa,{(r)}},$$
+which yields re-parameterization via  projection
+\begin{equation}
+\begin{aligned}
+& U=U^* w_U^{-1}, \quad  w_U=\text{QR.R}(U^*), \\
+& \kappa_{(k,r)} = \frac{\kappa^*_{(k,r)}}{w_{\kappa,{(r)}}}, \quad  w_{\kappa,{(r)}}= \sum_{k=1}^V \kappa^*_{(k,r)}\\
+& \eta_{k,r}= \frac{u_{(k,r)}}{\kappa_{(k,r)}\sigma_{u}},
+\end{aligned}	
+\end{equation}
 
-   Therefore, we consider applying some constraint on the Tucker decomposition. Motivated by high-order singular value decomposition, we impose orthonormality constraints $U'U=I_{d_1}$ and $W'W=I_{d_2}$. \cite{hoff2016equivariant} previously obtained conjugated posterior for Tucker decomposition under orthonormality constraint, however, the symmetry in undirectedness of networks breaks the conjugacy.
+where $\text{QR.R}$ denotes the function that outputs $\text{R}$ matrix in
+QR decomposition.
+To control the amount of relaxation, we assign $w_U$ near $I_d$ via $\pi(w_U)\propto \text{etr}\left[ -\frac{(w_U-I_d)'(w_U-I_d)}{\lambda}\right]$ and $w_{\kappa,{(r)}}$
+near $1$ via $\pi(w_{\kappa,{(r)}})\propto \exp\left[ -\frac{(w_{\kappa,{(r)}}-1)^2}{\lambda}\right]$ and set $\lambda=10^{-3}$.
 
-   We assign normal prior for $U_{k,r_2}\sim \No(0,\phi_{1})$, $W_{i,r_1}\sim \No(0,\phi_2)$, $Z_{k,l}\sim \No(0,\phi_3)$, $D_{r_1,r_2}\sim No(0, \phi_{4,r_1,r_2})$ for all $i,k,l,r_1,r_2$, and inverse-Gamma prior $\phi_1,\phi_2,\phi_3\stackrel{indep}{\sim} \text{IG}(2,1)$, $\phi_{4,r_1,r_2}= \tau_{r_1}\tau_{r_2}$, with $\tau_{r_1},\tau_{r_2}\stackrel{indep}{\sim} \text{IG}(2,1)$ for all $r_1,r_2$. We
 
-%we assign multiplicative inverse gamma distribution \citep{bhattacharya2011sparse} $\phi_{4,r_1,r_2}= \prod_{m_1=1}^{r_1} \nu_{1,m_1} \prod_{m_2=1}^{r_2}  \nu_{2,m_2}$ with $\nu_{1,1},\nu_{2,1} \stackrel{indep}{\sim} \text{IG}(a_1,1)$ and $\nu_{1,m},\nu_{2,m}\stackrel{indep}{\sim} \text{IG}(a_2,1)$ for $m\ge 2$. This induces increasing concentration toward zero as $r_1,r_2$ increase, allowing adaptive choosing of latent dimensions. We set $a_1=a_2=5$ in this application.
+For comparison, we test with the specified model (i) against (ii) the  same
+model except with simple $u_{(k,r)}\sim \No (0,\sigma^2_u)$ instead of the shrinkage prior and (iii) the  same
+model except  without the orthonormality constraint $U'U=I$ and the shrinkage prior.
+We run all models for $10,000$ iterations and discard the first $5,000$ iteration
+as burn-in;
+for each iteration, we run $300$ leap-frog steps.
+For efficient computing, we truncated $d=10$ and found the loading $v_{(i,r)}$
+are very close to $0$ after $r\ge 7$. Table~\ref{network_model} lists the benchmark results. Compared to (i) and
+(ii), the unconstrained model (iii) suffers from low effective sample
+size due to the severe convergence issue in factor matrix $U$, as it could
+scale and rotate without changing the likelihood. This is similar  to
+the previous findings \citep{hoff2016equivariant} that
+ removing scaling and rotation
+via orthonormality constraint  improves the convergence of general tensor
+factorization.
+We validate these models by calculating area under the receiver operating characteristic curve  (AUC) based on the mean predicted probability and the binary outcome $A_{(i,k,l)}$, using the unused rescan data of the $21$ subjects.
+The two  models (i) and (ii) with orthonomality constraint perform similarly well, but clearly better than 
+the unconstrained model (iii) in prediction AUC.  
+ \begin{table}[H]
+   \begin{center}
+   \tiny
+   \begin{tabular}{ l| c | c| c }
+   \hline     
+ Model   &  with Shrinkage and Orthonormality    & with  orthonormality only  & Unconstrained \\         
+       \hline           
+     Fitted AUC &  97.9\%  & 97.1\%  & 96.9\%     \\
+   \hline
+     Prediction AUC & 96.2\% & 96.2\%  & 93.6\%      \\
+   \hline
+   ESS /1000 Iterations &  193.72  & 188.10  & 8.15     \\
+   \hline  
+   \end{tabular}
+   \end{center}
+   \caption{Comparing 3 models for 21 brain networks
+   \label{network_model}}
+   \end{table}
 
-To allow estimation for model with orthonormality constraint, we use extrinsic prior with $\mc K(\theta) = \exp( - \frac{(U'U-I_{d_1})^2 + (W'W-I_{d_2})^2  }{\lambda})$ and set $\lambda=10^{-3}$. To compare, we also test with the same model configuration without the orthonormality constraint. We run both models for $10,000$ steps and discard the first $5,000$ steps. Figure~\ref{tucker} plots the traceplot and autocorrelation for matrix $U$. Unconstrained base model has severe convergence issue due to the non-identifiability, while constrained model converges and show low autocorrelation for all the parameters.
-
+Figure~\ref{network_model_basis} compares the models (i) and (ii) over the top $6$ frames of $U_r$, with  $r$
+ reordered such that $\sigma^2_{v,(1)}\ge \sigma^2_{v,(2)}\ge \ldots \ge \sigma^2_{v,(d)}$. The posterior of $U_4,U_5,U_6$ look very similar between the two, whereas $U_4,U_5,U_6$ have a considerable subset
+of points close to 0 in the model with shrinkage prior.
+\textsl{}
 \begin{figure}[H]
 \begin{subfigure}[b]{1\textwidth}
-\includegraphics[width=1\textwidth]{tucker_traceplot.pdf}
-\caption{Traceplot of $U_{1,1}$.}
+\includegraphics[width=1\textwidth]{network_factor.pdf}
+
 \end{subfigure}
-\begin{subfigure}[b]{1\textwidth}
-\includegraphics[width=1\textwidth]{tucker_acf.pdf}
-\caption{ACF of all elements in $U$}
-\end{subfigure}
-\caption{Orthonormality constraint in the tensor decomposition modelallows convergence and rapid mixing on the factor matrix (left column); whereas unconstrained model does not converge due to free scaling. Traceplot for one parameter in factor matrix $U$ and boxplot for autocorrelations of all parameters are shown.}
-\label{tucker}
+\caption{Posterior mean and pointwise $95\%$ credible interval of $U_1,\ldots,
+U_6$ in network model. \label{network_model_basis}}
 \end{figure}
+
+
+
 
 \section{Discussion}
 
-The estimation difficulty associated with parameter constraint often hinders the development of new models. Often one needed to carefully avoid models without conjugate posteriors, or skillfully re-parameterize the model for a more tractable algorithm. The extrinsic approach we introduced significantly reduces the burden. Through space expansion, it allows conventional toolbox such as HMC to be easily adopted to sample posterior without closed-forms. This allows researchers to impose constraints more freely in modeling and simplifies the way to incorporate constraint information about the functional of parameters.
+Parameter constraint often limits the flexibility to develop new model and creates huge burden in developing efficient posterior sampling algorithms. In this article, we develop a formal strategy to utilize the large pool of distributions in the constrained space, and propose a constraint relaxation approach to allow simple implementation for posterior estimation. For common constraint such as simplex and orthonormality, we propse an exact algorithm based on data augmentation; for more general problem, we propose an approximation approach.
 
-We show the approximation error of the extrinsic approach can controlled via tuning parameter, with some trade-off between computing time and accuracy. A potentially more efficient strategy would be obtaining a rough approximate first in $\mc R$, then projecting into $\mc D$. \cite{lin2016extrinsic} developed algorithms similar to this idea and obtained consistency result for point estimation. A useful task would be to find an optimal projection also quantifying the uncertainty associated with finite sample. Lastly, the normalization of parameters over constrained space can sometime yield intractable integral, known as `doubly stochastic' problem. We expect that the proposed extrinsic prior can be adapted and used together with the various existing solutions \citep{rao2016data,stoehr2017noisy}.
-
+The extension of this work may include tackling the  `doubly intractable' problem. This is common when the data is on the constrained space, or the constrained prior has hyper-parameters to estimate. In the data application, we show that a reparameterization strategy works for some shrinkage priors, but clearly, 
+more general treatment is needed. We expect our work to be compatible to the existing solutions \citep{murray2012mcmc,rao2016data, stoehr2017noisy}.
 
 
 \bibliography{reference}
