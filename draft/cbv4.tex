@@ -165,39 +165,44 @@ applications.
 
 \subsection{Deriving Constrained Distribution via Conditioning}
 
-Let $\theta \in \mc D$ denote the parameters of interests. The support $\mc
+Let $\theta\in \mc D$ be a $p$-element parameter of interests. The support $\mc
 D$ is a constrained space. The usual Bayesian approach assigns an existing prior
 density $\pi_{\mc D}(\theta)$ for $\theta$ only having support $\mc D$, where the available choices are often quite limited. On the other hand, in the un/less-constrained space $\mc R\supset \mc D$, there is a large family of
 distributions with well-studied properties. We denote such a distribution by $\pi_{\mc R}(\theta)$. It would be appealing to 
-adopt it in the constrained subspace. In this article, we restrict focus on $\mc R$ being the subspace of $p$-dimensional Euclidean space, $\mc R\subset \bb R^p$, and   $\mu^s(A)$ the $s$-dimensional Lebesgue measure of set $A$.
+adopt it in the constrained subspace. In this article, we restrict focus on $\mc D$ and $\mc R$ being the subspace of $p$-dimensional Euclidean space, $\mc D \subset\mc R\subseteq \bb R^p$. We use $\mu^p(A)$ to denote the $p$-dimensional Lebesgue measure of set $A$.
 
-Intuitively, one would want to directly apply space truncation to ${\theta\in\mc D}$ on $\pi_{\mc R}(\theta)$, renormalizing by $1/\mu^s(\mc D)$ to obtain the appropriate density. However, this often does not work as many constrained
+Intuitively, one would want to directly apply space truncation to ${\theta\in\mc D}$ on $\pi_{\mc R}(\theta)$, renormalizing by $1/\mu^p(\mc D)$ to obtain the appropriate density. However, this often does not work as many constrained
 space has $\mu^p(\mc D)=\int_{\mc D}  \pi_{\mc R}(\theta) \mu^p(d\theta)=0$. Therefore, an alternative strategy is needed.
 
-First starting from  a derived random variable $w=v(\theta)$, as long as $v:\mc R\rightarrow \bb R^d$ is measurable with respect to $\pi_{\mc R}$, one can obtain conditional density given $w=w_0$,
-
+We now exploit the fact that one can often define a valid conditional distribution,
+even conditioned on an event with measure $0$ \citep{kolmogorov1950foundations}.
+Starting from  a derived random variable $w=v(\theta)$, as long as $v:\bb R^p\rightarrow \bb R^d$ is  Lipschitz
+continuous and measurable with respect to $\pi_{\mc R}$, one can obtain a conditional density given $w=w_0$ 
 \be
+\label{conditionalDensity}
 \pi_{\mc R}(\theta \mid w=w_0) = \frac{1}{m^s(w_0) J(v(\theta))} \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=w_0}
 \ee
 where $\mathbbm{1}_{E}$ is an indicator equal $1$ when condition
-$E$ holds and $0$ otherwise; $J(v(\theta))$ is the Jacobian equal to
+$E$ holds and $0$ otherwise; $J(v(\theta))$ is the Jacobian induced by using
+co-area formula \citep{federer2014geometric}, which equals to
 $\sqrt{\mbox{det[}D(v(\theta))'
-D(v(\theta))]}$ with $D(v(\theta))$ the partial derivative matrix and $det$
-as the determinant; $m^s(w_0)=\int_{v(\theta)=w_0} \frac{1}{J(v(\theta))} \pi_{\mc R}(\theta) \mu^s(d\theta) $. Note   $s\le p$ is  the intrinsic dimension of subspace $\{\theta: v(\theta)=w_0\}$ such that  $m^s(w_0)\in(0,\infty)$. Since the normalizing constant is nonzero, this conditional density is valid provided
-if such $s$ exists and $J(v(\theta))>0$. This is based on the coarea
-formula in \cite{federer2014geometric}. A more rigorous justification
-is deferred to the theory section.
+D(v(\theta))]}$ with $D(v(\theta))$ the partial derivative matrix and $\text{det}[.]$
+as the determinant; $0<J(v(\theta))<\infty$; $m^s(w_0)=\int_{v(\theta)=w_0} \frac{1}{J(v(\theta))} \pi_{\mc R}(\theta) \mu^s(d\theta) $ is the normalizing constant. Note the $m^s(w_0)$  could be a potentially lower dimensional integral at  $s\le p$, with
+$s$ often referred as the `intrinsic' dimension of subspace $\{\theta: v(\theta)=w_0\}$
+such that   $0<m^s(w_0)<\infty$.  For example, consider a compact set of $\theta=\{\theta_1,\theta_2,\theta_3\}$ inside a
+hyperplane $\{\theta: \theta_1+\theta_2+\theta_3=w_0\}$ in $\bb R^3$: at $p=3$, it has a volume measure of $0$;  but at $s=2$, it has a  positive area measure, which is calculated by integrating over $(\theta_1,\theta_2)$, with $\theta_3=1-\theta_1-\theta_2$ deterministic. Using $m^s(w_0)$
+instead of $\mu^p(\mc D)$, \eqref{conditionalDensity} forms a valid conditional density. We provide  a  formal proof and a more rigorous elaboration on  $s$ and $\mu^s(d\theta)$  
+in the theory section.
 
 A large family of constraints can be
 associated with such function $v(\theta)$ fixed at certain value $w_0$, without
-loss of generality, we take $w_0=\bf 0$. We have
+loss of generality, we take $w_0=\bf 0$. We now have
  $\mc D =\{\theta:
-v(\theta)={\bf 0}\}$. For example, one
-equality constraint $f(\theta)=0$ can be associated with $v(\theta)=f(\theta)$=0;
-one inequality $f(\theta)<0$ can be associated with $v(\theta)=|f(\theta)|_+=\left\{\begin{array}{cc}  0 \text{ if } f(x)\le 0
-\\ f(x) \text{ if } f(x)> 0\end{array}\right.$ (assuming $f:\mc R\rightarrow \bb R$  measurable). Although this imposes a
-restriction  on the suitable constrained space, there is a rich class within this category. Namely, many useful manifolds are simple embedding in $\bb R^p$ via equality
-constraint \citep{do2016differential}. 
+v(\theta)={\bf 0}\}$. Although this imposes a
+restriction  on the suitable constrained spaces, there is a rich class within this category.
+For example, the common  inequality $f(\theta)<0$ can be associated with $v(\theta)=|f(\theta)|_+=\left\{\begin{array}{cc}  0 \text{ if } f(x)\le 0
+\\ f(x) \text{ if } f(x)> 0\end{array}\right.$; the 
+equality constraint $f(\theta)=0$ can be associated with $v(\theta)=f(\theta)$=0. The former is often used for space truncation, whereas the latter is often used for  embedding manifolds   in $\bb R^p$ \citep{do2016differential}. 
 
 Omitting normalization constant, the derived constrained density is:
 
@@ -207,16 +212,23 @@ Omitting normalization constant, the derived constrained density is:
 D}/J(v(\theta)).
 \ee
 Obviously, there are potentially more than one suitable $v(\theta)$'s for
-this derivation. Among those, if there exists $v(\theta)$ with constant
-$J(v(\theta))$ when $\theta\in\mc D$,
-it can be taken as the justified result of doing simple space truncation
+this derivation. Often there exists $v(\theta)$ with constant
+$J(v(\theta))$ when $\theta\in\mc D$, then the conditional density would appear as if
+the result of simple space truncation
 from $\mc R$ to $\mc D$.
 
- 
-To provide more intuition and illustrate the generality, we now derive two distributions on a $(p-1)$-hypersphere, defined as $\mc
+The derived density \eqref{constrainedDensity} generalizes the family of distributions one can use for constrained space. Since $\pi_{\mc D}(\theta)$
+is almost proportional to $\pi_{\mc R}(\theta)$ except for the Jacobian part,
+one can often utilize the similar distribution patterns on $\mc D$
+and $\mc R$ for guidiing prior selection.
+
+
+To illustrate, we now derive two distributions on a $(p-1)$-hypersphere, defined as $\mc
 D=\{\theta\in
-\bb R^p:\theta'\theta=1\}$. A simple choice of  function is $v(\theta)=\theta'\theta-1$,
-which has $J(v(\theta))=\|2\theta\|=2$ when $\theta\in \mc D$.
+\bb R^p:\theta'\theta=1\}$. The sphere $\mc D$ has intrinsic dimension $(p-1)$ hence measure $0$ in $\bb R^3 $. As the result, a  space truncation and renormalizing would
+yield an improper density. Instead, we can define a conditional density using
+a simple  function  $v(\theta)=\theta'\theta-1$,
+which has $J(v(\theta))=\|2\theta\|=2$ for $\theta\in \mc D$.
  We start with a familiar
 location-scale distribution Gaussian distribution with diagonal
 covariance $\theta \in \No(F,I\sigma^2)$ as $\pi_{\mc
@@ -231,8 +243,9 @@ R}$, where $F\in \mc D $ and $I$ is the identity matrix. Conditioning on $v(\the
 \mathbbm{1}_{\theta'\theta=1}
 ,\ee
 where the quadratic term $\theta'\theta$ is left out as a constant in the second line. This gives rise to the well-known von
-Mises--Fisher distribution \citep{khatri1977mises}. Although appears more
-like an exponential in the final form, the behavior of von
+Mises--Fisher distribution \citep{khatri1977mises}. Although the final form
+appears more
+like an exponential, the behavior of von
 Mises--Fisher
 on sphere can be explained by its unconstrained parent Gaussian.
 In the Gaussian $\pi_{\mc
@@ -240,10 +253,10 @@ R}(\theta)$, $\theta$ is symmetrically distributed around $F$, with density
 decaying exponentially as $\| \theta-F\|^2$ increases with rate controled by
 $({2\sigma^2})^{-1}$; as the constrained
 density $\pi_{\mc D}(\theta)$ is proportional $\pi_{\mc R}(\theta)$ on $\mc
-D$, it behaves
-similarly.  Figure~\ref{sphere_examples}(a) shows this distribution parameterized by $F=[1/\sqrt{3},1/\sqrt{3},1/\sqrt{3}]'$ and $\sigma^2=0.1$.
+D$, it concentrates
+similarly since geodesic distance behaves locally similar to Euclidean distance.  Figure~\ref{sphere_examples}(a) shows this distribution parameterized by $F=[1/\sqrt{3},1/\sqrt{3},1/\sqrt{3}]'$ and $\sigma^2=0.1$.
 
-The observation on von Mises-Fisher immediately suggests we can induce different behavior by using a different unconstrained $\pi_{\mc R}(\theta)$.
+The observation made on von Mises-Fisher immediately suggests we can induce different behavior by using a different unconstrained $\pi_{\mc R}(\theta)$.
 % % leo: skip the the multivariate Gaussian example as it doesn't seem original
 %  Starting from
 % correlated  Gaussian $\pi_{\mc
@@ -265,7 +278,7 @@ The observation on von Mises-Fisher immediately suggests we can induce different
 For example, to induce slower decay in density, one can start from a
 multivariate $t$-distribution $\pi_{\mc
 R}(\theta)$, $t_m(F,I\sigma^2)$ with $m$ degrees of freedom,
-mean $F\in \mc D$ and variance $I\sigma^2$, and obtain a new constrained density 
+mean $F\in \mc D$ and variance $I\sigma^2$, generating a new constrained density 
 \be
 \pi_{\mc
 D}(\theta)
@@ -276,7 +289,8 @@ D}(\theta)
 \ee
 As in the $t$-distribution, density decays polynomially as $\|F-\theta\|^2$ increases, at small
 $m$, the induced distribution (Figure~\ref{sphere_examples}(b) with $m=3,p=3$) exhibits less concentration than von
-Mises--Fisher on the sphere. This can be useful for robust modeling.
+Mises--Fisher on the sphere. This can be useful for robust modeling when
+there could be `outlier' on the sphere.
 We will illustrate more general use by adapting shrinakge prior on similar space later
 in the application section. 
 \begin{figure}[H]
@@ -299,14 +313,7 @@ in the application section.
 \label{sphere_examples}
 \end{figure}
 
-In these examples,  the conditioning step may not appear explicit due to
-constant Jacobian,
- but we did use the result in the normalizing constant. As the sphere $\mc D$ has measure $0$ in $\bb R^3$
-based on either Gaussian or $t$ distribution, the simple space truncation will
-yield an improper density. This is due to the subspace $\{\theta\in \bb R^3:\theta'\theta=1\}$ has an intrinsic dimension of $2$, as can be revealed by its $2$-dimensional
-coordinate system $(\theta^*_1,\theta^*_2)$, $\theta_1=\cos(\theta^*_1), \theta_2=\sin(\theta^*_1)\cos(\theta^*_2), \theta_3=\sin(\theta^*_1)\sin(\theta^*_2)$. 
-Conditioning of $v(\theta)=\theta'\theta-1$
-on a 2-dimensional measure $m^2(\bf 0)$ yields the proper density. 
+
 
 \subsection{ Constraint Relaxation for Posterior Inference}
 
