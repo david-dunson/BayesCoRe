@@ -1,63 +1,77 @@
-setwd("~/git/constrainedBayes/hmc_constraint/unit_circle/")
+setwd("~/git/constrainedBayes/hmc_constraint/sphere/")
 require("rstan")
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
 
 #model
-ss_model = stan_model(file= "unit_circle.stan")
+ss_model = stan_model(file= "sphere.stan")
 
 ##### Data ###
-N = 10
-sd= 1
-
-theta = c(sqrt(3/4),sqrt(1/4))
-y= cbind(rnorm(N,theta[1],sd),rnorm(N,theta[2],sd))
-
-plot(y[,1],y[,2],xlim=c(-2,2),ylim=c(-2,2))
-lines(theta[1],theta[2],col="red",type="p")
-F=c(1,1)
-n_steps = 2E3
-eps = 1E-3
-
+N = 1
+F = c(1,1,1)
+F = F/ sqrt(sum(F^2))
 lambda1=1E-2
+sigma2 = 0.1
+Sigma = diag(1,3)
+Sigma[1,2]=Sigma[2,1]= 0.9
+m=3
 
+input_dat <- list(N=N, F=F, lambda1 = lambda1, sigma2=sigma2, Sigma=Sigma,m=m)
 
-testUnitCircle<- function(lambda1,eps=0.001){
-  input_dat <- list(N=N, F=F+ sum(y)/1, y=y,lambda1 = lambda1)
-  init = list(list("theta"=theta,"tau"=sd^2))
-  ss_fit <- sampling(ss_model, data = input_dat, init=init,
-                     iter = n_steps,
+ss_fit <- sampling(ss_model, data = input_dat,
+                     iter = 10000,
                      chains = 1, algorithm = "NUTS"
-                     # ,
-                     # control=list(
-                       # adapt_engaged=FALSE,
-                       # stepsize= eps,
-                       # int_time=100*eps
-                       # int_time=100*eps
-                       # )
                      )
   
-  post_theta<- extract(ss_fit,"theta",permuted=F)
-  post_theta[[1]]
+theta_vmf=extract(ss_fit,"theta_vmf",permuted=FALSE)
+theta_fb=extract(ss_fit,"theta_fb",permuted=FALSE)
+theta_t=extract(ss_fit,"theta_t",permuted=FALSE)
+
+theta_vmf = theta_vmf[c(1:1000)*5,,]
+theta_fb = theta_fb[c(1:1000)*5,,]
+theta_t = theta_t[c(1:1000)*5,,]
+
+proj<-function(x){
+  t(apply(x,1,function(y){y/sqrt(sum(y^2))}))
 }
 
-trace1 = testUnitCircle(1E-3)
-trace2 = testUnitCircle(1E-4)
-trace3 = testUnitCircle(1E-5)
-trace4 = testUnitCircle(1E-6)
+vmf = proj(theta_vmf)
+fb = proj(theta_fb)
+t = proj(theta_t)
 
-plot(trace1[,1],trace1[,2])
-plot(trace2[,1],trace2[,2])
-plot(trace3[,1],trace3[,2])
-plot(trace4[,1],trace4[,2])
 
-acf(trace1[,1])
-acf(trace2[,1])
-acf(trace3[,1])
-acf(trace4[,1])
+require("plot3D")
 
-require("coda")
+colnames(vmf)
+
+scatter3D(x = vmf[,1],y=vmf[,2],z=vmf[,3],col="red", 
+          xlim=c(-1,1),ylim=c(-1,1),zlim=c(-1,1))
+
+scatter3D(x = fb[,1],y=fb[,2],z=fb[,3],col="red", 
+          xlim=c(-1,1),ylim=c(-1,1),zlim=c(-1,1))
+
+scatter3D(x = t[,1],y=t[,2],z=t[,3],col="red", 
+          xlim=c(-1,1),ylim=c(-1,1),zlim=c(-1,1))
+
+vmf = data.frame(vmf)
+fb = data.frame(fb)
+t = data.frame(t)
+colnames(vmf)<- c("x","y","z")
+colnames(fb)<- c("x","y","z")
+colnames(t)<- c("x","y","z")
+
+pdf("sphere_vmf.pdf",6,6)
+plot(vmf,xlim=c(-1,1),ylim=c(-1,1),zlim=c(-1,1))
+dev.off()
+pdf("sphere_fb.pdf",6,6)
+plot(fb,xlim=c(-1,1),ylim=c(-1,1),zlim=c(-1,1))
+dev.off()
+pdf("sphere_t.pdf",6,6)
+plot(t,xlim=c(-1,1),ylim=c(-1,1),zlim=c(-1,1))
+dev.off()
+
+scatterplot3d(vmf,angle = 60, box=FALSE)
 
 effectiveSize(trace1[,1])
 effectiveSize(trace2[,1])

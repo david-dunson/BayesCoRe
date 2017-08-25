@@ -6,70 +6,10 @@ options(mc.cores = parallel::detectCores())
 
 #######################################################
 
-extractPosterior<-function(varname, dimen, stan_fit){
-  if(dimen==1){
-    eval(parse(text=paste(stan_fit,"@sim$samples[[1]]$`",varname,"`",sep="")))
-  }else{
-  sapply(c(1:dimen), function(i)  eval(parse(text=paste(stan_fit,"@sim$samples[[1]]$`",varname,"[",i, "]`",sep=""))))
-  }
-}
+ss_model = stan_model(file= "ortho_sparse_pca.stan")
 
-extractPosteriorMat<-function(varname, d1,d2, stan_fit){
-  	L = lapply(c(1:d2), function(j){
-  		sapply(c(1:d1), function(i)  eval(parse(text=paste(stan_fit,"@sim$samples[[1]]$`",varname,"[",i,",",j, "]`",sep=""))))
-	})
-	do.call("cbind",L)
-}
-
-
-extractPosterior3D<-function(varname, d1,d2,d3, stan_fit){
-  n = length( eval(parse(text=paste(stan_fit,"@sim$samples[[1]]$`",varname,"[",1,",",1,",",1, "]`",sep=""))))
-  L = matrix(0, n, d1*d2*d3)
-  for(i in 1:d1){
-    for(j in 1:d2){
-      for(l in 1:d3){
-          idx = (i-1)*d2*d3 + (j-1)*d3+ l;
-          L[,idx] = eval(parse(text=paste(stan_fit,"@sim$samples[[1]]$`",varname,"[",i,",",j,",",l, "]`",sep="")))
-      }
-    }
-  }
-  L
-}
-
-
-#model
-ss_model = stan_model(file= "ortho_tensor_diag.stan")
-# ss_model = stan_model(file= "ortho_tensor.stan")
-
-##### Data ###
-
-if(FALSE){
-  N = 20
-  d1 = 5
-  d2 = 5
-  p = 20
-  
-  
-  U = matrix(rnorm(N*d1),N,d1)
-  # U = qr.Q(qr(U))
-  y = array(0, c(N,N,p))
-  
-  
-  for(l in 1:p){
-    eta = rnorm(d1)* c(d1:1)
-    UDU = U%*%diag(eta)%*%t(U)
-    p_mat = 1/(1+exp(-UDU))
-    y_l = (matrix(runif(N*N),N)<p_mat)*1
-    Lower=lower.tri(y_l)
-    y_l[Lower] = t(y_l)[Lower]
-    y[,,l] = y_l
-  }
-
-}
-####
-
-load("tensorA.RDa")
-y=A[,,1:40]
+load("../../tensorA.RDa")
+y=A[,,1:21]
 N = dim(A)[1]
 p = dim(A)[3]
 
