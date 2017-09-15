@@ -830,7 +830,7 @@ using $\theta_1 = \frac{\theta_1^*}{w}, w= \sqrt{(\theta_1^*)^2+ (\theta_2^*)^2}
 Unlike the previous linear inequality constraint, the unit circle has narrow
 $\eta(\theta;\mc D)=0$ for all $\theta\in \mc D$, therefore, some support expansion is needed
 for HMC. We test $\lambda = 10^{-3}$, $10^{-4}$ and $10^{-5}$ for approximation-CORE. To compare the efficiency of HMC, we fix the number of leap-frog steps to $20$ within one iteration HMC, and let software STAN
-automatically tune for stable step size. Table~\ref{table_circle} shows the effective sample size per $1000$ iterations, the effective `violation' $|v(\theta)|=|\theta_1^{2}+\theta_2^{2}-1|$ and the 1-Wasserstein distance $W_1$ as the approximation error. As $W_1$ is numerically computed, to provide a baseline error, we also calculate the average $W_1$ comparing two independent samples from the same exact distribution. The approximation error $W_1$ based on $\lambda= 10^{-5}$ approximation is indistinguishable from this low numerical error, while the other approximations  have slightly larger error but more effective samples. As expected, the DA-CORE is exact
+automatically tune for stable step size. Table~\ref{table_circle} shows the effective sample size per $1000$ iterations, the effective `violation' $|v(\theta)|=|\theta_1+\theta_2-1|$ and the 1-Wasserstein distance $W_1$ as the approximation error. As $W_1$ is numerically computed, to provide a baseline error, we also calculate the average $W_1$ comparing two independent samples from the same exact distribution. The approximation error $W_1$ based on $\lambda= 10^{-5}$ approximation is indistinguishable from this low numerical error, while the other approximations  have slightly larger error but more effective samples. As expected, the DA-CORE is exact
 and has high effective sample size. 
    \begin{table}[H]
    \begin{center}
@@ -959,7 +959,7 @@ Although previous work was done using sparse PCA \citep{zou2006sparse} for
 continuous outcome,  little work has been done in a probabilistic model for
 binary matrices.
 
-To apply shrinkage in the constrained space, we adopt the induced prior  as common in Bayesian  literature (reviewed by
+To apply shrinkage in the constrained space, we adopt the global-local shrinkage prior  as common in Bayesian  literature (reviewed by
 \cite{polson2012local}), which usually takes the form hierarchical structure $\theta_i\mid
 \kappa_i  ,\sigma\sim \No(0,\kappa_i \sigma), \quad \kappa_i\sim G_1, \quad \sigma \sim G_2$ with
 $\kappa_i$, $\sigma$ as the local and global scale parameters.  However,
@@ -1081,7 +1081,6 @@ the estimated shared factors with and without the shrinkage prior (model (iii) i
 
 \section{Discussion}
 
-what
 Parameter constraint often limits the flexibility to develop new model and creates huge burden in developing efficient posterior sampling algorithms. In this article, we develop a formal strategy to utilize the large pool of distributions in the constrained space, and propose a constraint relaxation approach to allow simple implementation for posterior estimation. For common constrained space that can be projected to via a function, we propose an exact algorithm based on data augmentation; for more general problem, we propose an approximation approach.
 This strategy works well for general equality and inequality constraints.
 
