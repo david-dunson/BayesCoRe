@@ -66,7 +66,7 @@
 \DeclareMathOperator{\var}{var}
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\Diag}{Diag}
-\newcommand{\KL}[2]{\textnormal{KL}\left(#1 \parallel #2\right)}
+\newcommand{\KL}[2]{\textnormal{KL}\bigg(#1 \parallel #2\bigg)}
 \DeclareMathOperator{\1}{\mathbbm{1}}
 \DeclareMathOperator{\bigO}{\mc O}
 \newcommand{\dt}{\epsilon} % Stepsize of leapfrog
@@ -87,126 +87,160 @@
 %\clearpage\pagebreak\newpage
 \pagenumbering{arabic}
 
-Assume the approximating function for $\{v_{j}(\theta)=0\}_{j=1}^s$ take the form
-$\exp(-\frac{ \|v(\theta)\|_1}{\lambda})=\exp(-\frac{ \sum_j|v_j(\theta)|}{\lambda})$, with $\lambda >0$ a scalar. And
-$\mc R$ and $\{v_j(\theta)\}_{j=1}^s$ satisfy $\int \mathbbm{1}_{v(\theta)= x } \pi_{\mc R}(\theta)  \bar{\mc H}^{p-s}(d\theta) \in (0,\infty)$  for any $x\in \mathcal
-X =\{v(\theta);\theta\in \mc R\}$.
-We denote conditional expectation $\mathbb{E}(g(\theta) \mid v(\theta)=x)=\mathbb{E}(g(\theta) \mid  x)=\int_{v^{-1}(x)} g(\theta)\frac{\pi_{\mc R}(\theta)}{Jv(\theta)}  \bar{\mc H}^{p-s}(d \theta)$. 
-\begin{remark}
-The 1-Wasserstein distance between the measures based on \eqref{exactPosterior} and \eqref{approximatePosterior} has
-$$ \underset{\lambda \rightarrow 0}\lim W_1(\Pi,\tilde\Pi)=0.$$
-Further, for $\alpha=1$ in \eqref{approximatePosterior},
+Let the approximating function for $\{v_{j}(\theta)=0\}_{j=1}^s$ take the form
+$\exp(-\frac{ \|v(\theta)\|_1}{\lambda})=\exp(-\frac{ \sum_j|v_j(\theta)|}{\lambda})$, with $\lambda >0$ a scalar. Letting $\bar{\mc H}^{p-s}(d \theta)$ be the $(p-s)$-dimensional
+ Hausdorff measure, 
+we assume $\mc R$ is chosen so that   $0< m(x)
+=\int_{v^{-1}(x)}\frac{\pi_{\mc R}(\theta)}{Jv(\theta)}  \bar{\mc H}^{p-s}(d \theta) <\infty$ for any $x\in \mathcal X =\{v(\theta);\theta\in \mc R\}$
+and $\bf 0 \in \mc X$.
 
+
+
+ 
+For any given set $A \subseteq \mc R $, the exact and approximate measures are
+
+\be
+\Pi(A) & =\int_{\mathbb R^s} \frac{1}{m_0}\bigg[\int_{v^{-1}({x}) \cap A}\frac{\pi_{\mc R}(\theta)}{Jv(\theta)}  \bar{\mc H}^{p-s}(d \theta)\bigg] \delta_{\bf 0}(x)\mu^{s}(dx)
+\\
+\tilde\Pi(A) &=\int_{\mathbb R^s} \frac{1}{m_\lambda}\bigg[\int_{v^{-1}(x) \cap A} \frac{\pi_{\mc R}(\theta)}{Jv(\theta)}  \bar{\mc H}^{p-s}(d \theta)
+\bigg] \exp(-\frac{\|x\|_1}{\lambda})\mathbbm{1}_{x\in
+\mathcal X}\mu^{s}(dx)
+\ee
+ where $\delta_{\bf 0}(x)$ is a Dirac measure at $\bf 0$; $\mu^{s}(dx)$ is the
+ $s$-dimensional Lebesgue measure; $m_0$ and $m_\lambda$ are normalizing constant so that
+ $\Pi(\mc R)=1$ and $\tilde\Pi(\mc R)=1$.
+
+Similarly, the expectations of an integrable function
+ $g(\theta)$ are
+ \be
+\bb E_{\Pi}(g(\theta)) & =\int_{\mathbb R^s} \frac{1}{m_0}\bigg[\int_{v^{-1}(x) } g(\theta)\frac{\pi_{\mc R}(\theta)}{Jv(\theta)}  \bar{\mc H}^{p-s}(d \theta)\bigg] \delta_{\bf 0}(x)\mu^{s}(dx)\\
+\bb E_{\tilde \Pi}(g(\theta)) &=\int_{\mathbb R^s} \frac{1}{m_\lambda}\bigg[\int_{v^{-1}(x) }g(\theta) \frac{\pi_{\mc R}(\theta)}{Jv(\theta)}  \bar{\mc H}^{p-s}(d \theta)
+\bigg] \exp(-\frac{\|x\|_1}{\lambda})\mathbbm{1}_{x\in
+\mathcal X}\mu^{s}(dx)
+\ee
+
+
+We denote integral $h(g;x)=\int_{v^{-1}(x) } g(\theta)\frac{\pi_{\mc R}(\theta)}{Jv(\theta)}  \bar{\mc H}^{p-s}(d \theta)$, which is related to
+conditional expectation $\bb E(g(\theta)\mid v(\theta)=x) =\frac{1}{m(x)}h(g;x)$.  
+
+ 
+ 
+  
+\begin{remark}
+The 1-Wasserstein distance between the measures $\Pi$ and $\tilde \Pi$ has
+$$ \underset{\lambda \to 0}\lim W_1(\Pi,\tilde\Pi)=0.$$
+Further,
 \begin{equation}
 \begin{aligned}
 W_1(\Pi,\tilde\Pi) \le  (2\lambda)^{s} (\frac{k_1 k_3}{m_0^2} + \frac{k_1}{m_0}) + \exp(- \lambda^{-1} t )(\frac{k_1}{m_0^2} + \frac{k_2}{m_0}),
 \end{aligned}
 \end{equation}
-where $k_1= \underset{g:\|g\|_L\le 1}\sup \quad \underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
-\mathcal X}\sup\|\mathbb{E}(g(\theta) \mid x^*)\|$, $k_2=\underset{g:\|g\|_L\le 1} \sup \mathbb{E}(\| g(\theta )\| \mathbbm{1}_{v(\theta)\in
-\mathcal X}) $, $k_3= \underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
+where $k_1= \underset{g:\|g\|_L\le 1}\sup \quad \underset{x^{*}:\|x^{*}\|_1\in[0,t]\cap
+\mathcal X}\sup |h(g; x^*)|$, $k_2=\underset{g:\|g\|_L\le 1} \sup \mathbb{E}(| g(\theta )| )$ with expectation taken over $\pi_{\mc R}(\theta)$, $k_3= \underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
 \mathcal X}\sup m(x^{*})$.
 \end{remark}
 
 
 \begin{proof}[Proof]
 
-The co-area formula from \cite{federer2014geometric} is,
- \begin{equation}
- \ \int_{\mathbb{R}^p}  f(\theta)J\Phi(\theta)\mu^p(d \theta)
- =\ \int_{\mathbb{R}^{s}} \left[   \int_{\Phi^{-1}(x)}f(\theta)  \bar{\mc H}^{p-s}(d\theta) \right]\mu^{s}(d x),
- \end{equation}
- where $\mu^k(d\theta)$ a $k$-dimensional Lebesgue measure and $\bar{\mc H}^{s}(d\theta)$ is a $s$-dimensional normalized Hausdorff measure.
-
-
-Let $g:\mathbb{R}^p\rightarrow \mathbb{R}$ be a 1-Lipschitz continuous function, i.e. $\|g(x)-g(y)\|\le \|x-y\|$, denoted by $\|g\|_L\le 1$. 
+Let $g:\mathbb{R}^p\to \mathbb{R}$ be a 1-Lipschitz continuous function, i.e. $\|g(x)-g(y)\|\le \|x-y\|$, denoted by $\|g\|_L\le 1$. 
 By Kantorovich-Rubinstein duality, the 1-Wasserstein distance based on Euclidean metric equals to: 
 
 \begin{equation}
-W_1(\Pi,\tilde\Pi)=\underset{g:\|g\|_L\le 1}\sup \int g(x) \Pi(dx) -  \int g(y) \tilde\Pi(dy) 
-\end{equation}
-
-By assumption, $\pi_{\mc R}(\theta)= \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)\in
-\mathcal X}$. Taking $f(\theta)=\frac{ \exp(- \lambda^{-1}\| v(\theta) \|_1) \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)\in
-\mathcal X}}{ J v(\theta) }$ and $\Phi(\theta)=v(\theta)$ in the co-area formula yields
-\begin{equation}
-\begin{aligned}
-m_\lambda
-& = \int_{\mathbb{R}^{s}}\left[ \int_{v^{-1}(x)} \frac{ \exp(- \lambda^{-1}\| v(\theta) \|_1) \pi_{\mc R}(\theta)}{ J v(\theta) }  \bar{\mc H}^{p-s}(d \theta) \right]  \mathbbm{1}_{x\in
-\mathcal X}\mu^{s}(d x) \\
-& = \int_{\mathbb{R}^{s}}\left[ \int_{v^{-1}(x)} \frac{  \pi_{\mc R}(\theta)}{ J v(\theta) }  \bar{\mc H}^{p-s}(d \theta) \right] \exp(- \lambda^{-1}\| x \|_1) \mathbbm{1}_{x\in
-\mathcal X}\mu^{s}(d x) \\
-& = \int_{\mathbb{R}^{s}}  m(x)\exp(- \lambda^{-1} \| x\|_1 )  \mathbbm{1}_{x\in
-\mathcal X}\mu^{s}(d x)  .
-\end{aligned}
-\end{equation}
-
-Taking $f(\theta)=\frac{\pi_{\mc R}(\theta)}{ J v(\theta) } \mathbbm{1}_{v(\theta)=
-\bf 0}$ and $\Phi(\theta)=v(\theta)$ yields 
-
-
-\begin{equation}
-m_0
-= \int_{\mathbb{R}^{s}} \left[ \int_{v^{-1}(x)} \frac{ \pi_{\mc R}(\theta) }{ J v(\theta) }  \bar{\mc H}^{p-
-s}(d \theta) \right]\mathbbm{1}_{x={\bf 0}} \mu^{s}(d x)    =  \int_{v^{-1}({\bf 0})} \frac{ \pi_{\mc R}(\theta) }{ J v(\theta) } \bar{\mc H}^{s}(d \theta) =m({\bf 0})
+W_1(\Pi,\tilde\Pi)=\underset{g:\|g\|_L\le 1}\sup \bb E_{\Pi}(g(\theta)) -
+\bb E_{\tilde \Pi}(g(\theta))
 \end{equation}
 
 
-Clearly $m_\lambda \ge m_0$.
+%The co-area formula from \cite{federer2014geometric} is
+% \begin{equation}
+% \ \int_{\mathbb{R}^p}  f(\theta)J\Phi(\theta)\mu^p(d \theta)
+% =\ \int_{\mathbb{R}^{s}} \bigg[   \int_{\Phi^{-1}(x)}f(\theta)  \bar{\mc H}^{p-s}(d\theta) \bigg]\mu^{s}(d x),
+% \end{equation}
+ 
 
-1. Asymptotic result:
+
+The two normalizing constants are:
+
+\be
+m_0 = &  \int_{\mathbb R^s}m(x) \delta_{\bf 0}(x)\mu^{s}(dx),  \\
+m_\lambda  = & \int_{\mathbb R^s} m(x) \exp(-\frac{\|x\|_1}{\lambda})\mathbbm{1}_{x\in
+\mathcal X}\mu^{s}(dx).
+\ee
+
+Noting $ \delta_{\bf 0}(x) = \lim_{\lambda_0 \to 0}  \exp(-\frac{\|x\|_1}{\lambda_0})$,
+we have  $ \exp(-\frac{\|x\|_1}{\lambda_0}) \le  \exp(-\frac{\|x\|_1}{\lambda})$ for any $\lambda \ge \lambda_0$, therefore $m_0 \le m_\lambda$.
+
+
+We have
 
 
 
 \begin{equation}                
 \label{wass0}
 \begin{aligned}
-&\underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}\int_{v^{-1}(x)} g(\theta)  \left[ \frac{ \exp(- \lambda^{-1} \|v(\theta)\|_1) } {  m_\lambda}  - 
-\frac{ \mathbbm{1}_{v(\theta)= {\bf 0}} } {  m_0} 
-\right]  \frac{\pi_{\mc R}(\theta)}{Jv(\theta)}  \bar{\mc H}^{p-s}(d \theta)\mathbbm{1}_{x\in
-\mathcal X}
-   \mu^{s}(d x) \\
-&= \underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}  \mathbb{E}(g(\theta) \mid  x)  \left[ \frac{ \exp(- \lambda^{-1} \|x\|_1) } {  m_\lambda}  - 
-\frac{ \mathbbm{1}_{x=\bf 0} } {  m_0} 
-\right] \mathbbm{1}_{x\in
+\underset{g:\|g\|_L\le 1}\sup \bb E_{\Pi}(g(\theta)) -
+\bb E_{\tilde \Pi}(g(\theta)) &= \underset{g:\|g\|_L\le 1}\sup \bb E_{\tilde \Pi}(g(\theta)) - \bb E_{\Pi}(g(\theta)) 
+\\
+=& \underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}  h(g; x)  \bigg[ \frac{ \exp(- \lambda^{-1} \|x\|_1) } {  m_\lambda}  - 
+\frac{ \delta_{\bf 0}(x) } {  m_0} 
+\bigg] \mathbbm{1}_{x\in
 \mathcal X}\mu^{s}(d x) \\
-&=      \underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}  \mathbb{E}(g(\theta) \mid x)  \left[ \frac{  1} {  m_\lambda}  - 
-\frac{ 1 } {  m_0} 
-\right]\mathbbm{1}_{x= \bf 0} \mu^{s}(d x)  + \underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}  \mathbb{E}(g(\theta) \mid x)\frac{ \exp(- \lambda^{-1} \| x\|_1)} {  m_\lambda}  
-\mathbbm{1}_{x \neq \bf 0} \mathbbm{1}_{x\in
-\mathcal X}\mu^{s}(d x) \\
-& \le \underset{g:\|g\|_L\le 1}\sup \|\mathbb{E}(g(\theta) \mid {\bf
-0})\| \left[ \frac{ 1 } {  m_0} -\frac{  1} {  m_\lambda}   
-\right] + \frac{1} {  m_0} \underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}  \mathbb{\| E}(g(\theta) \mid x)\|{ \exp(- \lambda^{-1} \| x\|_1)}   
-\mathbbm{1}_{x \neq \bf 0} \mathbbm{1}_{x\in
-\mathcal X}\mu^{s}(d x) \\      
+= &\underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}  h(g; x) 
+ \bigg[ \mathbbm{1}_{x=\bf 0}(\frac{1}{m_\lambda}-\frac{1}{m_0})
+ + \mathbbm{1}_{x \in \mc X \setminus\bf 0}(\frac{ \exp(- \lambda^{-1} \|x\|_1) }{m_\lambda})
+\bigg]\mu^{s}(d x) \\   
+ \le &\underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}  |h(g; x)| 
+ \bigg[ \mathbbm{1}_{x=\bf 0}(\frac{1}{m_0}-\frac{1}{m_\lambda})
+ + \mathbbm{1}_{x \in \mc X \setminus\bf 0}(\frac{ \exp(- \lambda^{-1} \|x\|_1) }{m_\lambda})
+\bigg]\mu^{s}(d x) \\  
+\le &\underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}  |h(g; x)| 
+ \bigg[ \mathbbm{1}_{x=\bf 0}(\frac{1}{m_0}-\frac{1}{m_\lambda})
+ + \frac{1}{m_0}\mathbbm{1}_{x \in \mc X \setminus\bf 0}({ \exp(- \lambda^{-1} \|x\|_1) })
+\bigg]\mu^{s}(d x)
 \end{aligned}
 \end{equation}
 
 
+
+
+1. Asymptotic result:
+
+
+
+
+
+
 Note $m_\lambda\le  \int_{\mathbb{R}^{s}}  m(x)\mathbbm{1}_{x\in
-\mathcal X}\mu^{s}(d x) =\int_{\mathbb{R}^{p}} \pi_{\mc R}(\theta)d \theta =1$. By dominated convergence theorem, 
+\mathcal X}\mu^{s}(d x) =\int_{\mathbb{R}^{p}} \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)\in
+\mathcal X} \mu^p(d \theta) =1$. By dominated convergence theorem, 
 
 \begin{equation}
-\lim_{\lambda\rightarrow 0}m_\lambda=  \int_{\mathbb{R}^{s}}  m(x)\lim_{\lambda\rightarrow 0}\exp(- \lambda^{-1} \| x\|_1 )  \mathbbm{1}_{x\in
+\lim_{\lambda\to 0}m_\lambda=  \int_{\mathbb{R}^{s}}  m(x)\lim_{\lambda\to 0}\exp(- \lambda^{-1} \| x\|_1 )  \mathbbm{1}_{x\in
 \mathcal X}\mu^{s}(d x)   = m_0.
 \end{equation}
 
 
 Since 
-$$ \underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}} \| \mathbb{E}(g(\theta) \mid x) \|{ \exp(- \lambda^{-1} \| x\|_1)}   
-\mathbbm{1}_{x \neq \bf 0} \mathbbm{1}_{x\in
-\mathcal X}\mu^{s}(d x) \le\int_{\mathbb{R}^{s}}  \underset{g:\|g\|_L\le 1}\sup \mathbb{\|E}(g(\theta) \mid x)\|{ \exp(- \lambda^{-1} \| x\|_1)}   
-\mathbbm{1}_{x \neq \bf 0} \mathbbm{1}_{x\in
-\mathcal X}\mu^{s}(d x),$$
-letting $q_\lambda=       \underset{g:\|g\|_L\le 1}\sup \mathbb{\|E}(g(\theta) \mid x)\|{ \exp(- \lambda^{-1} \| x\|_1)}   
-\mathbbm{1}_{x \neq \bf 0}  \mathbbm{1}_{x\in
-\mathcal X}$, for fixed $x$, we have $0\le q_1-q_{\lambda_1}\le q_1-q_{\lambda_2}$ for any two numbers in the series $1\ge\lambda_1\ge \lambda_2$, by monotone convergence theorem, $\lim_{\lambda\rightarrow 0}\int [ q_1(x)-q_\lambda(x)]dx = \int [q_1(x)- q_0(x) ]dx$ hence $\lim_{\lambda\rightarrow 0}\int q_\lambda(x)dx =0$. Combining the results yields 
+\be
+&\underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}  |h(g; x)| 
+ \bigg[ \mathbbm{1}_{x=\bf 0}(\frac{1}{m_0}-\frac{1}{m_\lambda})
+ + \mathbbm{1}_{x \in \mc X \setminus\bf 0}(\frac{ \exp(- \lambda^{-1} \|x\|_1) }{m_0})
+\bigg]\mu^{s}(d x) \\
+\le & \int_{\mathbb{R}^{s}} \underset{g:\|g\|_L\le 1}\sup |h(g; x)| 
+ \bigg[ \mathbbm{1}_{x=\bf 0}(\frac{1}{m_0}-\frac{1}{m_\lambda})
+ + \mathbbm{1}_{x \in \mc X \setminus\bf 0}(\frac{ \exp(- \lambda^{-1} \|x\|_1) }{m_0})
+\bigg]\mu^{s}(d x),
+\ee
+letting $q_\lambda=  \underset{g:\|g\|_L\le 1} \sup |h(g; x)| 
+ \bigg[ \mathbbm{1}_{x=\bf 0}(\frac{1}{m_0}-\frac{1}{m_\lambda})
+ + \mathbbm{1}_{x \in \mc X \setminus\bf 0}(\frac{ \exp(- \lambda^{-1} \|x\|_1) }{m_0})
+\bigg]$, for fixed $x$, a decreasing series $1\ge\lambda_1\ge \lambda_2\ge \ldots$, has monotone increasing $0\le q_1-q_{\lambda_1}\le q_1-q_{\lambda_2}$ , by monotone convergence theorem, $\lim_{\lambda\to 0}\int [ q_1(x)-q_\lambda(x)]dx = \int [q_1(x)- q_0(x) ]dx$ hence $\lim_{\lambda\to 0}\int q_\lambda(x)dx =0$. Combining the results yields 
 
 
 
 \begin{equation}
-\underset{\lambda \rightarrow 0}\lim W_1(\Pi,\tilde\Pi)=0.        \end{equation}
+\underset{\lambda \to 0}\lim W_1(\Pi,\tilde\Pi)=0.        \end{equation}
 
 2. Non-asymptotic result:
 
@@ -214,19 +248,21 @@ letting $q_\lambda=       \underset{g:\|g\|_L\le 1}\sup \mathbb{\|E}(g(\theta) \
 \begin{equation}
 \label{wass1}
 \begin{aligned}
-\frac{1}{m_0}-\frac{1}{m_\lambda} & \le  \frac{    \int_{\mathbb{R}^{s}}  m(x)\exp(- \lambda^{-1} \| x\|_1 )\mathbbm{1}_{x \neq \bf 0}\mathbbm{1}_{x\in
-\mathcal X}\mu^{s}(d x) } {  m_0^2}  \\
-&= \frac{1}{ m_0^2} \left[ \int_{\mathbb{R}^{s}} \mathbbm{1}_{\|x\|_1\in(0,t]}  m(x) \exp(- \lambda^{-1} \| x\|_1  )\mathbbm{1}_{x\in
+\frac{1}{m_0}-\frac{1}{m_\lambda} 
+& \le \frac{m_\lambda -m_0}{m_0^2} \\ 
+\\ &=  \frac{    \int_{\mathbb{R}^{s}}  m(x)\exp(- \lambda^{-1} \| x\|_1 )\mathbbm{1}_{x\in
+\mathcal X \setminus \bf 0}\mu^{s}(d x) } {  m_0^2}  \\
+&= \frac{1}{ m_0^2} \bigg[ \int_{\mathbb{R}^{s}} \mathbbm{1}_{\|x\|_1\in(0,t]}  m(x) \exp(- \lambda^{-1} \| x\|_1  )\mathbbm{1}_{x\in
 \mathcal X}\mu^{s}(d x) + \int_{\mathbb{R}^{s}}
  \mathbbm{1}_{\|x\|_1\in(t,\infty)}  m(x) \exp(- \lambda^{-1} \| x\|_1  )
  \mathbbm{1}_{x\in
-\mathcal X} \mu^{s}(d x) \right] \\
+\mathcal X} \mu^{s}(d x) \bigg] \\
 &\le \frac{1}{ m_0^2} \bigg[  \underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
 \mathcal X}\sup m(x^{*}) \int_{\mathbb{R}^{s}}\mathbbm{1}_{\|x\|_1\in(0,t]}  \exp(- \lambda^{-1} \|x\|_1 )\mathbbm{1}_{x\in
 \mathcal X}\mu^{s}(d x) \\ &+ \exp(- \lambda^{-1} t) \int_{\mathbb{R}^{s}}\mathbbm{1}_{\|x\|_1\in(t,\infty]}  m(x)\mathbbm{1}_{x\in
 \mathcal X}\mu^{s}(d x)   \bigg] \\
-&\le \frac{1}{ m_0^2} \left[(2\lambda)^s  \underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
-\mathcal X}\sup m(x^{*})  + \exp(- \lambda^{-1} t ) \right] 
+&\le \frac{1}{ m_0^2} \bigg[(2\lambda)^s  \underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
+\mathcal X}\sup m(x^{*})  + \exp(- \lambda^{-1} t ) \bigg] 
 \end{aligned}
 \end{equation}
 where 
@@ -241,37 +277,49 @@ where
 \begin{equation}
 \label{wass2}
 \begin{aligned}
-& \underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}  \mathbb{\| E}(g(\theta) \mid x)\|{ \exp(- \lambda^{-1} \| x\|_1)}   
+& \underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}} |h(g; x)|   { \exp(- \lambda^{-1} \| x\|_1)}   
 \mathbbm{1}_{x \neq \bf 0} \mathbbm{1}_{x\in
 \mathcal X}\mu^{s}(d x) \\
 &\le \underset{g:\|g\|_L\le 1} \sup\quad \underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
-\mathcal X}\sup \|\mathbb{E}(g(\theta) \mid x^*)\|     
+\mathcal X}\sup |h(g; x^{*})|     
 \int_{\mathbb{R}^{s}}\mathbbm{1}_{\|x\|_1\in(0,t]}\exp(- \lambda^{-1} \| x \|_1)\mathbbm{1}_{x\in
-\mathcal X}\mu^{s}(d x) \\ & + \exp(- \lambda^{-1} t ) \underset{g:\|g\|_L\le 1}\sup \int_{\mathbb{R}^{s}}   \mathbbm{1}_{\|x\|_1\in(t,\infty)}\|\mathbb{E}( g(\theta )\mid x)\| \mathbbm{1}_{x\in
+\mathcal X}\mu^{s}(d x) \\ & + \exp(- \lambda^{-1} t ) \underset{g:\|g\|_L\le 1}\sup \int_{\mathbb{R}^{s}}   \mathbbm{1}_{\|x\|_1\in(t,\infty)}|h(g; x)| \mathbbm{1}_{x\in
 \mathcal X}\mu^{s}(d x) \\
 &\le \underset{g:\|g\|_L\le 1}\sup \quad \underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
-\mathcal X}\sup \|\mathbb{E}(g(\theta) \mid x^*)\|     
+\mathcal X}\sup |h(g; x^{*})|     
 \int_{\mathbb{R}^{s}}\mathbbm{1}_{\|x\|_1\in(0,t]}\exp(- \lambda^{-1} \| x \|_1) \mathbbm{1}_{x\in
-\mathcal X}\mu^{s}(d x) \\ & + \exp(- \lambda^{-1} t ) \underset{g:\|g\|_L\le 1}\sup \int_{\mathbb{R}^{s}}   \mathbbm{1}_{\|x\|_1\in(t,\infty)}\mathbb{E}(\| g(\theta )\|\mid x) \mathbbm{1}_{x\in
+\mathcal X}\mu^{s}(d x) \\ & + \exp(- \lambda^{-1} t ) \underset{g:\|g\|_L\le 1}\sup \int_{\mathbb{R}^{s}}   \mathbbm{1}_{\|x\|_1\in(t,\infty)}h(|g|; x) \mathbbm{1}_{x\in
 \mathcal X}\mu^{s}(d x) \\
 &\le \underset{g:\|g\|_L\le 1}\sup \quad\underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
-\mathcal X}\sup\|\mathbb{E}(g(\theta) \mid x^*)\| (2\lambda)^s + \exp(- \lambda^{-1} t ) \underset{g:\|g\|_L\le 1} \sup \mathbb{E}(\| g(\theta )\| \mathbbm{1}_{v(\theta)\in
-\mathcal X}) \\
+\mathcal X}\sup|h(g; x^{*})|(2\lambda)^s + \exp(- \lambda^{-1} t ) \underset{g:\|g\|_L\le 1} \sup \mathbb{E}( | g(\theta )| \mathbbm{1}_{v(\theta)\in
+\mathcal X}), \\
 \end{aligned}
-\end{equation},
+\end{equation}
+where we used $h(|g|;x)=\int_{v^{-1}(x) } |g(\theta)|\frac{\pi_{\mc R}(\theta)}{Jv(\theta)}  \bar{\mc H}^{p-s}(d \theta) \ge h(g;x)$ and $ \int_{\mathbb{R}^{s}}   h(|g|; x) \mathbbm{1}_{x\in
+\mathcal X}\mu^{s}(d x) = \bb E(|g(\theta)|) $  with expectation taken over $\pi_{\mc R}(\theta)$.
 
-Combining \eqref{wass0}\eqref{wass1}\eqref{wass2}, $k_1= \underset{g:\|g\|_L\le 1}\sup \quad \underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
-\mathcal X}\sup\|\mathbb{E}(g(\theta) \mid x^*)\|$, $k_2=\underset{g:\|g\|_L\le 1} \sup \mathbb{E}(\| g(\theta )\| \mathbbm{1}_{v(\theta)\in
-\mathcal X}) $, $k_3= \underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
-\mathcal X}\sup m(x^{*})  $
+
+Combining \eqref{wass0}\eqref{wass1}\eqref{wass2}, $k_1= \underset{g:\|g\|_L\le 1}\sup \quad \underset{x^{*}:\|x^{*}\|_1\in[0,t]\cap
+\mathcal X}\sup |h(g; x^*)|$, $k_2=\underset{g:\|g\|_L\le 1} \sup \mathbb{E}(| g(\theta )| )$, $k_3= \underset{x^{*}:\|x^{*}\|_1\in(0,t]\cap
+\mathcal X}\sup m(x^{*})$
 
 
 \begin{equation}
 \begin{aligned}
-& \underset{g:\|g\|_L\le 1}\sup \int g(x) \Pi(dx) -  \int g(x) \tilde\Pi(dx) \\
-        %&\le  \frac{k_1}{ m_0^2} \left[\lambda k_3  + \exp(- \lambda^{-1} t ) \right] 
+& \underset{g:\|g\|_L\le 1}\sup \bb E_{\Pi}(g(\theta)) -
+\bb E_{\tilde \Pi}(g(\theta)) \\
+        %&\le  \frac{k_1}{ m_0^2} \bigg[\lambda k_3  + \exp(- \lambda^{-1} t ) \bigg] 
         %+ \frac{1} {  m_0} [ k_1       \lambda + \exp(- \lambda^{-1} t )k_2 ]\\     
-        & \le (2\lambda)^{s} (\frac{k_1 k_3}{m_0^2} + \frac{k_1}{m_0}) + \exp(- \lambda^{-1} t )(\frac{k_1}{m_0^2} + \frac{k_2}{m_0})
+\le & \underset{g:\|g\|_L\le 1}\sup\int_{\mathbb{R}^{s}}  |h(g; x)| 
+ \bigg[ \mathbbm{1}_{x=\bf 0}(\frac{1}{m_0}-\frac{1}{m_\lambda})
+ + \mathbbm{1}_{x \in \mc X \setminus\bf 0}(\frac{ \exp(- \lambda^{-1} \|x\|_1) }{m_0})
+\bigg]\mu^{s}(d x)\\
+\le & \underset{g:\|g\|_L\le 1}\sup |h(g; {\bf 0})| 
+ (\frac{1}{m_0}-\frac{1}{m_\lambda}) 
+ + \underset{g:\|g\|_L\le 1}\sup \int_{\mathbb{R}^{s}} |h(g; x)|  \mathbbm{1}_{x \in \mc X \setminus\bf 0}(\frac{ \exp(- \lambda^{-1} \|x\|_1) }{m_0})
+\bigg]\mu^{s}(d x)\\
+\le & k_1  \frac{1}{ m_0^2} \bigg[(2\lambda)^s  k_3  + \exp(- \lambda^{-1} t ) \bigg] + \frac{1}{m_0} \bigg [ k_{1}(2\lambda)^s  + \exp(- \lambda^{-1} t ) k_2 \bigg] \\
+         \le & (2\lambda)^{s} (\frac{k_1 k_3}{m_0^2} + \frac{k_1}{m_0}) + \exp(- \lambda^{-1} t )(\frac{k_1}{m_0^2} + \frac{k_2}{m_0})
         \end{aligned}
         \end{equation}
 
@@ -281,7 +329,7 @@ Combining \eqref{wass0}\eqref{wass1}\eqref{wass2}, $k_1= \underset{g:\|g\|_L\le 
         
 
 
-The first part shows the asymptotic accuracy of the approximation. The second part shows the rate with non-asymptotic $\lambda$ under mild assumptions. The interpretation for these assumptions is that if in a small space expansion of $\mc D$, defined as $\{\theta^*: \|v(\theta^*)\|_{1}\in [0,t] \}$, the marginal density of $v(\theta^*)$ and the conditional expectation of Lipschitz functions are bounded $k_1,k_2= \mc O(1)$, and the expected norm of Lipschitz function are smaller than a bound that grows near exponentially $k_3 = \mc O(\lambda \exp(t/\lambda))$, then the distance $W_1(\Pi,\tilde\Pi)$ converges to $0$ in $\mc O(\lambda^s)$ as $\lambda\rightarrow 0$.
+The first part shows the asymptotic accuracy of the approximation. The second part shows the rate with non-asymptotic $\lambda$ under mild assumptions. The interpretation for these assumptions is that if in a small space expansion of $\mc D$, defined as $\{\theta^*: \|v(\theta^*)\|_{1}\in [0,t] \}$, the marginal density of $v(\theta^*)$ and the integral of Lipschitz functions are bounded $k_1,k_2= \mc O(1)$, and the expected norm of Lipschitz function are smaller than a bound that grows near exponentially $k_3 = \mc O(\lambda \exp(t/\lambda))$, then the distance $W_1(\Pi,\tilde\Pi)$ converges to $0$ in $\mc O(\lambda^s)$ as $\lambda\to 0$.
 
 
 
