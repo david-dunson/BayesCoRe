@@ -14,6 +14,7 @@
 %macro for commenting
 \usepackage{color}
 \newcommand{\leo}[1]{{\color{blue}{Leo: #1}}}
+\newcommand{\alex}[1]{{\color{red}{Alex: #1}}}
 
 % \newcommand{\Xbeta}{ X_i \theta}
 \newcommand{\xbeta}{ x_i \beta}
@@ -79,7 +80,7 @@
 \baselineskip=28pt
 
 \title{\textbf{Constraint Relaxation for Bayesian Modeling with Parameter Constraints}}
-\author{Leo Duan, Akihiko Nishimura,  Alex Young,  David Dunson}
+\author{Leo Duan, Alexander L Young, Akihiko Nishimura,  David Dunson}
 \date{}
 \begin{document}
 
@@ -295,7 +296,7 @@ We will illustrate more general use by adapting shrinakge prior on similar space
 in the application section. 
 \begin{figure}[H]
 \begin{subfigure}[b]{0.45\textwidth}
-\includegraphics[width=1\textwidth]{sphere_vmf}
+%\includegraphics[width=1\textwidth]{sphere_vmf.pdf}
 \caption{Constrained independent Gaussian distribution}
 \end{subfigure}
 %\begin{subfigure}[b]{0.30\textwidth}
@@ -303,7 +304,7 @@ in the application section.
 %\caption{Constrained correlated Gaussian distribution}
 %\end{subfigure}
 \begin{subfigure}[b]{0.45\textwidth}
-\includegraphics[width=1\textwidth]{sphere_t}
+%\includegraphics[width=1\textwidth]{sphere_t}
 \caption{Constrained independent $t_3$ distribution}
 \end{subfigure}
 \caption{Sectional view of random samples from constrained distributions on a unit sphere inside $\bb R^3$. The distributions are derived through conditioning on $\theta'\theta=1$ based on unconstrained densities of (a) $\No( F, \diag\{0.1\})$, 
@@ -688,8 +689,71 @@ Combining \eqref{wass0}\eqref{wass1}\eqref{wass2}, $k_1=\underset{g:\|g\|_L\le 1
 
 The first part shows the asymptotic accuracy of the approximation. The second part shows the rate with non-asymptotic $\lambda$ under mild assumptions. The interpretation for these assumptions is that if in a small space expansion of $\mc D$, defined as $\{\theta^*: v(\theta^*)\in [0,t] \}$, the marginal density of $v(\theta^*)$ and the conditional expectation of Lipschitz functions are bounded $k_1,k_2= \mc O(1)$, and the expected norm of Lipschitz function are smaller than a bound that grows near exponentially $k_3 = \mc O(\lambda \exp(t/\lambda))$, then the distance $W_1(\Pi,\tilde\Pi)$ converges to $0$ in $\mc O(\lambda)$ as $\lambda\rightarrow 0$.
 
+\alex{
+
+\section{Analytical Results}
+\subsection{Positive measure constrained spaces}
 
 
+\begin{theorem}
+\label{THM:positive_measure_approximation_error}
+Suppose $g \in \mathbb{L}^1(\mathcal{R}, \pi_\mathcal{R}d\mu_\mathcal{R})$ and that $\pi_\mathcal{D}$ and $\tilde{\pi}_\lambda$ are taken as above.  Then,
+$$\bigg|E[g(\theta) |\theta\in\mathcal{D}] - \tilde{E}[g(\theta)]   \bigg| \le \frac{\int_{\mathcal{R}\setminus \mathcal{D}} (E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\exp(-v(\theta)/\lambda ) d\mu_\mathcal{R}(\theta)}{\big[\int_\mathcal{D} \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\big]^2 }$$
+where $\tilde{E}[g(\theta)] = \int_\mathcal{R} g(\theta) \tilde{\pi}_\lambda(\theta)d\mu_\mathcal{R}(\theta)$ is the expected value of $g(\theta)$ with respect to the relaxed density $\tilde{\pi}_\lambda.$
+\end{theorem}
+
+\begin{corollary}
+Suppose $g \in  \mathbb{L}^2(\mathcal{R}, \pi_\mathcal{R}d\mu_\mathcal{R})$,  $\pi_\mathcal{D}$ and $\tilde{\pi}_\lambda$ are as above, and $v_d(\theta)$ has the form of Eq. (\ref{EQ:Isotrophic_relaxation}) with $k=2$.  Then for $0<\lambda \ll 1,$
+$$ \bigg|E[g(\theta) |\theta\in\mathcal{D}] - \tilde{E}[g(\theta)]   \bigg| = O(\lambda\log(\lambda)).  $$ \leo{$\log(\lambda)<0?$}
+\end{corollary}
+
+\subsection{Measure zero constrained spaces}
+
+\begin{theorem}
+\label{THM:RCP_construction}
+\alex{We'll need to decide on a choice of notation for this definition: 
+
+Assume that $J(v(\theta)) > 0$ and that for each $z\in\mathbb{R}^s$ there is a finite non-negative integer $p_z$ such that,  $$m^{p_z}(z) = \int_{\mathbb{R}^ {s}} \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_{v(\theta)=z}}{J(v(\theta))} d\bar{\mathcal{H}}^{p}(z) \in (0,\infty).$$
+Then, for any Borel subset, $E$, of $\mathcal{R}$, it follows that 
+$$P(E|v(\theta) = z) = 
+\begin{cases}
+\frac{1}{m^{p_z}(z)} \int_E \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_{v(\theta)=z}}{J(v(\theta))} d\bar{\mathcal{H}}^{p}(z)  & m^s(z)\in (0,\infty)  \\
+\delta (E) & m^p(z) \in \{0,\infty\}
+\end{cases}$$
+is a valid regular conditional probability for $\theta\in\mathcal{D}.$ Here, $\delta (E)=1$ if $0\in E$ and $0$ otherwise. }
+\leo{I suggest we use the $r$ and $(r-s)$ for dimensionality as before,
+this changes to:\\
+Assume that $J(v(\theta)) > 0$ and that there exists $z\in\mathbb{R}^s$  such that,  $$m^{s}(z) = \int_{\mathbb{R}^ {r-s}} \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_{v(\theta)=z}}{J(v(\theta))} d\bar{\mathcal{H}}^{(r-s)}(\theta) \in (0,\infty).$$
+Then, for any Borel subset, $E$, of $\mathcal{R}$, it follows that 
+$$P(E|v(\theta) = z) = 
+\begin{cases}
+\frac{1}{m^{s}(z)} \int_E \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_{v(\theta)=z}}{J(v(\theta))} d\bar{\mathcal{H}}^{(r-s)}(\theta)  & m^s(z)\in (0,\infty)  \\
+\delta (E) & m^s(z) \in \{0,\infty\}
+\end{cases}$$
+is a valid regular conditional probability for $\theta\in\mathcal{D}.$ Here, $\delta (E)=1$ if $0\in E$ and $0$ otherwise. 
+}
+\end{theorem}
+
+
+\begin{theorem}
+\label{THM:Relaxed_Expectation_Convergence_Measure_Zero}
+Let $m:\mathbb{R}^s\to \mathbb{R}$ and $m_g:\mathbb{R}^s\to \mathbb{R}$ be defined as follows
+\begin{align*}
+m(x) &= \int_{\nu^{-1}(x)} \frac{\pi_\mathcal{H}(\theta) \mathcal{L}(y;\theta)}{J(\nu(\theta))} d\mathcal{R}^{r-s}(\theta) \\
+m_g(x) &= \int_{\nu^{-1}(x)} g(\theta)\frac{\pi_\mathcal{H}(\theta) \mathcal{L}(y;\theta)}{J(\nu(\theta))} d\mathcal{R}^{r-s}(\theta).
+\end{align*}
+Suppose that both $m$ and $m_g$ are continuous on an open interval containing the origin and that \\ $g\in\mathbb{L}^1(\mathcal{R},\pi_R\mathcal{L}(y;\theta)d\mu_\mathcal{R}) \cap\mathbb{L}^1(\mathcal{D},\frac{\pi_R\mathcal{L}(y;\theta)}{J(\nu(\theta))}d\mu_\mathcal{R})$. Then,
+$$E_{\tilde{\Pi}}[g] \to E[g|\theta \in \mathcal{D}].$$
+\end{theorem}
+
+\begin{corollary}
+In addition to the assumptions of Theorem \ref{THM:Relaxed_Expectation_Convergence_Measure_Zero}, suppose that both $m$ and $m_g$ are differentiable at $0$. Then
+$$|E_{\tilde{\Pi}}[g] - E[g|\theta \in \mathcal{D}] | = O()$$
+as $\lambda \to 0^+.$
+\end{corollary}
+
+}
+ 
 \section{Posterior Computation}
 
 Adapting  unconstrained density into space $\mc D$ often disrupts its posterior conjugacy. Since one can now sample the posterior in $\mc R$ using
@@ -810,11 +874,11 @@ $\mc D$. To compare, we ran simple rejection sampling with untruncated normal pr
 
 \begin{figure}[H]
 \begin{subfigure}[b]{0.45\textwidth}
-\includegraphics[width=1\textwidth]{linear_inequal_1}
+%\includegraphics[width=1\textwidth]{linear_inequal_1}
 \caption{Constrained $\No([0.3,0.3],1/{10})$}
 \end{subfigure}
 \begin{subfigure}[b]{0.45\textwidth}
-\includegraphics[width=1\textwidth]{linear_inequal_2}
+%\includegraphics[width=1\textwidth]{linear_inequal_2}
 \caption{Constrained $\No([0.7,0.3],1/{10^4})$}
 \end{subfigure}
 \caption{Posterior sample of bivariate normal distribution subject to linear inequality constraints $\theta\in(0,1)^2,\theta_1+\theta_2<1$, using HMC with  constraint relaxation. Posterior is spread out around the center (panel (a)) or concentrated on the boundary (panel (b)) of the region.}
@@ -895,11 +959,11 @@ to the former, which explains the similarity in performance.
 
 \begin{figure}[H]
 \begin{subfigure}[b]{0.45\textwidth}
-\includegraphics[width=1\textwidth]{simplex001}
+%\includegraphics[width=1\textwidth]{simplex001}
 \caption{$2,000$ samples from $\text{Dir}(0.01)$ on $2$-simplex.}
 \end{subfigure}
 \begin{subfigure}[b]{0.45\textwidth}
-\includegraphics[width=1\textwidth]{simplexTrace001}
+%\includegraphics[width=1\textwidth]{simplexTrace001}
 \caption{Traceplot of $\theta_1$ using 4 types of HMCs.}
 \end{subfigure}
 \caption{Sampling of Dirichlet on an simplex with distribution concentrated on the boundaries.
@@ -1061,12 +1125,12 @@ of points close to 0 in the model with shrinkage prior.
 \begin{figure}[H]
 \centering
 \begin{subfigure}[b]{0.8\textwidth}
-\includegraphics[width=1\textwidth]{network_loading}
+%\includegraphics[width=1\textwidth]{network_loading}
 \caption{Posterior mean of the loadings $v_{i,r}$ for 21 subjects using three
 models. Each line represents the loadings for one subject over $r=1,\ldots10$.}
 \end{subfigure}
 \begin{subfigure}[b]{1\textwidth}
-\includegraphics[width=1\textwidth]{network_factor.pdf}
+%\includegraphics[width=1\textwidth]{network_factor.pdf}
 \caption{Posterior mean and pointwise $95\%$ credible interval of  the factors
 $U_1,\ldots,
 U_6$ in the two constrained models. }
@@ -1088,6 +1152,103 @@ This strategy works well for general equality and inequality constraints.
 
 The future work of this research may include tackling the  `doubly intractable' problem. This issue is common when the data is on the constrained space, or the constrained prior has hyper-parameters to estimate. In the data application, we show that a reparameterization strategy works for some shrinkage priors, but clearly, 
 more general treatment is needed. We expect our work to be compatible to the existing solutions \citep{murray2012mcmc,rao2016data, stoehr2017noisy}. 
+
+\appendix
+
+
+\alex{
+
+\section{Proofs from Section 3.1}
+
+
+\section{Proofs from Section 3.2}
+We have two densities. The first is the fully constrained density for $\theta\in\mathcal{D}$.
+\begin{equation*}
+\pi_\mathcal{D}(\theta) = \frac{1}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)
+\end{equation*}
+where the normalizing constant $m_0$ is calculated w.r.t. Hausdorff measure
+$$m_0 = \int_\mathcal{R} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta).$$
+This density defines a probability measure, $\Pi$, w.r.t. Hausdorff measure.  For a measurable set $E$, 
+$$\Pi(E) = \int_E \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta).$$
+
+Secondly, we have the relaxed distribution
+$$\tilde{\pi}_\mathcal{D}(\theta) = \frac{1}{m_\lambda} \mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)$$
+where the normalizing constant is calculated w.r.t. Lebesgue measure on $\mathcal{R}$
+$$m_\lambda = \int_\mathcal{R}\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg) d\mu_\mathcal{R}(\theta).$$
+We use $\mu_\mathcal{R}$ to denote Lebesgue measure on $\mathcal{R}.$ This density defines a probability measure, $\tilde{\Pi}$, w.r.t. $\mu_\mathcal{R}$.  For a measurable set $E$, 
+$$\tilde{\Pi}(E) = \int_E \frac{g(\theta)}{m_\lambda} \mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)d\mu_\mathcal{R}(\theta).$$
+
+\noindent \textbf{Definition of expectation of $g(\theta)$ w.r.t. constrained and relaxed measures}
+
+For a given function, $g$, we can define the exact and approximate expectations of $g$, respectively $E_\Pi$ and $E_{\tilde{\Pi}}$, as
+\begin{align*}
+E_\Pi[g(\theta)|\theta\in\mathcal{D}] &= \int_\mathcal{R} \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta) \\
+&=\int_\mathcal{D} \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta)\\
+E_{\tilde{\Pi}}[g(\theta)] &= \int_\mathcal{R}  \frac{g(\theta)}{m_\lambda} \mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)d\mu_\mathcal{R}(\theta) \\
+&= \int_{\mathbb{R}^s} \frac{1}{m_\lambda} \int_{\nu^{-1}(x)} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} \exp\bigg(-\frac{||\nu(\theta)||_1}{\lambda}\bigg) d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}(x) \\
+&=\int_{\mathbb{R}^s} \frac{\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) }{m_\lambda} \int_{\nu^{-1}(x)} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}(x) 
+\end{align*}
+Let, $$m(x) = m^{r-s}(x) = \int_{\nu^{-1}(x)}\frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) .$$
+By construction, $m(x) > 0$ for $\mu_{\mathbb{R}^s}$-a.e. $x\in \mathbb{R}^s$ and $m(0)>0$. Then by Theorem 1,
+\begin{equation}
+E[g(\theta) | \nu(\theta) = x] = \frac{1}{m(x)} \int_{\nu^{-1}(x)} g(\theta)\frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta).
+\end{equation}
+As such, we may may express $E_{\tilde{\Pi}}[g(\theta)]$ as 
+\begin{equation}
+E_{\tilde{\Pi}} = \int_{\mathbb{R}^s} \frac{m(x)}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) E\big[g(\theta)|\nu(\theta)=x\big] d\mu_{\mathbb{R}^s}(x).
+\end{equation}
+%To show $\tilde{E}[g(\theta)] \to E[g(\theta)|\nu(\theta)=0] = E[g(\theta)|\theta\in\mathcal{D}]$ as $\lambda \to 0^+$, we first need to investigate the behavior of $m_\lambda$ for $0<\lambda \ll 1.$
+
+\begin{center}\line(1,0){450}\end{center}
+
+At this point, I'm going to try to demonstrate the asymptotic behavior of (2) for small $\lambda.$ To write this up properly, we'll need to begin with absolute values of differences and bound above. This will require some statements about the integrability of $g$. I'm going to wait on writing the argument up in that manner until we determine what can be said about the continuity/uniform continuity/differentiability of $m$ and $E[g|\nu=x]$ near $x=0.$ For now, I'll make the following assumptions.\\
+
+\noindent\textbf{Assumption:} Both $m(x)$ and $E\big[g(\theta)|\nu(\theta)=x\big]$ are continuous at $x=0.$
+
+\begin{center}\line(1,0){450}\end{center}
+\vspace{0.5cm}
+\noindent \textbf{Asymptotic behavior of $m_\lambda$} \\
+
+\noindent Fix $\epsilon >0$. Since $-\lambda\log(\lambda^{s+1}) \to 0$ as $\lambda\to 0^+$, we may choose $\lambda$ small enough so that $||m(x)-m(0)||_1 < \epsilon$ for all $x\in B_1(0;\lambda|\log(\lambda^{s+1}|)$ and $\lambda < \max(\epsilon^{1/s},\epsilon^{1/(s+1)})$, the 1-ball of radius $\lambda|\log(\lambda^{s+1})|$ centered at $0.$ 
+
+Let us first consider the small $\lambda$ behavior of $m_\lambda.$ We begin by re-expressing $m_\lambda$ in terms of $m(x).$
+\begin{align*}
+m_\lambda &= \int_\mathcal{R} \pi_\mathcal{R}(\theta) \mathcal{L}(y;\theta) \exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg) d\mu_\mathcal{R} \\
+&= \int_{\mathbb{R}^s} \exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{\nu^{-1}(x)} \frac{\pi_\mathcal{R}(\theta) \mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}(x)  \\
+&=\int_{\mathbb{R}^s}m(x) \exp\bigg(-\frac{||x||_1}{\lambda}\bigg)
+\end{align*}
+
+Now, split the above integral into two regions: the interior and exterior of $B_1(0;\lambda|\log(\lambda^{s+1})|)$. Note that outside of $B_1$, $\exp(-||x||_1/\lambda) \le \lambda^{s+1}.$
+\begin{align*}
+m_\lambda &= \int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)}m(x) \exp\bigg(-\frac{||x||_1}{\lambda}\bigg)d\mu_{\mathbb{R}^s}(x) + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)}m(x) \exp\bigg(-\frac{||x||_1}{\lambda}\bigg)d\mu_{\mathbb{R}^s}(x) \\
+&=O\bigg( \lambda^{s+1} \int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)}m(x) d\mu_{\mathbb{R}^s}(x)\bigg) + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} (m(0)+O(\epsilon)) \bigg[1+O\bigg(\frac{1}{\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg)\bigg)\bigg]d\mu_{\mathbb{R}^s}(x)\\
+&= O\bigg( \lambda^{s+1} \underbrace{\int_{\mathbb{R}^s}m(x) d\mu_{\mathbb{R}^s}(x)}_{=C}\bigg) + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} [m(0) + O(\epsilon)][1+O(\lambda^s)] d\mu_{\mathbb{R}^s} (x) \\
+&= O(C \lambda^{s+1}) + (m(0)+O(\epsilon))(1++ O(\lambda^s)) \underbrace{\frac{|2(s+1)\lambda \log \lambda |^s}{\Gamma(s+1)}}_{Vol(B_1(0;\lambda|\log(\lambda^{s+1})|)}   \\
+&\sim m(0) \frac{|2(s+1)\lambda \log \lambda |^s}{\Gamma(s+1)}
+\end{align*}
+at leading order for small $\lambda$.
+
+\vspace{1cm}
+\noindent \textbf{Asymptotic behavior of $E_{\tilde{\Pi}}[g(\theta)]$} \\
+
+We know turn to the small $\lambda$ behavior of $\tilde{E}[g(\theta)].$  Fix $\epsilon >0$, choose $\lambda<\epsilon^{1/s}$ such that $x\in B_1(0,\lambda|\log(\lambda)^{s+1}|)$ implies
+\begin{align*}
+|m(x)- m(0)| &< \epsilon \\
+|E[g(\theta)|\nu(\theta)=x] - E[g(\theta)|\nu(\theta)=0 | & < \epsilon \\
+\end{align*}
+Similar to the study of $m(x)$, separate the $\tilde{E}[g(\theta)]$ into integrals over the interior and exterior of $B_1(0,\lambda|\log(\lambda)^{s+1}|)$
+\begin{align*}
+E_{\tilde{\Pi}}[g(\theta)] &= \int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{m(x)}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) E\big[g(\theta)|\nu(\theta)=x\big] d\mu_{\mathbb{R}^s}(x) \\
+&\hspace{0.5 cm} + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{m(x)}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) E\big[g(\theta)|\nu(\theta)=x\big] d\mu_{\mathbb{R}^s}(x) \\
+&= O\bigg( \frac{\lambda^{s+1}}{m_\lambda} \int_{\mathbb{R}^s} m(x) E[g(\theta)|\nu(\theta)=x]d\mu_{\mathbb{R}^s}(x)\bigg) + \int_{B_1} \frac{m(0)+O(\epsilon)}{m_\lambda}(1+O(\lambda^s)]\bigg(E[g(\theta)|\nu(\theta)=0] + O(\epsilon)\bigg) d\mu_{\mathbb{R}^s} (x) \\
+&= O\bigg( C E|g|\frac{\lambda}{|\log\lambda|^s}\bigg) + \frac{1+O(\epsilon)}{ \frac{|2(s+1)\lambda \log \lambda |^s}{\Gamma(s+1)} } E[g(\theta)|\nu(\theta) = 0] \int_{B_1}(1+O(\epsilon))d\mu_{\mathbb{R}^s}(x) \\
+&=O\bigg(C E|g|\frac{\lambda}{|\log\lambda|^s}\bigg)  +E[g(\theta)|\nu(\theta)=0] \frac{1+O(\epsilon)}{1-C_1\epsilon}
+\end{align*}
+Therefore, $\lambda$ may be chosen sufficiently small so that $CE|g|\lambda/|\log\lambda^s| < \epsilon $ which implies that 
+$$\bigg|E_{\tilde{\Pi}}[g] - E[g(\theta)|\nu(\theta) = 0] \bigg| < C\epsilon.$$
+And we may conclude that $$E_{\tilde{\Pi}}[g] \to E[g|\nu = 0] \text{ as } \lambda\to0^+.$$
+
+}
 
 \bibliography{reference}
 \bibliographystyle{chicago}
