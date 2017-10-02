@@ -21,6 +21,7 @@
 \newcommand{\xtheta}{ x_i \theta}
 % \newcommand{\xbetaij}{ x_{ij}^T \theta}
 \newcommand{\sgamma}{s_{ij}^T\gamma_i}
+\newcommand{\core}{\textbf{CORE}}
 
 \usepackage[round]{natbib}
 
@@ -162,538 +163,590 @@ applications.
 
 
 
-\section{Constrained Relaxation Methodology}
-
-\subsection{Deriving Constrained Distribution via Conditioning}
-
-Let $\theta\in \mc D$ be a $p$-element parameter of interests. The support $\mc
-D$ is a constrained space. The usual Bayesian approach assigns an existing prior
-density $\pi_{\mc D}(\theta)$ for $\theta$ only having support $\mc D$, where the available choices are often quite limited. On the other hand, in the un/less-constrained space $\mc R\supset \mc D$, there is a large family of
-distributions with well-studied properties. We denote such a distribution by $\pi_{\mc R}(\theta)$. It would be appealing to 
-adopt it in the constrained subspace. In this article, we restrict focus on $\mc D$ and $\mc R$ being the subspace of $p$-dimensional Euclidean space, $\mc D \subset\mc R\subseteq \bb R^p$. We use $\mu^p(A)$ to denote the $p$-dimensional Lebesgue measure of set $A$.
-
-Intuitively, one would want to directly apply space truncation to ${\theta\in\mc D}$ on $\pi_{\mc R}(\theta)$, renormalizing by $1/\mu^p(\mc D)$ to obtain the appropriate density. However, this often does not work as many constrained
-space has $\mu^p(\mc D)=\int_{\mc D}  \pi_{\mc R}(\theta) \mu^p(d\theta)=0$. Therefore, an alternative strategy is needed.
-
-We now exploit the fact that one can often define a valid conditional distribution,
-even conditioned on an event with measure $0$ \citep{kolmogorov1950foundations}.
-Starting from  a derived random variable $w=v(\theta)$, as long as $v:\bb R^p\rightarrow \bb R^d$ is  Lipschitz
-continuous and measurable with respect to $\pi_{\mc R}$, one can obtain a conditional density given $w=w_0$ 
-\be
-\label{conditionalDensity}
-\pi_{\mc R}(\theta \mid w=w_0) = \frac{1}{m^s(w_0) J(v(\theta))} \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=w_0}
-\ee
-where $\mathbbm{1}_{E}$ is an indicator equal $1$ when condition
-$E$ holds and $0$ otherwise; $J(v(\theta))$ is the Jacobian induced by using
-co-area formula \citep{federer2014geometric}, which equals to
-$\sqrt{\mbox{det[}D(v(\theta))'
-D(v(\theta))]}$ with $D(v(\theta))$ the partial derivative matrix and $\text{det}[.]$
-as the determinant; $0<J(v(\theta))<\infty$; $m^s(w_0)=\int_{v(\theta)=w_0} \frac{1}{J(v(\theta))} \pi_{\mc R}(\theta) \mu^s(d\theta) $ is the normalizing constant. Note the $m^s(w_0)$  could be a potentially lower dimensional integral at  $s\le p$, with
-$s$ often referred as the `intrinsic' dimension of subspace $\{\theta: v(\theta)=w_0\}$
-such that   $0<m^s(w_0)<\infty$.  For example, consider a compact set of $\theta=\{\theta_1,\theta_2,\theta_3\}$ inside a
-hyperplane $\{\theta: \theta_1+\theta_2+\theta_3=w_0\}$ in $\bb R^3$: at $p=3$, it has a volume measure of $0$;  but at $s=2$, it has a  positive area measure, which is calculated by integrating over $(\theta_1,\theta_2)$, with $\theta_3=w_0-\theta_1-\theta_2$ deterministic. Using $m^s(w_0)$
-instead of $\mu^p(\mc D)$ for re-normalizing, \eqref{conditionalDensity} forms a valid conditional density. We provide a formal proof and a more rigorous elaboration on  $s$ and $\mu^s(d\theta)$  
-in the theory section.
-
-We then consider the constrained density as a conditional density. A large family of constraints can be
-associated with $v(\theta)$ fixed at certain $w_0$, without
-loss of generality, we take $w_0=\bf 0$. We now have
- $\mc D =\{\theta:
-v(\theta)={\bf 0}\}$. Although the conditions on $v(\theta)$ imposes some
-restriction  on the suitable constrained spaces, there is a rich class within this category.
-For example, the common  inequality $f(\theta)<0$ can be associated with $v(\theta)=|f(\theta)|_+=\left\{\begin{array}{cc}  0 \text{ if } f(x)\le 0
-\\ f(x) \text{ if } f(x)> 0\end{array}\right.$; the 
-equality constraint $f(\theta)=0$ can be associated with $v(\theta)=f(\theta)$=0. The former is often used for space truncation, whereas the latter is often used for  embedding manifolds   in $\bb R^p$ \citep{do2016differential}. 
-
-Omitting normalization constant, the derived constrained density is:
-
-\be
-\label{constrainedDensity}
-\pi_{\mc D}(\theta)=\pi_{\mc R}(\theta\mid v(\theta)={\bf 0})\propto \pi_{\mc R}(\theta) \mathbbm{1}_{\theta\in \mc
-D}/J(v(\theta)).
-\ee
-Obviously, there are potentially more than one suitable $v(\theta)$'s for
-this derivation. Often there exists $v(\theta)$ with constant
-$J(v(\theta))$ when $\theta\in\mc D$, then the conditional density would appear as if
-the result of simple space truncation
-from $\mc R$ to $\mc D$.
-
-The derived density \eqref{constrainedDensity} generalizes the family of distributions one can use for constrained space. Since $\pi_{\mc D}(\theta)$
-is almost proportional to $\pi_{\mc R}(\theta)$ except for the Jacobian part,
-one can often utilize the similar distribution patterns on $\mc D$
-and $\mc R$ for guidiing prior selection.
-
-
-To illustrate, we now derive two distributions on a $(p-1)$-hypersphere, defined as $\mc
-D=\{\theta\in
-\bb R^p:\theta'\theta=1\}$. The sphere $\mc D$ has intrinsic dimension $(p-1)$ hence measure $0$ in $\bb R^3 $. As the result, a  space truncation and renormalizing would
-yield an improper density. Instead, we can define a conditional density using
-a simple  function  $v(\theta)=\theta'\theta-1$,
-which has $J(v(\theta))=\|2\theta\|=2$ for $\theta\in \mc D$.
- We start with a familiar
-location-scale distribution Gaussian distribution with diagonal
-covariance $\theta \in \No(F,I\sigma^2)$ as $\pi_{\mc
-R}$, where $F\in \mc D $ and $I$ is the identity matrix. Conditioning on $v(\theta)=\theta'\theta-1=0$ yields
-
-\be
-\pi_{\mc D}(\theta) &\propto
-\exp(-\frac{\|F-\theta\|^2}{2\sigma^2})
-\mathbbm{1}_{\theta'\theta=1}/2 \\
-& \propto
-\exp(\frac{F'}{\sigma^2}\theta)
-\mathbbm{1}_{\theta'\theta=1}
-,\ee
-where the quadratic term $\theta'\theta$ is left out as a constant in the second line. This gives rise to the well-known von
-Mises--Fisher distribution \citep{khatri1977mises}. Although the final form
-appears more
-like an exponential, the behavior of von
-Mises--Fisher
-on sphere can be explained by its unconstrained parent Gaussian.
-In the Gaussian $\pi_{\mc
-R}(\theta)$, $\theta$ is symmetrically distributed around $F$, with density
-decaying exponentially as $\| \theta-F\|^2$ increases with rate controled by
-$({2\sigma^2})^{-1}$; as the constrained
-density $\pi_{\mc D}(\theta)$ is proportional $\pi_{\mc R}(\theta)$ on $\mc
-D$, it concentrates
-similarly since geodesic distance behaves locally similar to Euclidean distance.  Figure~\ref{sphere_examples}(a) shows this distribution parameterized by $F=[1/\sqrt{3},1/\sqrt{3},1/\sqrt{3}]'$ and $\sigma^2=0.1$.
-
-The observation made on von Mises-Fisher immediately suggests we can induce different behavior by using a different unconstrained $\pi_{\mc R}(\theta)$.
-% % leo: skip the the multivariate Gaussian example as it doesn't seem original
-%  Starting from
-% correlated  Gaussian $\pi_{\mc
-% R}(\theta)$, $\theta \in \No(F,\Sigma)$, one obtains 
-% \be
-% \pi_{\mc
-% D}(\theta) & \propto\exp(-\frac{1}{2}\theta'\Sigma^{-1}\theta+
-% {F'}{\Sigma^{-1}}\theta) \mathbbm{1}_{\theta'\theta=1} \\
-% & \propto \exp(\sum_{k=2}^p(-\frac{1}{2}w_k)\theta'\Psi_k'\Psi_k\theta
-% + (-\frac{1}{2}w_1)\theta' \Psi_1\Psi'_1\theta+
-% + \sum_{k=1}^p w_k F'\Psi_k\Psi'_k\theta ) \mathbbm{1}_{\theta'\theta=1} \\
-% & \propto \exp(-\frac{1}{2}\sum_{k=2}^p( w_k - w_1)\theta'\Psi_k'\Psi_k\theta
-% + \sum_{k=1}^p w_k F'\Psi_k\Psi'_k\theta )\mathbbm{1}_{\theta'\theta=1}
-% \ee
-% where $\Psi_k$ and $w_k$ are the $k$th eigenvector and eigenvalue of $\Sigma^{-1}$. This is the $p$-dimensional generalization of the Fisher-Bingham distribution
-% proposed by \cite{mardia1975statistics}, who originally focused on $p=3$. Similar to its role in Gaussian covariance, the covariance controls the correlation on the sphere. An illustration with correlated $x$ and $y$ axes is shown in
-% Figure~\ref{sphere_examples}(b).
-% 
-For example, to induce slower decay in density, one can start from a
-multivariate $t$-distribution $\pi_{\mc
-R}(\theta)$, $t_m(F,I\sigma^2)$ with $m$ degrees of freedom,
-mean $F\in \mc D$ and variance $I\sigma^2$, generating a new constrained density 
-\be
-\pi_{\mc
-D}(\theta)
-\propto &
-(1+\frac{\|F-\theta\|^2}{m\sigma^2})^{-{(m+p)}/{2}}\mathbbm{1}_{\theta'\theta=1}/2\\
-\propto &
-(1-\frac{F'\theta}{1+m\sigma^2/2})^{-{(m+p)}/{2}}\mathbbm{1}_{\theta'\theta=1}
-\ee
-As in the $t$-distribution, density decays polynomially as $\|F-\theta\|^2$ increases, at small
-$m$, the induced distribution (Figure~\ref{sphere_examples}(b) with $m=3,p=3$) exhibits less concentration than von
-Mises--Fisher on the sphere. This can be useful for robust modeling when
-there could be `outlier' on the sphere.
-We will illustrate more general use by adapting shrinakge prior on similar space later
-in the application section. 
-\begin{figure}[H]
-\begin{subfigure}[b]{0.45\textwidth}
-%\includegraphics[width=1\textwidth]{sphere_vmf.pdf}
-\caption{Constrained independent Gaussian distribution}
-\end{subfigure}
-%\begin{subfigure}[b]{0.30\textwidth}
-%\includegraphics[width=1\textwidth]{sphere_fb}
-%\caption{Constrained correlated Gaussian distribution}
+%\section{Constrained Relaxation Methodology}
+%
+%\subsection{Deriving Constrained Distribution via Conditioning}
+%
+%Let $\theta\in \mc D$ be a $p$-element parameter of interests. The support $\mc
+%D$ is a constrained space. The usual Bayesian approach assigns an existing prior
+%density $\pi_{\mc D}(\theta)$ for $\theta$ only having support $\mc D$, where the available choices are often quite limited. On the other hand, in the un/less-constrained space $\mc R\supset \mc D$, there is a large family of
+%distributions with well-studied properties. We denote such a distribution by $\pi_{\mc R}(\theta)$. It would be appealing to 
+%adopt it in the constrained subspace. In this article, we restrict focus on $\mc D$ and $\mc R$ being the subspace of $p$-dimensional Euclidean space, $\mc D \subset\mc R\subseteq \bb R^p$. We use $\mu^p(A)$ to denote the $p$-dimensional Lebesgue measure of set $A$.
+%
+%Intuitively, one would want to directly apply space truncation to ${\theta\in\mc D}$ on $\pi_{\mc R}(\theta)$, renormalizing by $1/\mu^p(\mc D)$ to obtain the appropriate density. However, this often does not work as many constrained
+%space has $\mu^p(\mc D)=\int_{\mc D}  \pi_{\mc R}(\theta) \mu^p(d\theta)=0$. Therefore, an alternative strategy is needed.
+%
+%We now exploit the fact that one can often define a valid conditional distribution,
+%even conditioned on an event with measure $0$ \citep{kolmogorov1950foundations}.
+%Starting from  a derived random variable $w=v(\theta)$, as long as $v:\bb R^p\rightarrow \bb R^d$ is  Lipschitz
+%continuous and measurable with respect to $\pi_{\mc R}$, one can obtain a conditional density given $w=w_0$ 
+%\be
+%\label{conditionalDensity}
+%\pi_{\mc R}(\theta \mid w=w_0) = \frac{1}{m^s(w_0) J(v(\theta))} \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=w_0}
+%\ee
+%where $\mathbbm{1}_{E}$ is an indicator equal $1$ when condition
+%$E$ holds and $0$ otherwise; $J(v(\theta))$ is the Jacobian induced by using
+%co-area formula \citep{federer2014geometric}, which equals to
+%$\sqrt{\mbox{det[}D(v(\theta))'
+%D(v(\theta))]}$ with $D(v(\theta))$ the partial derivative matrix and $\text{det}[.]$
+%as the determinant; $0<J(v(\theta))<\infty$; $m^s(w_0)=\int_{v(\theta)=w_0} \frac{1}{J(v(\theta))} \pi_{\mc R}(\theta) \mu^s(d\theta) $ is the normalizing constant. Note the $m^s(w_0)$  could be a potentially lower dimensional integral at  $s\le p$, with
+%$s$ often referred as the `intrinsic' dimension of subspace $\{\theta: v(\theta)=w_0\}$
+%such that   $0<m^s(w_0)<\infty$.  For example, consider a compact set of $\theta=\{\theta_1,\theta_2,\theta_3\}$ inside a
+%hyperplane $\{\theta: \theta_1+\theta_2+\theta_3=w_0\}$ in $\bb R^3$: at $p=3$, it has a volume measure of $0$;  but at $s=2$, it has a  positive area measure, which is calculated by integrating over $(\theta_1,\theta_2)$, with $\theta_3=w_0-\theta_1-\theta_2$ deterministic. Using $m^s(w_0)$
+%instead of $\mu^p(\mc D)$ for re-normalizing, \eqref{conditionalDensity} forms a valid conditional density. We provide a formal proof and a more rigorous elaboration on  $s$ and $\mu^s(d\theta)$  
+%in the theory section.
+%
+%We then consider the constrained density as a conditional density. A large family of constraints can be
+%associated with $v(\theta)$ fixed at certain $w_0$, without
+%loss of generality, we take $w_0=\bf 0$. We now have
+% $\mc D =\{\theta:
+%v(\theta)={\bf 0}\}$. Although the conditions on $v(\theta)$ imposes some
+%restriction  on the suitable constrained spaces, there is a rich class within this category.
+%For example, the common  inequality $f(\theta)<0$ can be associated with $v(\theta)=|f(\theta)|_+=\left\{\begin{array}{cc}  0 \text{ if } f(x)\le 0
+%\\ f(x) \text{ if } f(x)> 0\end{array}\right.$; the 
+%equality constraint $f(\theta)=0$ can be associated with $v(\theta)=f(\theta)$=0. The former is often used for space truncation, whereas the latter is often used for  embedding manifolds   in $\bb R^p$ \citep{do2016differential}. 
+%
+%Omitting normalization constant, the derived constrained density is:
+%
+%\be
+%\label{constrainedDensity}
+%\pi_{\mc D}(\theta)=\pi_{\mc R}(\theta\mid v(\theta)={\bf 0})\propto \pi_{\mc R}(\theta) \mathbbm{1}_{\theta\in \mc
+%D}/J(v(\theta)).
+%\ee
+%Obviously, there are potentially more than one suitable $v(\theta)$'s for
+%this derivation. Often there exists $v(\theta)$ with constant
+%$J(v(\theta))$ when $\theta\in\mc D$, then the conditional density would appear as if
+%the result of simple space truncation
+%from $\mc R$ to $\mc D$.
+%
+%The derived density \eqref{constrainedDensity} generalizes the family of distributions one can use for constrained space. Since $\pi_{\mc D}(\theta)$
+%is almost proportional to $\pi_{\mc R}(\theta)$ except for the Jacobian part,
+%one can often utilize the similar distribution patterns on $\mc D$
+%and $\mc R$ for guidiing prior selection.
+%
+%
+%To illustrate, we now derive two distributions on a $(p-1)$-hypersphere, defined as $\mc
+%D=\{\theta\in
+%\bb R^p:\theta'\theta=1\}$. The sphere $\mc D$ has intrinsic dimension $(p-1)$ hence measure $0$ in $\bb R^3 $. As the result, a  space truncation and renormalizing would
+%yield an improper density. Instead, we can define a conditional density using
+%a simple  function  $v(\theta)=\theta'\theta-1$,
+%which has $J(v(\theta))=\|2\theta\|=2$ for $\theta\in \mc D$.
+% We start with a familiar
+%location-scale distribution Gaussian distribution with diagonal
+%covariance $\theta \in \No(F,I\sigma^2)$ as $\pi_{\mc
+%R}$, where $F\in \mc D $ and $I$ is the identity matrix. Conditioning on $v(\theta)=\theta'\theta-1=0$ yields
+%
+%\be
+%\pi_{\mc D}(\theta) &\propto
+%\exp(-\frac{\|F-\theta\|^2}{2\sigma^2})
+%\mathbbm{1}_{\theta'\theta=1}/2 \\
+%& \propto
+%\exp(\frac{F'}{\sigma^2}\theta)
+%\mathbbm{1}_{\theta'\theta=1}
+%,\ee
+%where the quadratic term $\theta'\theta$ is left out as a constant in the second line. This gives rise to the well-known von
+%Mises--Fisher distribution \citep{khatri1977mises}. Although the final form
+%appears more
+%like an exponential, the behavior of von
+%Mises--Fisher
+%on sphere can be explained by its unconstrained parent Gaussian.
+%In the Gaussian $\pi_{\mc
+%R}(\theta)$, $\theta$ is symmetrically distributed around $F$, with density
+%decaying exponentially as $\| \theta-F\|^2$ increases with rate controled by
+%$({2\sigma^2})^{-1}$; as the constrained
+%density $\pi_{\mc D}(\theta)$ is proportional $\pi_{\mc R}(\theta)$ on $\mc
+%D$, it concentrates
+%similarly since geodesic distance behaves locally similar to Euclidean distance.  Figure~\ref{sphere_examples}(a) shows this distribution parameterized by $F=[1/\sqrt{3},1/\sqrt{3},1/\sqrt{3}]'$ and $\sigma^2=0.1$.
+%
+%The observation made on von Mises-Fisher immediately suggests we can induce different behavior by using a different unconstrained $\pi_{\mc R}(\theta)$.
+%% % leo: skip the the multivariate Gaussian example as it doesn't seem original
+%%  Starting from
+%% correlated  Gaussian $\pi_{\mc
+%% R}(\theta)$, $\theta \in \No(F,\Sigma)$, one obtains 
+%% \be
+%% \pi_{\mc
+%% D}(\theta) & \propto\exp(-\frac{1}{2}\theta'\Sigma^{-1}\theta+
+%% {F'}{\Sigma^{-1}}\theta) \mathbbm{1}_{\theta'\theta=1} \\
+%% & \propto \exp(\sum_{k=2}^p(-\frac{1}{2}w_k)\theta'\Psi_k'\Psi_k\theta
+%% + (-\frac{1}{2}w_1)\theta' \Psi_1\Psi'_1\theta+
+%% + \sum_{k=1}^p w_k F'\Psi_k\Psi'_k\theta ) \mathbbm{1}_{\theta'\theta=1} \\
+%% & \propto \exp(-\frac{1}{2}\sum_{k=2}^p( w_k - w_1)\theta'\Psi_k'\Psi_k\theta
+%% + \sum_{k=1}^p w_k F'\Psi_k\Psi'_k\theta )\mathbbm{1}_{\theta'\theta=1}
+%% \ee
+%% where $\Psi_k$ and $w_k$ are the $k$th eigenvector and eigenvalue of $\Sigma^{-1}$. This is the $p$-dimensional generalization of the Fisher-Bingham distribution
+%% proposed by \cite{mardia1975statistics}, who originally focused on $p=3$. Similar to its role in Gaussian covariance, the covariance controls the correlation on the sphere. An illustration with correlated $x$ and $y$ axes is shown in
+%% Figure~\ref{sphere_examples}(b).
+%% 
+%For example, to induce slower decay in density, one can start from a
+%multivariate $t$-distribution $\pi_{\mc
+%R}(\theta)$, $t_m(F,I\sigma^2)$ with $m$ degrees of freedom,
+%mean $F\in \mc D$ and variance $I\sigma^2$, generating a new constrained density 
+%\be
+%\pi_{\mc
+%D}(\theta)
+%\propto &
+%(1+\frac{\|F-\theta\|^2}{m\sigma^2})^{-{(m+p)}/{2}}\mathbbm{1}_{\theta'\theta=1}/2\\
+%\propto &
+%(1-\frac{F'\theta}{1+m\sigma^2/2})^{-{(m+p)}/{2}}\mathbbm{1}_{\theta'\theta=1}
+%\ee
+%As in the $t$-distribution, density decays polynomially as $\|F-\theta\|^2$ increases, at small
+%$m$, the induced distribution (Figure~\ref{sphere_examples}(b) with $m=3,p=3$) exhibits less concentration than von
+%Mises--Fisher on the sphere. This can be useful for robust modeling when
+%there could be `outlier' on the sphere.
+%We will illustrate more general use by adapting shrinakge prior on similar space later
+%in the application section. 
+%\begin{figure}[H]
+%\begin{subfigure}[b]{0.45\textwidth}
+%%\includegraphics[width=1\textwidth]{sphere_vmf.pdf}
+%\caption{Constrained independent Gaussian distribution}
 %\end{subfigure}
-\begin{subfigure}[b]{0.45\textwidth}
-%\includegraphics[width=1\textwidth]{sphere_t}
-\caption{Constrained independent $t_3$ distribution}
-\end{subfigure}
-\caption{Sectional view of random samples from constrained distributions on a unit sphere inside $\bb R^3$. The distributions are derived through conditioning on $\theta'\theta=1$ based on unconstrained densities of (a) $\No( F, \diag\{0.1\})$, 
-%(b) $\No(F, \left[\protect\begin{smallmatrix} 0.1 & 0.09 & 0 \\ 0.09 & 0.1 & 0 \\ 0 & 0 &0.1  \protect\end{smallmatrix}\right])$,
- (b) $t_3(F,\diag\{0.1\} )$, where $F=[1/\sqrt{3},1/\sqrt{3},1/\sqrt{3}]'$\\
-}
-\label{sphere_examples}
-\end{figure}
-
-
-
-\subsection{ Constraint Relaxation for Posterior Inference}
-
-The conditional distribution \eqref{constrainedDensity} allows one to adapt
-simple unconstrained $\pi_{\mc R}(\theta)$ into constrained space. When it
-is used as a prior,
-with  the likelihood as $ L(y;\theta)$  and $y$ the data, one can obtain posterior:
-\be
-\label{exactPosterior}
-\pi(\theta\mid y) & \propto L(y;\theta)\pi_{\mc D}(\theta) \\
-& \propto L(y;\theta) \pi_{\mc
-R}(\theta) /J(v(\theta))\mathbbm{1}_{\theta\in \mc D}.
-\ee
-Clearly, the
-posterior also has support only inside $\mc D$ as well due to the inheritance of
-$\mathbbm{1}_{\theta\in \mc D}$ from $\pi_{\mc D}(\theta)$. On the hand,
-the indicator is often inconvenient for posterior inference. We now develop
- two different strategies to relax the parameter $\theta\in \mc D$ into the neighborhood
-of $\mc D$, obtaining posterior $\theta^*$. Then we directly use $\theta^*$ as approximation
-or project $\theta^*$ back to $\mc D$ for exact inference. We refer this
-strategy as {\bf COnstraint RElaxation (CORE)}.
-
-
- \subsubsection{Approximation CORE}
-
-We first present a general approximation strategy. By putting positive mass around $v(\theta)=\bf
-0$, and let it decay exponentially, we relax the support of $\theta$ into a
-neighborhood surrounding $\mc D $. This generate approximate posterior sample $\theta^*\in \mc R$ via
-
-\be
-\label{approximatePosterior}
-\tilde{\pi}(\theta^*\mid y)  & = \frac{1}{m(\lambda)} L(y;\theta^*) \pi_{\mc
-R}(\theta^*) /J(v(\theta^*)) \exp (- \sum_{k=1}^K |v_k(\theta^*)|^\alpha/\lambda_k),
-\ee
-where $v_k$ is the $k$th equation in $v(\theta)$, $\alpha$ is
-typically chosen as $1$ or $2$ to mimic Laplace or Gaussian kernel, $m(\lambda)$ is a normalizing
-constant such that $\int_{\mc R} \tilde{\pi}(\theta^*\mid y) d\theta^*=1$;
- $\lambda_k\ge 0$ is a
-tuning parameter controling the concentration around $v(\theta^*)=\bf 0$.
-When $\lambda_k=0$ for all $k$, 
-\eqref{approximatePosterior} becomes exact; using small $\lambda_k>0$, \eqref{approximatePosterior}
- conventional Monte Carlo approach can be exploited directly in $\mc R$.
-
-We use a toy example with closed-form posterior to illustrate the  approximation. Consider a posterior from a sum-constrained
-bivariate Gaussian random vector $[\theta_1,\theta_2]' \mid y \sim \No(0,I)
-\mathbbm{1}_{\theta_1+\theta_2-1=0}$. Using
-$v(\theta)=\theta_1+\theta_2-1=0$, $J(v(\theta))=\sqrt 2$, the exact posterior \eqref{exactPosterior} is proportional to 
-$$
-\phi(\theta_1)
-\phi(\theta_2)\mathbbm{1}_{v(\theta)=0}
-$$
-where $\phi(.)$ is the standard
-normal density. The exact posterior density has closed-form
-
-$$
-\pi(\theta\mid y)=\frac{\sqrt{2}}{\sqrt{2\pi}} \exp(-\frac{(\theta_1-\frac{1}{2})^2}{2/2})
-\mathbbm{1}_{\theta_2=1-\theta_1}
-$$
-corresponding to $\theta_1\mid (\theta_1+ \theta_2=1) \sim
-\No(1/2,1/2)$, $\theta_2\mid \theta_1 \sim \delta_{1-\theta_1}(.)$, where
-$\delta$ denotes a point mass. Marginally, it is a degenerate Gaussian:
-$$\begin{bmatrix} \theta_1 \\ \theta_2 \end{bmatrix} \sim
-\No_{\text d} \left(
-\begin{bmatrix} \frac{1}{2} \\ \frac{1}{2} \end{bmatrix},
-\begin{bmatrix} \frac{1}{2} & -\frac{1}{2}  \\  -\frac{1}{2}  & \frac{1}{2} \end{bmatrix}
-\right).$$
-
-Using $ \exp( - (\theta^*_1+\theta^*_2-1)^2/\lambda)$ to
-replace $\mathbbm{1}_{v(\theta)=0}$, we obtain approximation $\theta^*_1 \sim \No(\frac{2}{\lambda+4},\frac{\lambda+2}{\lambda+4})$, $\theta^*_2\mid \theta^*_1 \sim \No(\frac{2}{\lambda+2}(1-\theta^*_1),\frac{\lambda}{\lambda+2})$. Marginally, 
-
-$$\begin{bmatrix} \theta^*_1 \\ \theta^*_2 \end{bmatrix} \sim
-\No \left(
-\begin{bmatrix} \frac{2}{\lambda+4} \\ \frac{2}{\lambda+4} \end{bmatrix},
-\begin{bmatrix} \frac{\lambda+2}{\lambda+4} & -\frac{2}{\lambda+4}  \\  -\frac{2}{\lambda+4}  &\frac{\lambda+2}{\lambda+4} \end{bmatrix}
-\right).$$
-As approximation, one can sample from the non-degenerate distribution using small $\lambda$. Clearly, the approximation error decreases as $\lambda$ gets
-smaller, and intuitively becomes exact when $\lambda\rightarrow 0$. We will formalize
-this notion in the theory section.
-
-\subsubsection{Data Augmentation CORE}
-
-The previous strategy is generally applicable for approximating the indicator
-function. In some less general but
-still common cases, one can relax the parameter $\theta$ to $\theta^*$ through some relaxing function
-$g$ first, if there is an inverse function $g^{-1}$ to project it back to
-$\mc D$, we can use $\theta=g^{-1}(\theta^*)$ to directly reparameterize $\pi_{\mc D}(\theta\mid y)$.
-
-
-The relaxation $\theta^*=g(\theta;w)$ often requires an auxillary parameter
-$w$ that controls the amount of relaxation. Usually $w$ is independent of $\theta$, but can be dependent on $\theta^*$. Treating $w$ as a latent variable from $\pi(w)$  with $\int_{\mc W} \pi(w) dw =1$ and $\mc W$ as
-its support, one uses $g^{-1}(\theta^*;w)$ to reparameterize the exact posterior $\pi_{\mc D}(\theta\mid y)$.
-Standard variable transformation yields new parameterization
-
-
-\be
-\label{reparameterization}
-\pi(\theta^*,w\mid y) & =\pi_{\mc D}(g^{-1}(\theta^*;w)\mid y) \frac{1}{J(g(\theta;w))}  \pi(w) \\
-&\propto \frac{\pi_{\mc R}(g^{-1}(\theta^*;w)\mid y) }{ J(v(\theta))\mid_{\theta=g^{-1}(\theta^*;w)} } \frac{1}{J(g(\theta;w))} \pi(w) 
-\ee
-where   $J(g(\theta;w))$ is the Jacobian of $g$ with respect to $\theta$.
-The indicator function $\mathbbm{1}_{\theta\in \mc D}$ disappears since $g^{-1}(\theta^*;w)\in \mc
-D$ always holds. It can be verified that transforming $\theta^*=g(\theta;w)$  yields $\pi_{\mc D}(\theta\mid y) \pi(w)$, which is the exact posterior augmented
-with latent variable $w$. Therefore, we refer this strategy as data augmentation
-constraint relaxation (DA-CORE). Using DA-CORE, one can directly sample $\theta^*$ and $w$ in less constrained
-space, and apply $\theta=g^{-1}(\theta^*;w)$ in the end to obtain the $\theta$-marginal.
-
-One simple example of relaxation would be scaling of $\theta$ under  norm constraint. For example, in $(p-1)$-simplex,
-$\|\theta\|_1=\sum_{i=1}^p\theta_1=1$ with $\theta\in \mc R=[0,\infty]^p$, one
-can augment an independent latent variable $w\in [0,\infty)$ have
-$\theta_i^*=\theta_i w$, and the inverse $\theta_i=\theta_i^*/w$ with
-$w=\sum_{i=1}^p \theta^*_i$. Suppose exact posterior is a Dirichlet distribution 
-$\theta\mid y\sim \text{Dir}(\alpha)$
-, 
-$$
-\pi_{\mc D}(\theta \mid y)\propto \prod_{i=1}^p \theta_i^{\alpha-1}\mathbbm{1}_{\sum_{i=1}^p\theta_i=1},$$
-then the relaxed parameterization is $$
-\pi(\theta^*,w\mid y) =\pi(\theta^*\mid y)\propto  \prod_{i=1}^{p-1} (\frac{\theta_i^*}{w})^{\alpha-1}  w^{-(p-1)} \pi(w), \quad w=\sum_{i=1}^p \theta^*_i, \quad \theta^*\in(0,\infty)^p.$$
-
-More generally, one can often choose the relaxation $g$ based on the projection $g^{-1}$ that produces $\theta\in \mc D$. To illustrate, we consider the random variable
-$\theta$, a $n$-by-$k$ matrix in the Stiefel manifold $\theta\in \mc V(n,k)=\{\theta\in \bb R^{n\times
-k}: \theta'\theta=I\}$, where $n\ge k$. The QR-decomposition produces such
-an orthonormal matrix, for which a $n$-by-$k$ matrix $X=QR$,
-with $Q\in \mc V(n,k)$ and $R$ $k$-by-$k$ upper triangular and diagonal positive;
- the
-QR decomposition is unique if $X$ is of rank $k$ \citep{gulliksson1992modifying}, which allows us to
-use it as $g^{-1}$. Letting $w$ be a random matrix, $k$-by-$k$, upper triangular and diagonal positive, we have $\theta^*=\theta w$, with $\theta^*$ in rank
-$k$. Suppose $\theta$ is $n$-by-$k$ and from the Matrix Bingham--von Mises--Fisher distribution
-\citep{hoff2009simulation},
-$$\pi_{\mc D}(\theta\mid y)\propto \text{etr}(C'\theta+B\theta'A\theta)  \mathbbm{1}_{\theta'\theta=I_k}$$
-where $\text{etr}$ represents the exponential of trace, $A$ is symmetric $n$-by-$n$, $B$ is symmetric $k$-by-$k$ and $C$ is $n$-by-$k$. The relaxed
-parameterization is
-
-$$\pi(\theta^*, w\mid y) =\pi(\theta^*\mid y)\propto \text{etr}(C'\theta^*w^{-1}+B(\theta^*w^{-1})'A\theta^*w^{-1} \text{det}^{-1}(w), \quad \text{rank}(\theta^*)=k, \quad w= \text{QR.R}(\theta^*)$$
-where $\text{QR.R}$ denotes the function that outputs $R$ matrix in QR decomposition.
-
-In comparison, in other reparameterization such as coordinate system, one can only use equal or less parameters to satisfy the constraint, which can
-be  constringent. In DA-CORE, it is generally
-more flexible with more parameters, thanks to the data augmentation. Since $w$ is a redundant latent variable, one can
-assign $\pi(w)$ to allow greater relaxation, which is commonly associated
-with better performance in posterior sampling. More will be illustrated in
-the simulation.
-
-
- \subsection{Theoretic Properties}
-
-We now present the properties of the proposed approach. We first establish
-that the conditioning approach yields valid probability measure.
-
-We focus on $\mc R$ being a $p$-dimensional Euclidean space and the
-intrinsic dimension of $\mc D$, $\mbox{dim}(\mc D)=s\le p$  is integer.
-Although the
-$p$-dimensional Lebesgue measure can have $\mu^p(\mc D)=0$, it is still possible to define a conditional probability given the event ${v(\theta)=\bf 0}$. We utilize the concept of {\it regular
-conditional probability} (r.c.p.)
-\citep{kolmogorov1950foundations}. For this article to be self-contained,
-we list the definition as below (a more complete review can be found in \cite{leao2004regular}).
-
-Let $(X, \mathscr A, \mu)$ be a probability space and $(Y, \mathscr B)$ a measurable space. A function $v$ is measurable if $v:X\rightarrow Y$, $v^{-1}(\mathscr B)\in \mathscr A$.
-A r.c.p is a function
-$f: Y\times \mathscr A \rightarrow[0,1]$ satisfying:
-
-\begin{enumerate}
-        \item $f(y, .)$ is a measure on $(X,\mathscr A)$ for each $y \in
-        Y$;
-        \item $f(., E)$ is a measurable function on $(Y,\mathscr B)$ for each $E\in \mathscr A$;
-        \item For each $E \in \mathscr A$, $F\in \mathscr B$,
-        $\mu(E \cap v^{-1}(F))=\int_{F} f(y, E) \mu_y(dy)$, with
-        $\mu_y$ the induced measure on $(Y,\mathscr B)$.
-\end{enumerate}
-
-Using the previous notation, we write $f(y,E)= P(\theta\in E\mid
-v(\theta)=y)=\int_E \pi_{\mc R}(\theta
-\mid v(\theta)=y) d\theta$
-
-\begin{remark}
-Assuming $J(v(\theta))> 0$ and there is a finite and
-non-negative integer $s$ such
-that, for some $y\in Y$,
-\be
-m^{s}(y)=\int \frac{\pi_{\mc
-R}(\theta)
-\mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}\mu^s(d\theta)\in(0,\infty),
-\ee
-then
-\begin{equation}
-P(E\mid v(\theta)=y)=\left\{\begin{array}{ll}  \frac{1}{m_s(y)}\int_{E } \frac{\pi_{\mc
-R}(\theta) \mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}\mu^s(d\theta)
-& \text{  , if }m_s(y)\in(0,\infty) \\
-\delta_{x^*}(E) \text{ with fixed } x^*\in \bb R^p
-& \text{  , if }m_s(y)\in\{0,\infty\} \\
-\end{array}\right.
-\end{equation}
-is a valid r.c.p..
-\end{remark}
-\begin{proof} The first two crieria for r.c.p are trivally satisfied. We
-use the Hausdorff measure, the standard tool for geometric measure theory \citep{federer2014geometric}, defined as $\mc H^{s}(A)= \underset{\delta\rightarrow 0}\lim \inf \{ \sum \left[{\text{diam}(S_i)}\right]^s: {A\subseteq \cup S_i, \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in S}\|x-y\|\}$. We denote the normalized Hausdorff measure as $\bar{\mc H}^{s}(A) =\frac{\Gamma(\frac{1}{2})^{s}}{2^s \Gamma(\frac{s}{2}+1)} \mc H^{s}(A)$. When $s$ is an integer, Lebesgue and normalized Hausdorff measures coincide  $\mu^{s}(A)= \bar{\mc H}^{s}(A)$ \citep{evans2015measure}.
-
-Similar to the proof of (2) of Proposition 2 of \cite{diaconis2013manifold}, using co-area formula \citep{federer2014geometric}:
-
-\be
-\mu^{p}(E\cap v^{-1}(F))= & \int \mathbbm{1}_{\theta \in E} \mathbbm{1}_{\theta \in v^{-1}(F)}\pi_{\mc R}(\theta)\mu^p(d\theta) \\
-= & \int \left[ \int_{v^{-1}(y)} \mathbbm{1}_{\theta \in E} \mathbbm{1}_{v(\theta) \in F}  \frac{ \pi_{\mc R}(\theta)}{J(v(\theta))} \bar{\mc H}^{s}(d\theta)\right] \mu^{p-s}(dy) \\
-= & \int_{F} \left [ \int_{ E}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} \mu^{s}(d\theta)  \right] \mu^{p-s}(dy) \\
-\ee
-
-
-For $y\in \{y':m(y')=0\}$, $\int_{ E}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} \mu^s(d\theta) \le \int_{ \bb R^{s}}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} \mu^s(d\theta) =0$; for $y\in \{y':m(y')=\infty\}$, since $\mu ^{p}(\bb R^p)=\int \mathbbm{1}_{m(y)=\infty}m(y) dy + \int  \mathbbm{1}_{m(y)<\infty}m(y)  dy=1$, one must have $\int \mathbbm{1}_{m(y)=\infty} dy=0$. Combining parts yields
-\be
-\mu(E\cap v^{-1}(F)) & = \int_{F} \mathbbm{1}_{m(y)\in (0,\infty)}\left[
-\int_{E} \frac{\pi_{\mc
-R}(\theta) \mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}
-\mu^{s}(d\theta) \right] \mu^{p-s}(dy) \\
-& = \int_{F} \mathbbm{1}_{m(y)\in (0,\infty)}
-\left[ \int_{E}  \frac{1}{m(y)}  \frac{\pi_{\mc
-R}(\theta) \mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}
-\mu^{s}(d\theta) \right ]  m(y)\mu^{p-s}(dy)\\
-& =\int_F f(y,E) \mu_y(dy) 
-\ee
-
-\end{proof}
-
-The above remark gives the definition of r.c.p given all $v(\theta)\in Y$. It is possible $m^s(y)=0$ or $\infty$ for some $y\in Y$, but as long as  $m^{s}({\bf 0})\in (0,\infty)$ at certain integer $s$, we would have a valid constrained density 
-
-\be 
-\pi_{\mc D}(\theta)=
-\frac{1}{m^{s}({\bf 0})}  \frac{\pi_{\mc
-R}(\theta) \mathbbm{1}_{v({\theta})={\bf 0}}}{J(v(\theta))}
-\ee 
-
-The dimension $s$ is often referred as `intrinsic' dimension of $\mc D$. Formally, one would use a standard concept in geometric measure theory named Hausdorff measure,  \citep{federer2014geometric}. The $d$-dimensional Hausdorff measure is the limit total volume of the $d$-dimenional balls covering $A$, $\mc H^{d}(A)= \underset{\delta\rightarrow 0}\lim \inf \{ \sum \left[{\text{diam}(S_i)}\right]^d: {A\subseteq \cup S_i, \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in S}\|x-y\|\}$. Then the intrinsic dimension is equal to Hausdorff dimension $s=\inf_{d\ge 0}\{H^d(\mc D)=0\}=\sup_{d\ge 0}\{H^d(\mc D)=\infty\}$, at which the Hausdorff measure transitions from $0$ to $\infty$. Although finding $s$ can be challenging \citep{mardia1975statistics,bowen1979hausdorff}, one could could heuristically test $s\in \{p,p-1,\ldots, 0\}$ if $s$ is known to be an integer. Fortunately, for posterior estimation, there is no need for estimating $s$ or the normalizing constant $m^{s}(\bf 0)$ in Monte Carlo sampling.
-
-We now quantify the approximation error of the approximation CORE \eqref{approximatePosterior}. 
-We use $\Pi(.)$ and $\tilde\Pi(.)$ to represent the measures under exact and approximating distributions. 
- For easier notation, we re-parameterize the approximating part as $\exp(-\lambda^{-1}  v(\theta))$ where $\lambda=\max_k \lambda_k$ and $v(\theta)=\sum_{k=1}^d\frac{|v_k(\theta)|^{\alpha}}{\lambda^*_k}$ with $\lambda^*_k=\lambda_k/\lambda$ and define a conditional expectation, $\mathbb{E}(g(\theta) \mid v(\theta)=x)=  \int_{\bb R^s } \frac{ g(\theta) \mathbbm{1}_{v(\theta)=x} \pi_{\mc R}(\theta)}{ J v(\theta) } d \theta.$
-
- We now assess the behavior of approximation error in terms of 1-Wasserstein distance, as $\lambda$ decreases towards $0$. The 1-Wasserstein distance $W_1(\Pi,\tilde\Pi)$ represents the minimal amount of transport needed to transform one distribution to another. Formally, it is defined as
-
-$$W_1(\Pi,\tilde\Pi)=\underset{\gamma\in \Gamma(\Pi,\tilde\Pi)}{\inf}\int \|\theta-\theta^*\| d\gamma(\theta,\theta^*)$$ 
-where $\Gamma(\Pi,\tilde\Pi)$ is the family of all joint measures of with $\Pi$ and $\tilde\Pi$ as the marginals, and $\|\theta-\theta^*\|$ is the
-Euclidean distance.
-
-
-
-%Due to similar form in prior and posterior, we now introduce some general notation. Let $\pi_{\mc R}(\theta)$ be the normalized density in $\mc R$ such that $\int \pi_{\mc R}(\theta)=1$, which is $\pi_{0,\mc R}(\theta)$ for prior and $L(y;\theta)\pi_{0,\mc R}(\theta)$ for posterior;% Suppose $\Phi:\mathbb R^p \rightarrow \mathbb R^d$ with $p>d$ is Lipschitz, then the co-area formula \citep{federer2014geometric} is,
-% \begin{equation}
-% \ \int_{\mathbb{R}^n}  f(\theta)J_N\Phi(\theta)\mu^n(d \theta)
-% =\ \int_{\mathbb{R}^m}  \int_{\Phi^{-1}(y)}f(\theta) \mc H^{n-m}(d\theta)\mu^m(d y),
-% \end{equation}
-% where $\mu^k(d\theta)$ a $k$-dimensional Lebesgue measure. 
-
-
-\begin{remark}
-The 1-Wasserstein distance between the measures based on \eqref{exactPosterior} and \eqref{approximatePosterior} has
-$$ \underset{\lambda \rightarrow 0}\lim W_1(\Pi,\tilde\Pi)=0.$$
-Further, for $\alpha=1$ in \eqref{approximatePosterior},
-
-\begin{equation}
-\begin{aligned}
-W_1(\Pi,\tilde\Pi) \le \lambda (\frac{k_1 k_2}{m(0)^2} + \frac{k_1}{m(0)}) + \exp(- \lambda^{-1} t )(\frac{k_1}{m(0)^2} + \frac{k_3}{m(0)}),
-\end{aligned}
-\end{equation}
-where $k_1=\underset{g:\|g\|_L\le 1}\sup\underset{t^*\in [0,t)}\sup \|\mathbb{E}(g(\theta^*) \mid v(\theta^*)=t^*)\|$, $k_2= \underset{t^*\in (0,t)}\sup  m(t^{*})$ and $k_3=\underset{g:\|g\|_L\le 1} \sup \mathbb{E}(\| g(\theta )\|)$.
-\end{remark}
-
-
-\begin{proof}[Proof]
-Let $g:\mathbb{R}^p\rightarrow \mathbb{R}$ be a 1-Lipschitz continuous function, i.e. $\|g(x)-g(y)\|\le \|x-y\|$, denoted by $\|g\|_L\le 1$. 
-By Kantorovich-Rubinstein duality, the 1-Wasserstein distance based on Euclidean metric equals to: 
-
-\begin{equation}
-W_1(\Pi,\tilde\Pi)=\underset{g:\|g\|_L\le 1}\sup \int g(x) \Pi(dx) -  \int g(y) \tilde\Pi(dy) 
-\end{equation}
-
-Taking $g(\theta)=\exp(-\lambda^{-1}v(\theta))$ in the co-area formula yields
-\begin{equation}
-\begin{aligned}
-m_\lambda
-& = \int_\mathbb{R}  \left[ \int_{v^{-1}(x)} \frac{ \exp(- \lambda^{-1} v(\theta) ) \pi_{\mc R}(\theta)}{ J v(\theta) }  \bar{\mc H}^{p-d}(d \theta) \right] \mathbbm{1}_{x \ge 0}  d x \\
-& = \int_\mathbb{R}  m(x)\exp(- \lambda^{-1} x ) \mathbbm{1}_{x \ge 0}  d x .
-\end{aligned}
-\end{equation}
-
-Taking $g(\theta)={\mathbbm{1}_{v(\theta)=0}}$ yields 
-\begin{equation}
-m_0
-= \int_\mathbb{R} \left[ \int_{v^{-1}(y)} \frac{ \pi_{\mc R}(\theta) }{ J v(\theta) }  \bar{\mc H}^{p-d}(d \theta) \right]\mathbbm{1}_{y=0} dy   =  \int_{v^{-1}(0)} \frac{ \pi_{\mc R}(\theta) }{ J v(\theta) } \bar{\mc H}^{p-d}(d \theta) =m(0)
-\end{equation}
-
-
-Clearly $m_\lambda \ge m_0$.
-
-1. Asymptotic result:
-
-We have
-
-\begin{equation}                
-\label{wass0}
-\begin{aligned}
-&\underset{g:\|g\|_L\le 1}\sup\int g(\theta)  \left[ \frac{ \exp(- \lambda^{-1} v(\theta)) } {  m_\lambda}  - 
-\frac{ \mathbbm{1}_{v(\theta)=0} } {  m_0} 
-\right]  \frac{\pi_{\mc R}(\theta)}{Jv(\theta)}  \bar{\mc H}^{p-d}(d \theta) \\
-&= \underset{g:\|g\|_L\le 1}\sup\int_\mathbb{R}  \mathbb{E}(g(\theta) \mid x)  \left[ \frac{ \exp(- \lambda^{-1} x) \mathbbm{1}_{x \ge 0}} {  m_\lambda}  - 
-\frac{ \mathbbm{1}_{x=0} } {  m_0} 
-\right] d x \\
-&=      \underset{g:\|g\|_L\le 1}\sup\int_\mathbb{R}  \mathbb{E}(g(\theta) \mid x)  \left[ \frac{  1} {  m_\lambda}  - 
-\frac{ 1 } {  m_0} 
-\right]\mathbbm{1}_{x=0} d x  + \underset{g:\|g\|_L\le 1}\sup\int_\mathbb{R}  \mathbb{E}(g(\theta) \mid x)\frac{ \exp(- \lambda^{-1} x)} {  m_\lambda}  
-\mathbbm{1}_{x > 0} d x \\
-& \le \underset{g:\|g\|_L\le 1}\sup \|\mathbb{E}(g(\theta) \mid 0)\| \left[ \frac{ 1 } {  m_0} -\frac{  1} {  m_\lambda}   
-\right] + \frac{1} {  m_0} \underset{g:\|g\|_L\le 1}\sup \int_\mathbb{R}  \|\mathbb{E}(g(\theta) \mid x)\| { \exp(- \lambda^{-1} x)}
-\mathbbm{1}_{x > 0} d x \\      
-\end{aligned}
-\end{equation}
-
-
-Note $m_\lambda\le \int_\mathbb{R} m(x) \mathbbm{1}_{x \ge 0}  dx =\int_\mathbb{R} \pi_{\mc R}(\theta) =1$. By dominated convergence theorem, 
-
-\begin{equation}
-\lim_{\lambda\rightarrow 0}m_\lambda= \int_\mathbb{R}  m(x) \lim_{\lambda\rightarrow 0}\exp(- \lambda^{-1} x ) \mathbbm{1}_{x \ge 0}  d x = m_0.
-\end{equation}
-
-
-Since 
-$ \underset{g:\|g\|_L\le 1}\sup \int_\mathbb{R}  \|\mathbb{E}(g(\theta) \mid x)\| { \exp(- \lambda^{-1} x)} dx \le \int_\mathbb{R} \underset{g:\|g\|_L\le 1}\sup \|\mathbb{E}(g(\theta) \mid x)\| { \exp(- \lambda^{-1} x)} dx$,
-letting $q_\lambda=       \underset{g:\|g\|_L\le 1}\sup \|\mathbb{E}(g(\theta) \mid x)\| { \exp(- \lambda^{-1} x)}
-\mathbbm{1}_{x > 0}  $, we have $0\le q_1-q_{\lambda_1}\le q_1-q_{\lambda_2}$ for $1\ge\lambda_1\ge \lambda_2$, by monotone convergence theorem, $\lim_{\lambda\rightarrow 0}\int [ q_1(x)-q_\lambda(x)]dx = \int [q_1(x)- q_0(x) ]dx$ hence $\lim_{\lambda\rightarrow 0}\int q_\lambda(x)dx =0$. Combining the results yields 
-
-
-
-\begin{equation}
-\underset{\lambda \rightarrow 0}\lim W_1(\Pi,\tilde\Pi)=0.        \end{equation}
-
-2. Non-asymptotic result:
-
-
-\begin{equation}
-\label{wass1}
-\begin{aligned}
-\frac{1}{m_0}-\frac{1}{m_\lambda} & \le  \frac{   \int_\mathbb{R}  m(x) \exp(- \lambda^{-1} x ) \mathbbm{1}_{x > 0}  d x } {  m_0^2}  \\
-&= \frac{1}{ m_0^2} \left[ \int_0^{t}  m(x) \exp(- \lambda^{-1} x ) dx + \int_t^{\infty}  m(x) \exp(- \lambda^{-1} x ) dx \right] \\
-&\le \frac{1}{ m_0^2} \left[  \underset{t^*\in (0,t)}\sup m(t^{*})\int_0^{t} \exp(- \lambda^{-1} x ) dx + \exp(- \lambda^{-1} t )\int_t^{\infty}  m(x) dx  \right] \\
-&\le \frac{1}{ m_0^2} \left[\lambda \underset{t^*\in (0,t)}\sup  m(t^{*})  + \exp(- \lambda^{-1} t ) \right] 
-\end{aligned}
-\end{equation}
-
-\begin{equation}
-\label{wass2}
-\begin{aligned}
-& \underset{g:\|g\|_L\le 1}\sup\int_\mathbb{R}  \|\mathbb{E}(g(\theta) \mid x)\| { \exp(- \lambda^{-1} x)}  \mathbbm{1}_{x > 0} d x \\
-&\le \underset{g:\|g\|_L\le 1}\sup\underset{t^*\in (0,t)}\sup \|\mathbb{E}(g(\theta) \mid t^*)\|     
-\int_0^{t} \exp(- \lambda^{-1} x ) dx + \exp(- \lambda^{-1} t ) \underset{g:\|g\|_L\le 1}\sup \int_t^{\infty}   \|\mathbb{E}( g(\theta )\mid x)\| dx \\
-&\le \underset{g:\|g\|_L\le 1}\sup\underset{t^*\in (0,t)}\sup \|\mathbb{E}(g(\theta) \mid t^*)\|     \lambda + \exp(- \lambda^{-1} t ) \underset{g:\|g\|_L\le 1} \sup \mathbb{E}(\| g(\theta )\|) \\
-\end{aligned}
-\end{equation}
-
-Combining \eqref{wass0}\eqref{wass1}\eqref{wass2}, $k_1=\underset{g:\|g\|_L\le 1}\sup\underset{t^*\in [0,t)}\sup \|\mathbb{E}(g(\theta) \mid t^*)\|$, $k_2=\underset{g:\|g\|_L\le 1} \sup \mathbb{E}(\| g(\theta )\|)$, $k_3= \underset{t^*\in (0,t)}\sup  m(t^{*})$
-
-
-\begin{equation}
-\begin{aligned}
-& \underset{g:\|g\|_L\le 1}\sup \int g(x) \Pi(dx) -  \int g(x) \tilde\Pi(dx) \\
-        %&\le  \frac{k_1}{ m_0^2} \left[\lambda k_3  + \exp(- \lambda^{-1} t ) \right] 
-        %+ \frac{1} {  m_0} [ k_1       \lambda + \exp(- \lambda^{-1} t )k_2 ]\\     
-        & \le \lambda (\frac{k_1 k_3}{m_0^2} + \frac{k_1}{m_0}) + \exp(- \lambda^{-1} t )(\frac{k_1}{m_0^2} + \frac{k_2}{m_0})
-        \end{aligned}
-        \end{equation}
-
-
-        \end{proof}
-
-        
-
-
-The first part shows the asymptotic accuracy of the approximation. The second part shows the rate with non-asymptotic $\lambda$ under mild assumptions. The interpretation for these assumptions is that if in a small space expansion of $\mc D$, defined as $\{\theta^*: v(\theta^*)\in [0,t] \}$, the marginal density of $v(\theta^*)$ and the conditional expectation of Lipschitz functions are bounded $k_1,k_2= \mc O(1)$, and the expected norm of Lipschitz function are smaller than a bound that grows near exponentially $k_3 = \mc O(\lambda \exp(t/\lambda))$, then the distance $W_1(\Pi,\tilde\Pi)$ converges to $0$ in $\mc O(\lambda)$ as $\lambda\rightarrow 0$.
+%%\begin{subfigure}[b]{0.30\textwidth}
+%%\includegraphics[width=1\textwidth]{sphere_fb}
+%%\caption{Constrained correlated Gaussian distribution}
+%%\end{subfigure}
+%\begin{subfigure}[b]{0.45\textwidth}
+%%\includegraphics[width=1\textwidth]{sphere_t}
+%\caption{Constrained independent $t_3$ distribution}
+%\end{subfigure}
+%\caption{Sectional view of random samples from constrained distributions on a unit sphere inside $\bb R^3$. The distributions are derived through conditioning on $\theta'\theta=1$ based on unconstrained densities of (a) $\No( F, \diag\{0.1\})$, 
+%%(b) $\No(F, \left[\protect\begin{smallmatrix} 0.1 & 0.09 & 0 \\ 0.09 & 0.1 & 0 \\ 0 & 0 &0.1  \protect\end{smallmatrix}\right])$,
+% (b) $t_3(F,\diag\{0.1\} )$, where $F=[1/\sqrt{3},1/\sqrt{3},1/\sqrt{3}]'$\\
+%}
+%\label{sphere_examples}
+%\end{figure}
+%
+%
+%
+%\subsection{ Constraint Relaxation for Posterior Inference}
+%
+%The conditional distribution \eqref{constrainedDensity} allows one to adapt
+%simple unconstrained $\pi_{\mc R}(\theta)$ into constrained space. When it
+%is used as a prior,
+%with  the likelihood as $ L(y;\theta)$  and $y$ the data, one can obtain posterior:
+%\be
+%\label{exactPosterior}
+%\pi(\theta\mid y) & \propto L(y;\theta)\pi_{\mc D}(\theta) \\
+%& \propto L(y;\theta) \pi_{\mc
+%R}(\theta) /J(v(\theta))\mathbbm{1}_{\theta\in \mc D}.
+%\ee
+%Clearly, the
+%posterior also has support only inside $\mc D$ as well due to the inheritance of
+%$\mathbbm{1}_{\theta\in \mc D}$ from $\pi_{\mc D}(\theta)$. On the hand,
+%the indicator is often inconvenient for posterior inference. We now develop
+% two different strategies to relax the parameter $\theta\in \mc D$ into the neighborhood
+%of $\mc D$, obtaining posterior $\theta^*$. Then we directly use $\theta^*$ as approximation
+%or project $\theta^*$ back to $\mc D$ for exact inference. We refer this
+%strategy as {\bf COnstraint RElaxation (CORE)}.
+%
+%
+% \subsubsection{Approximation CORE}
+%
+%We first present a general approximation strategy. By putting positive mass around $v(\theta)=\bf
+%0$, and let it decay exponentially, we relax the support of $\theta$ into a
+%neighborhood surrounding $\mc D $. This generate approximate posterior sample $\theta^*\in \mc R$ via
+%
+%\be
+%\label{approximatePosterior}
+%\tilde{\pi}(\theta^*\mid y)  & = \frac{1}{m(\lambda)} L(y;\theta^*) \pi_{\mc
+%R}(\theta^*) /J(v(\theta^*)) \exp (- \sum_{k=1}^K |v_k(\theta^*)|^\alpha/\lambda_k),
+%\ee
+%where $v_k$ is the $k$th equation in $v(\theta)$, $\alpha$ is
+%typically chosen as $1$ or $2$ to mimic Laplace or Gaussian kernel, $m(\lambda)$ is a normalizing
+%constant such that $\int_{\mc R} \tilde{\pi}(\theta^*\mid y) d\theta^*=1$;
+% $\lambda_k\ge 0$ is a
+%tuning parameter controling the concentration around $v(\theta^*)=\bf 0$.
+%When $\lambda_k=0$ for all $k$, 
+%\eqref{approximatePosterior} becomes exact; using small $\lambda_k>0$, \eqref{approximatePosterior}
+% conventional Monte Carlo approach can be exploited directly in $\mc R$.
+%
+%We use a toy example with closed-form posterior to illustrate the  approximation. Consider a posterior from a sum-constrained
+%bivariate Gaussian random vector $[\theta_1,\theta_2]' \mid y \sim \No(0,I)
+%\mathbbm{1}_{\theta_1+\theta_2-1=0}$. Using
+%$v(\theta)=\theta_1+\theta_2-1=0$, $J(v(\theta))=\sqrt 2$, the exact posterior \eqref{exactPosterior} is proportional to 
+%$$
+%\phi(\theta_1)
+%\phi(\theta_2)\mathbbm{1}_{v(\theta)=0}
+%$$
+%where $\phi(.)$ is the standard
+%normal density. The exact posterior density has closed-form
+%
+%$$
+%\pi(\theta\mid y)=\frac{\sqrt{2}}{\sqrt{2\pi}} \exp(-\frac{(\theta_1-\frac{1}{2})^2}{2/2})
+%\mathbbm{1}_{\theta_2=1-\theta_1}
+%$$
+%corresponding to $\theta_1\mid (\theta_1+ \theta_2=1) \sim
+%\No(1/2,1/2)$, $\theta_2\mid \theta_1 \sim \delta_{1-\theta_1}(.)$, where
+%$\delta$ denotes a point mass. Marginally, it is a degenerate Gaussian:
+%$$\begin{bmatrix} \theta_1 \\ \theta_2 \end{bmatrix} \sim
+%\No_{\text d} \left(
+%\begin{bmatrix} \frac{1}{2} \\ \frac{1}{2} \end{bmatrix},
+%\begin{bmatrix} \frac{1}{2} & -\frac{1}{2}  \\  -\frac{1}{2}  & \frac{1}{2} \end{bmatrix}
+%\right).$$
+%
+%Using $ \exp( - (\theta^*_1+\theta^*_2-1)^2/\lambda)$ to
+%replace $\mathbbm{1}_{v(\theta)=0}$, we obtain approximation $\theta^*_1 \sim \No(\frac{2}{\lambda+4},\frac{\lambda+2}{\lambda+4})$, $\theta^*_2\mid \theta^*_1 \sim \No(\frac{2}{\lambda+2}(1-\theta^*_1),\frac{\lambda}{\lambda+2})$. Marginally, 
+%
+%$$\begin{bmatrix} \theta^*_1 \\ \theta^*_2 \end{bmatrix} \sim
+%\No \left(
+%\begin{bmatrix} \frac{2}{\lambda+4} \\ \frac{2}{\lambda+4} \end{bmatrix},
+%\begin{bmatrix} \frac{\lambda+2}{\lambda+4} & -\frac{2}{\lambda+4}  \\  -\frac{2}{\lambda+4}  &\frac{\lambda+2}{\lambda+4} \end{bmatrix}
+%\right).$$
+%As approximation, one can sample from the non-degenerate distribution using small $\lambda$. Clearly, the approximation error decreases as $\lambda$ gets
+%smaller, and intuitively becomes exact when $\lambda\rightarrow 0$. We will formalize
+%this notion in the theory section.
+%
+%\subsubsection{Data Augmentation CORE}
+%
+%The previous strategy is generally applicable for approximating the indicator
+%function. In some less general but
+%still common cases, one can relax the parameter $\theta$ to $\theta^*$ through some relaxing function
+%$g$ first, if there is an inverse function $g^{-1}$ to project it back to
+%$\mc D$, we can use $\theta=g^{-1}(\theta^*)$ to directly reparameterize $\pi_{\mc D}(\theta\mid y)$.
+%
+%
+%The relaxation $\theta^*=g(\theta;w)$ often requires an auxillary parameter
+%$w$ that controls the amount of relaxation. Usually $w$ is independent of $\theta$, but can be dependent on $\theta^*$. Treating $w$ as a latent variable from $\pi(w)$  with $\int_{\mc W} \pi(w) dw =1$ and $\mc W$ as
+%its support, one uses $g^{-1}(\theta^*;w)$ to reparameterize the exact posterior $\pi_{\mc D}(\theta\mid y)$.
+%Standard variable transformation yields new parameterization
+%
+%
+%\be
+%\label{reparameterization}
+%\pi(\theta^*,w\mid y) & =\pi_{\mc D}(g^{-1}(\theta^*;w)\mid y) \frac{1}{J(g(\theta;w))}  \pi(w) \\
+%&\propto \frac{\pi_{\mc R}(g^{-1}(\theta^*;w)\mid y) }{ J(v(\theta))\mid_{\theta=g^{-1}(\theta^*;w)} } \frac{1}{J(g(\theta;w))} \pi(w) 
+%\ee
+%where   $J(g(\theta;w))$ is the Jacobian of $g$ with respect to $\theta$.
+%The indicator function $\mathbbm{1}_{\theta\in \mc D}$ disappears since $g^{-1}(\theta^*;w)\in \mc
+%D$ always holds. It can be verified that transforming $\theta^*=g(\theta;w)$  yields $\pi_{\mc D}(\theta\mid y) \pi(w)$, which is the exact posterior augmented
+%with latent variable $w$. Therefore, we refer this strategy as data augmentation
+%constraint relaxation (DA-CORE). Using DA-CORE, one can directly sample $\theta^*$ and $w$ in less constrained
+%space, and apply $\theta=g^{-1}(\theta^*;w)$ in the end to obtain the $\theta$-marginal.
+%
+%One simple example of relaxation would be scaling of $\theta$ under  norm constraint. For example, in $(p-1)$-simplex,
+%$\|\theta\|_1=\sum_{i=1}^p\theta_1=1$ with $\theta\in \mc R=[0,\infty]^p$, one
+%can augment an independent latent variable $w\in [0,\infty)$ have
+%$\theta_i^*=\theta_i w$, and the inverse $\theta_i=\theta_i^*/w$ with
+%$w=\sum_{i=1}^p \theta^*_i$. Suppose exact posterior is a Dirichlet distribution 
+%$\theta\mid y\sim \text{Dir}(\alpha)$
+%, 
+%$$
+%\pi_{\mc D}(\theta \mid y)\propto \prod_{i=1}^p \theta_i^{\alpha-1}\mathbbm{1}_{\sum_{i=1}^p\theta_i=1},$$
+%then the relaxed parameterization is $$
+%\pi(\theta^*,w\mid y) =\pi(\theta^*\mid y)\propto  \prod_{i=1}^{p-1} (\frac{\theta_i^*}{w})^{\alpha-1}  w^{-(p-1)} \pi(w), \quad w=\sum_{i=1}^p \theta^*_i, \quad \theta^*\in(0,\infty)^p.$$
+%
+%More generally, one can often choose the relaxation $g$ based on the projection $g^{-1}$ that produces $\theta\in \mc D$. To illustrate, we consider the random variable
+%$\theta$, a $n$-by-$k$ matrix in the Stiefel manifold $\theta\in \mc V(n,k)=\{\theta\in \bb R^{n\times
+%k}: \theta'\theta=I\}$, where $n\ge k$. The QR-decomposition produces such
+%an orthonormal matrix, for which a $n$-by-$k$ matrix $X=QR$,
+%with $Q\in \mc V(n,k)$ and $R$ $k$-by-$k$ upper triangular and diagonal positive;
+% the
+%QR decomposition is unique if $X$ is of rank $k$ \citep{gulliksson1992modifying}, which allows us to
+%use it as $g^{-1}$. Letting $w$ be a random matrix, $k$-by-$k$, upper triangular and diagonal positive, we have $\theta^*=\theta w$, with $\theta^*$ in rank
+%$k$. Suppose $\theta$ is $n$-by-$k$ and from the Matrix Bingham--von Mises--Fisher distribution
+%\citep{hoff2009simulation},
+%$$\pi_{\mc D}(\theta\mid y)\propto \text{etr}(C'\theta+B\theta'A\theta)  \mathbbm{1}_{\theta'\theta=I_k}$$
+%where $\text{etr}$ represents the exponential of trace, $A$ is symmetric $n$-by-$n$, $B$ is symmetric $k$-by-$k$ and $C$ is $n$-by-$k$. The relaxed
+%parameterization is
+%
+%$$\pi(\theta^*, w\mid y) =\pi(\theta^*\mid y)\propto \text{etr}(C'\theta^*w^{-1}+B(\theta^*w^{-1})'A\theta^*w^{-1} \text{det}^{-1}(w), \quad \text{rank}(\theta^*)=k, \quad w= \text{QR.R}(\theta^*)$$
+%where $\text{QR.R}$ denotes the function that outputs $R$ matrix in QR decomposition.
+%
+%In comparison, in other reparameterization such as coordinate system, one can only use equal or less parameters to satisfy the constraint, which can
+%be  constringent. In DA-CORE, it is generally
+%more flexible with more parameters, thanks to the data augmentation. Since $w$ is a redundant latent variable, one can
+%assign $\pi(w)$ to allow greater relaxation, which is commonly associated
+%with better performance in posterior sampling. More will be illustrated in
+%the simulation.
+%
+%
+% \subsection{Theoretic Properties}
+%
+%We now present the properties of the proposed approach. We first establish
+%that the conditioning approach yields valid probability measure.
+%
+%We focus on $\mc R$ being a $p$-dimensional Euclidean space and the
+%intrinsic dimension of $\mc D$, $\mbox{dim}(\mc D)=s\le p$  is integer.
+%Although the
+%$p$-dimensional Lebesgue measure can have $\mu^p(\mc D)=0$, it is still possible to define a conditional probability given the event ${v(\theta)=\bf 0}$. We utilize the concept of {\it regular
+%conditional probability} (r.c.p.)
+%\citep{kolmogorov1950foundations}. For this article to be self-contained,
+%we list the definition as below (a more complete review can be found in \cite{leao2004regular}).
+%
+%Let $(X, \mathscr A, \mu)$ be a probability space and $(Y, \mathscr B)$ a measurable space. A function $v$ is measurable if $v:X\rightarrow Y$, $v^{-1}(\mathscr B)\in \mathscr A$.
+%A r.c.p is a function
+%$f: Y\times \mathscr A \rightarrow[0,1]$ satisfying:
+%
+%\begin{enumerate}
+%        \item $f(y, .)$ is a measure on $(X,\mathscr A)$ for each $y \in
+%        Y$;
+%        \item $f(., E)$ is a measurable function on $(Y,\mathscr B)$ for each $E\in \mathscr A$;
+%        \item For each $E \in \mathscr A$, $F\in \mathscr B$,
+%        $\mu(E \cap v^{-1}(F))=\int_{F} f(y, E) \mu_y(dy)$, with
+%        $\mu_y$ the induced measure on $(Y,\mathscr B)$.
+%\end{enumerate}
+%
+%Using the previous notation, we write $f(y,E)= P(\theta\in E\mid
+%v(\theta)=y)=\int_E \pi_{\mc R}(\theta
+%\mid v(\theta)=y) d\theta$
+%
+%\begin{remark}
+%Assuming $J(v(\theta))> 0$ and there is a finite and
+%non-negative integer $s$ such
+%that, for some $y\in Y$,
+%\be
+%m^{s}(y)=\int \frac{\pi_{\mc
+%R}(\theta)
+%\mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}\mu^s(d\theta)\in(0,\infty),
+%\ee
+%then
+%\begin{equation}
+%P(E\mid v(\theta)=y)=\left\{\begin{array}{ll}  \frac{1}{m_s(y)}\int_{E } \frac{\pi_{\mc
+%R}(\theta) \mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}\mu^s(d\theta)
+%& \text{  , if }m_s(y)\in(0,\infty) \\
+%\delta_{x^*}(E) \text{ with fixed } x^*\in \bb R^p
+%& \text{  , if }m_s(y)\in\{0,\infty\} \\
+%\end{array}\right.
+%\end{equation}
+%is a valid r.c.p..
+%\end{remark}
+%\begin{proof} The first two crieria for r.c.p are trivally satisfied. We
+%use the Hausdorff measure, the standard tool for geometric measure theory \citep{federer2014geometric}, defined as $\mc H^{s}(A)= \underset{\delta\rightarrow 0}\lim \inf \{ \sum \left[{\text{diam}(S_i)}\right]^s: {A\subseteq \cup S_i, \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in S}\|x-y\|\}$. We denote the normalized Hausdorff measure as $\bar{\mc H}^{s}(A) =\frac{\Gamma(\frac{1}{2})^{s}}{2^s \Gamma(\frac{s}{2}+1)} \mc H^{s}(A)$. When $s$ is an integer, Lebesgue and normalized Hausdorff measures coincide  $\mu^{s}(A)= \bar{\mc H}^{s}(A)$ \citep{evans2015measure}.
+%
+%Similar to the proof of (2) of Proposition 2 of \cite{diaconis2013manifold}, using co-area formula \citep{federer2014geometric}:
+%
+%\be
+%\mu^{p}(E\cap v^{-1}(F))= & \int \mathbbm{1}_{\theta \in E} \mathbbm{1}_{\theta \in v^{-1}(F)}\pi_{\mc R}(\theta)\mu^p(d\theta) \\
+%= & \int \left[ \int_{v^{-1}(y)} \mathbbm{1}_{\theta \in E} \mathbbm{1}_{v(\theta) \in F}  \frac{ \pi_{\mc R}(\theta)}{J(v(\theta))} \bar{\mc H}^{s}(d\theta)\right] \mu^{p-s}(dy) \\
+%= & \int_{F} \left [ \int_{ E}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} \mu^{s}(d\theta)  \right] \mu^{p-s}(dy) \\
+%\ee
+%
+%
+%For $y\in \{y':m(y')=0\}$, $\int_{ E}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} \mu^s(d\theta) \le \int_{ \bb R^{s}}  \frac{ \pi_{\mc R}(\theta) \mathbbm{1}_{v(\theta)=y}}{J(v(\theta))} \mu^s(d\theta) =0$; for $y\in \{y':m(y')=\infty\}$, since $\mu ^{p}(\bb R^p)=\int \mathbbm{1}_{m(y)=\infty}m(y) dy + \int  \mathbbm{1}_{m(y)<\infty}m(y)  dy=1$, one must have $\int \mathbbm{1}_{m(y)=\infty} dy=0$. Combining parts yields
+%\be
+%\mu(E\cap v^{-1}(F)) & = \int_{F} \mathbbm{1}_{m(y)\in (0,\infty)}\left[
+%\int_{E} \frac{\pi_{\mc
+%R}(\theta) \mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}
+%\mu^{s}(d\theta) \right] \mu^{p-s}(dy) \\
+%& = \int_{F} \mathbbm{1}_{m(y)\in (0,\infty)}
+%\left[ \int_{E}  \frac{1}{m(y)}  \frac{\pi_{\mc
+%R}(\theta) \mathbbm{1}_{v({\theta})=y}}{J(v(\theta))}
+%\mu^{s}(d\theta) \right ]  m(y)\mu^{p-s}(dy)\\
+%& =\int_F f(y,E) \mu_y(dy) 
+%\ee
+%
+%\end{proof}
+%
+%The above remark gives the definition of r.c.p given all $v(\theta)\in Y$. It is possible $m^s(y)=0$ or $\infty$ for some $y\in Y$, but as long as  $m^{s}({\bf 0})\in (0,\infty)$ at certain integer $s$, we would have a valid constrained density 
+%
+%\be 
+%\pi_{\mc D}(\theta)=
+%\frac{1}{m^{s}({\bf 0})}  \frac{\pi_{\mc
+%R}(\theta) \mathbbm{1}_{v({\theta})={\bf 0}}}{J(v(\theta))}
+%\ee 
+%
+%The dimension $s$ is often referred as `intrinsic' dimension of $\mc D$. Formally, one would use a standard concept in geometric measure theory named Hausdorff measure,  \citep{federer2014geometric}. The $d$-dimensional Hausdorff measure is the limit total volume of the $d$-dimenional balls covering $A$, $\mc H^{d}(A)= \underset{\delta\rightarrow 0}\lim \inf \{ \sum \left[{\text{diam}(S_i)}\right]^d: {A\subseteq \cup S_i, \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in S}\|x-y\|\}$. Then the intrinsic dimension is equal to Hausdorff dimension $s=\inf_{d\ge 0}\{H^d(\mc D)=0\}=\sup_{d\ge 0}\{H^d(\mc D)=\infty\}$, at which the Hausdorff measure transitions from $0$ to $\infty$. Although finding $s$ can be challenging \citep{mardia1975statistics,bowen1979hausdorff}, one could could heuristically test $s\in \{p,p-1,\ldots, 0\}$ if $s$ is known to be an integer. Fortunately, for posterior estimation, there is no need for estimating $s$ or the normalizing constant $m^{s}(\bf 0)$ in Monte Carlo sampling.
+%
+%We now quantify the approximation error of the approximation CORE \eqref{approximatePosterior}. 
+%We use $\Pi(.)$ and $\tilde\Pi(.)$ to represent the measures under exact and approximating distributions. 
+% For easier notation, we re-parameterize the approximating part as $\exp(-\lambda^{-1}  v(\theta))$ where $\lambda=\max_k \lambda_k$ and $v(\theta)=\sum_{k=1}^d\frac{|v_k(\theta)|^{\alpha}}{\lambda^*_k}$ with $\lambda^*_k=\lambda_k/\lambda$ and define a conditional expectation, $\mathbb{E}(g(\theta) \mid v(\theta)=x)=  \int_{\bb R^s } \frac{ g(\theta) \mathbbm{1}_{v(\theta)=x} \pi_{\mc R}(\theta)}{ J v(\theta) } d \theta.$
+%
+% We now assess the behavior of approximation error in terms of 1-Wasserstein distance, as $\lambda$ decreases towards $0$. The 1-Wasserstein distance $W_1(\Pi,\tilde\Pi)$ represents the minimal amount of transport needed to transform one distribution to another. Formally, it is defined as
+%
+%$$W_1(\Pi,\tilde\Pi)=\underset{\gamma\in \Gamma(\Pi,\tilde\Pi)}{\inf}\int \|\theta-\theta^*\| d\gamma(\theta,\theta^*)$$ 
+%where $\Gamma(\Pi,\tilde\Pi)$ is the family of all joint measures of with $\Pi$ and $\tilde\Pi$ as the marginals, and $\|\theta-\theta^*\|$ is the
+%Euclidean distance.
+%
+%
+%
+%%Due to similar form in prior and posterior, we now introduce some general notation. Let $\pi_{\mc R}(\theta)$ be the normalized density in $\mc R$ such that $\int \pi_{\mc R}(\theta)=1$, which is $\pi_{0,\mc R}(\theta)$ for prior and $L(y;\theta)\pi_{0,\mc R}(\theta)$ for posterior;% Suppose $\Phi:\mathbb R^p \rightarrow \mathbb R^d$ with $p>d$ is Lipschitz, then the co-area formula \citep{federer2014geometric} is,
+%% \begin{equation}
+%% \ \int_{\mathbb{R}^n}  f(\theta)J_N\Phi(\theta)\mu^n(d \theta)
+%% =\ \int_{\mathbb{R}^m}  \int_{\Phi^{-1}(y)}f(\theta) \mc H^{n-m}(d\theta)\mu^m(d y),
+%% \end{equation}
+%% where $\mu^k(d\theta)$ a $k$-dimensional Lebesgue measure. 
+%
+%
+%\begin{remark}
+%The 1-Wasserstein distance between the measures based on \eqref{exactPosterior} and \eqref{approximatePosterior} has
+%$$ \underset{\lambda \rightarrow 0}\lim W_1(\Pi,\tilde\Pi)=0.$$
+%Further, for $\alpha=1$ in \eqref{approximatePosterior},
+%
+%\begin{equation}
+%\begin{aligned}
+%W_1(\Pi,\tilde\Pi) \le \lambda (\frac{k_1 k_2}{m(0)^2} + \frac{k_1}{m(0)}) + \exp(- \lambda^{-1} t )(\frac{k_1}{m(0)^2} + \frac{k_3}{m(0)}),
+%\end{aligned}
+%\end{equation}
+%where $k_1=\underset{g:\|g\|_L\le 1}\sup\underset{t^*\in [0,t)}\sup \|\mathbb{E}(g(\theta^*) \mid v(\theta^*)=t^*)\|$, $k_2= \underset{t^*\in (0,t)}\sup  m(t^{*})$ and $k_3=\underset{g:\|g\|_L\le 1} \sup \mathbb{E}(\| g(\theta )\|)$.
+%\end{remark}
+%
+%
+%\begin{proof}[Proof]
+%Let $g:\mathbb{R}^p\rightarrow \mathbb{R}$ be a 1-Lipschitz continuous function, i.e. $\|g(x)-g(y)\|\le \|x-y\|$, denoted by $\|g\|_L\le 1$. 
+%By Kantorovich-Rubinstein duality, the 1-Wasserstein distance based on Euclidean metric equals to: 
+%
+%\begin{equation}
+%W_1(\Pi,\tilde\Pi)=\underset{g:\|g\|_L\le 1}\sup \int g(x) \Pi(dx) -  \int g(y) \tilde\Pi(dy) 
+%\end{equation}
+%
+%Taking $g(\theta)=\exp(-\lambda^{-1}v(\theta))$ in the co-area formula yields
+%\begin{equation}
+%\begin{aligned}
+%m_\lambda
+%& = \int_\mathbb{R}  \left[ \int_{v^{-1}(x)} \frac{ \exp(- \lambda^{-1} v(\theta) ) \pi_{\mc R}(\theta)}{ J v(\theta) }  \bar{\mc H}^{p-d}(d \theta) \right] \mathbbm{1}_{x \ge 0}  d x \\
+%& = \int_\mathbb{R}  m(x)\exp(- \lambda^{-1} x ) \mathbbm{1}_{x \ge 0}  d x .
+%\end{aligned}
+%\end{equation}
+%
+%Taking $g(\theta)={\mathbbm{1}_{v(\theta)=0}}$ yields 
+%\begin{equation}
+%m_0
+%= \int_\mathbb{R} \left[ \int_{v^{-1}(y)} \frac{ \pi_{\mc R}(\theta) }{ J v(\theta) }  \bar{\mc H}^{p-d}(d \theta) \right]\mathbbm{1}_{y=0} dy   =  \int_{v^{-1}(0)} \frac{ \pi_{\mc R}(\theta) }{ J v(\theta) } \bar{\mc H}^{p-d}(d \theta) =m(0)
+%\end{equation}
+%
+%
+%Clearly $m_\lambda \ge m_0$.
+%
+%1. Asymptotic result:
+%
+%We have
+%
+%\begin{equation}                
+%\label{wass0}
+%\begin{aligned}
+%&\underset{g:\|g\|_L\le 1}\sup\int g(\theta)  \left[ \frac{ \exp(- \lambda^{-1} v(\theta)) } {  m_\lambda}  - 
+%\frac{ \mathbbm{1}_{v(\theta)=0} } {  m_0} 
+%\right]  \frac{\pi_{\mc R}(\theta)}{Jv(\theta)}  \bar{\mc H}^{p-d}(d \theta) \\
+%&= \underset{g:\|g\|_L\le 1}\sup\int_\mathbb{R}  \mathbb{E}(g(\theta) \mid x)  \left[ \frac{ \exp(- \lambda^{-1} x) \mathbbm{1}_{x \ge 0}} {  m_\lambda}  - 
+%\frac{ \mathbbm{1}_{x=0} } {  m_0} 
+%\right] d x \\
+%&=      \underset{g:\|g\|_L\le 1}\sup\int_\mathbb{R}  \mathbb{E}(g(\theta) \mid x)  \left[ \frac{  1} {  m_\lambda}  - 
+%\frac{ 1 } {  m_0} 
+%\right]\mathbbm{1}_{x=0} d x  + \underset{g:\|g\|_L\le 1}\sup\int_\mathbb{R}  \mathbb{E}(g(\theta) \mid x)\frac{ \exp(- \lambda^{-1} x)} {  m_\lambda}  
+%\mathbbm{1}_{x > 0} d x \\
+%& \le \underset{g:\|g\|_L\le 1}\sup \|\mathbb{E}(g(\theta) \mid 0)\| \left[ \frac{ 1 } {  m_0} -\frac{  1} {  m_\lambda}   
+%\right] + \frac{1} {  m_0} \underset{g:\|g\|_L\le 1}\sup \int_\mathbb{R}  \|\mathbb{E}(g(\theta) \mid x)\| { \exp(- \lambda^{-1} x)}
+%\mathbbm{1}_{x > 0} d x \\      
+%\end{aligned}
+%\end{equation}
+%
+%
+%Note $m_\lambda\le \int_\mathbb{R} m(x) \mathbbm{1}_{x \ge 0}  dx =\int_\mathbb{R} \pi_{\mc R}(\theta) =1$. By dominated convergence theorem, 
+%
+%\begin{equation}
+%\lim_{\lambda\rightarrow 0}m_\lambda= \int_\mathbb{R}  m(x) \lim_{\lambda\rightarrow 0}\exp(- \lambda^{-1} x ) \mathbbm{1}_{x \ge 0}  d x = m_0.
+%\end{equation}
+%
+%
+%Since 
+%$ \underset{g:\|g\|_L\le 1}\sup \int_\mathbb{R}  \|\mathbb{E}(g(\theta) \mid x)\| { \exp(- \lambda^{-1} x)} dx \le \int_\mathbb{R} \underset{g:\|g\|_L\le 1}\sup \|\mathbb{E}(g(\theta) \mid x)\| { \exp(- \lambda^{-1} x)} dx$,
+%letting $q_\lambda=       \underset{g:\|g\|_L\le 1}\sup \|\mathbb{E}(g(\theta) \mid x)\| { \exp(- \lambda^{-1} x)}
+%\mathbbm{1}_{x > 0}  $, we have $0\le q_1-q_{\lambda_1}\le q_1-q_{\lambda_2}$ for $1\ge\lambda_1\ge \lambda_2$, by monotone convergence theorem, $\lim_{\lambda\rightarrow 0}\int [ q_1(x)-q_\lambda(x)]dx = \int [q_1(x)- q_0(x) ]dx$ hence $\lim_{\lambda\rightarrow 0}\int q_\lambda(x)dx =0$. Combining the results yields 
+%
+%
+%
+%\begin{equation}
+%\underset{\lambda \rightarrow 0}\lim W_1(\Pi,\tilde\Pi)=0.        \end{equation}
+%
+%2. Non-asymptotic result:
+%
+%
+%\begin{equation}
+%\label{wass1}
+%\begin{aligned}
+%\frac{1}{m_0}-\frac{1}{m_\lambda} & \le  \frac{   \int_\mathbb{R}  m(x) \exp(- \lambda^{-1} x ) \mathbbm{1}_{x > 0}  d x } {  m_0^2}  \\
+%&= \frac{1}{ m_0^2} \left[ \int_0^{t}  m(x) \exp(- \lambda^{-1} x ) dx + \int_t^{\infty}  m(x) \exp(- \lambda^{-1} x ) dx \right] \\
+%&\le \frac{1}{ m_0^2} \left[  \underset{t^*\in (0,t)}\sup m(t^{*})\int_0^{t} \exp(- \lambda^{-1} x ) dx + \exp(- \lambda^{-1} t )\int_t^{\infty}  m(x) dx  \right] \\
+%&\le \frac{1}{ m_0^2} \left[\lambda \underset{t^*\in (0,t)}\sup  m(t^{*})  + \exp(- \lambda^{-1} t ) \right] 
+%\end{aligned}
+%\end{equation}
+%
+%\begin{equation}
+%\label{wass2}
+%\begin{aligned}
+%& \underset{g:\|g\|_L\le 1}\sup\int_\mathbb{R}  \|\mathbb{E}(g(\theta) \mid x)\| { \exp(- \lambda^{-1} x)}  \mathbbm{1}_{x > 0} d x \\
+%&\le \underset{g:\|g\|_L\le 1}\sup\underset{t^*\in (0,t)}\sup \|\mathbb{E}(g(\theta) \mid t^*)\|     
+%\int_0^{t} \exp(- \lambda^{-1} x ) dx + \exp(- \lambda^{-1} t ) \underset{g:\|g\|_L\le 1}\sup \int_t^{\infty}   \|\mathbb{E}( g(\theta )\mid x)\| dx \\
+%&\le \underset{g:\|g\|_L\le 1}\sup\underset{t^*\in (0,t)}\sup \|\mathbb{E}(g(\theta) \mid t^*)\|     \lambda + \exp(- \lambda^{-1} t ) \underset{g:\|g\|_L\le 1} \sup \mathbb{E}(\| g(\theta )\|) \\
+%\end{aligned}
+%\end{equation}
+%
+%Combining \eqref{wass0}\eqref{wass1}\eqref{wass2}, $k_1=\underset{g:\|g\|_L\le 1}\sup\underset{t^*\in [0,t)}\sup \|\mathbb{E}(g(\theta) \mid t^*)\|$, $k_2=\underset{g:\|g\|_L\le 1} \sup \mathbb{E}(\| g(\theta )\|)$, $k_3= \underset{t^*\in (0,t)}\sup  m(t^{*})$
+%
+%
+%\begin{equation}
+%\begin{aligned}
+%& \underset{g:\|g\|_L\le 1}\sup \int g(x) \Pi(dx) -  \int g(x) \tilde\Pi(dx) \\
+%        %&\le  \frac{k_1}{ m_0^2} \left[\lambda k_3  + \exp(- \lambda^{-1} t ) \right] 
+%        %+ \frac{1} {  m_0} [ k_1       \lambda + \exp(- \lambda^{-1} t )k_2 ]\\     
+%        & \le \lambda (\frac{k_1 k_3}{m_0^2} + \frac{k_1}{m_0}) + \exp(- \lambda^{-1} t )(\frac{k_1}{m_0^2} + \frac{k_2}{m_0})
+%        \end{aligned}
+%        \end{equation}
+%
+%
+%        \end{proof}
+%
+%        
+%
+%
+%The first part shows the asymptotic accuracy of the approximation. The second part shows the rate with non-asymptotic $\lambda$ under mild assumptions. The interpretation for these assumptions is that if in a small space expansion of $\mc D$, defined as $\{\theta^*: v(\theta^*)\in [0,t] \}$, the marginal density of $v(\theta^*)$ and the conditional expectation of Lipschitz functions are bounded $k_1,k_2= \mc O(1)$, and the expected norm of Lipschitz function are smaller than a bound that grows near exponentially $k_3 = \mc O(\lambda \exp(t/\lambda))$, then the distance $W_1(\Pi,\tilde\Pi)$ converges to $0$ in $\mc O(\lambda)$ as $\lambda\rightarrow 0$.
 
 \alex{
+\section{Constrained Relaxation Methodology}
+Suppose $\theta$ is an $\mathcal{R}$-valued random variable with $\dim(\mathcal{R})=r<\infty$ and that $\theta$ is subject to some constraints which restrict it to a subset $\mathcal{D} \subset \mathcal{R}$. In the Bayesian setting, of principle interest here, $\theta$ is a parameter which is known to satisfy some constraints such that it resides in $\mathcal{D}$.  In this case, a common approach is to choose a prior distribution with support $\mathcal{D}.$ However, aside from some special cases, a suitable choice of prior may be limited.
+ \leo{In my opinion, constructing/choosing prior for constrained space
+is a separate issue, which does not involve  `relaxation', so perhaps we
+can have a short section before and motivated for more computational stuffs.  }
+  Moreover, sampling $\theta$ from the constrained space, when possible, may be difficult or computationally intractable.
 
-\section{Analytical Results}
+One potential strategy to alleviate this issue is to construct an approximate distribution which places a high probability on $\mathcal{D}$ but has support in $\mathcal{R}$ by `relaxing' the constraints.   As a motivating example, consider the case where $\theta$ has density $\pi_\mathcal{R}(\theta)$ with support $\mathcal{R}$ and $\mathcal{D}$ is a measureable subset with positive measure.  The posterior density of $\theta$ given data $Y$ and $\theta \in \mathcal{D}$ is, $$\pi(\theta | \theta \in \mathcal{D}, Y) \propto \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_\mathcal{D} (\theta)$$ for some likelihood function $\mathcal{L}(\theta;Y)$ and data $Y$. 
+As an approximation, suppose we used the density 
+\begin{equation}
+\label{EQ:Rel_Dens_Motivation}
+\tilde{\pi}(\theta) \propto \mathcal{L}(\theta; Y)  \pi_\mathcal{R}(\theta) \exp\bigg(-\frac{1}{\lambda} v_\mathcal{D}(\theta)\bigg)
+\end{equation} where $v_\mathcal{D}(\theta) = \inf_{x\in\mathcal{D}} ||\theta-x||$ is a measure of the distance from $\theta$ to the constrained space for some metric $||\cdot||$. 
+
+Note that $\mathbbm{1}_\mathcal{D}(\theta)$ is the pointwise limit of $\exp\big(- \nu_\mathcal{D}(\theta)/\lambda)$ (except perhaps on the boundary of $\mathcal{D}$) as $\lambda \to 0^+.$ However, (1) has support $\mathcal{R}$ for all $\lambda > 0$, hence `relaxing' the constraint.   Since (1) is supported on $\mathcal{R}$ it is more suitable for off-the-shelf MCMC sampling strategies.   Ideally, one would hope that samples from (1) could be easily generated and that they would behave as if drawn from the fully conditioned distribution when $\lambda$ is sufficiently small. We consider this approach when adapted to a number of settings, but generally we refer to it as constraint relaxation (\core).
+
+These observations motivate a number of questions about \core\, which we investigate in the article.  (i) For what types of distributions and constraints is CORE suitable? (ii) Is there a general approach for constructing the `relaxed' constraint? (iii) How well do samples from the relaxed constraint represent those from the fully conditioned distribution? (iv) How does the approximation depend on the tuning parameter $\lambda$? 
+
+The answers to (ii) - (iv) depend largely upon (i).  Therefore, beginning with (i), we assume $\theta$ is a continuous random variable (e.g. $\mathcal{R}$ is $\mathbb{R}^d$, $[0,\infty)^d$, $\mathbb{R}^{n\times k}$) and $\theta$ has an unconstrained prior density $\pi_\mathcal{R}(\theta)$ which is absolutely continuous with respect to Lebesque measure on $\mathcal{R}$ hereby denoted as $\mu_\mathcal{R}$.  We investigate two general types of constraints. 
+
+
+
+First, we consider the simpler case where $\mathcal{D}$ has positive measure, i.e. $\int_\mathcal{D} \pi(\theta) \mu_\mathcal{R}(d\theta) >0.$ \leo{Generally,} Inequality constraints (e.g. $a_i < \theta_i < b_i$, $||\theta||_2^2 < 1$) fall into this category. The analysis in this case will be more straightforward as we can follow traditional approaches to conditional probability. Here, the construction of the relaxed constraint will follow the form of Eq. (\ref{EQ:Rel_Dens_Motivation}).
+
+Secondly, we consider the case where $\mathcal{D}$ is a measure zero subset of $\mathcal{R}$. In particular, we restrict ourselves to the setting where $\mathcal{D}$ can be represented implicitly as the solution set of a consistent system of equations $\{\nu_i(\theta) = 0\}_{i=1}^s$ so that $\mathcal{D} =\{\theta | v_j(\theta) =0, \, j = 1, \dots,s\}$ is a co-dimension $s$ submanifold of $\mathcal{R}$.  For a given constrained space, $\mathcal{D}$, there may be multiple choices of the constraints $v_i$. However, there are technical requirements, discussed in Section 2.1, which limit the potential choice of the constraint questions \leo{perhaps avoid cross-referencing
+later section, by simplifying this sentence
+to `There are some limitations on the types of constraint one could use,
+however we note that ...'}. While these criteria may seem restrictive, we note that many common constraints (e.g. $||\theta||^2 = 1$, $\sum_i \theta_i = 1$, $\theta \in V_k(\mathbb{R}^n)$ where $V_k(\mathbb{R}^n$) is the Stiefel manifold) fall into this category.  In this case, the conditional distribution of $\theta$ given $\theta \in \mathcal{D}$, must be handled with care since $\int_D \pi_R(\theta) d\mu_\mathcal{R} (\theta) =0$.  However, the requirement that $\mathcal{D}$ has codimension $s$ will serve two purposes.  First, it will make the construction of conditional distributions on $\mathcal{D}$ using the tools of geometric measure theory more intuitive.  Secondly, it will motivate a general strategy for choosing appropriate constraint equations and in constructing a relaxed density similar to (1). 
+
+
+%The remainder of this section is organized as follows.  In 2.1, we briefly discuss the construction of the fully constrained distribution $\theta|\theta \in \mathcal{D}$ when $\mathcal{D}$ is measure zero \leo{based on density
+%proportional to $\mathcal{L}(\theta; Y)  \pi_\mathcal{R}(\theta)$}.  Additionally, we suggest a general strategy for choosing the relaxed density.  Relevant theorems comparing the relaxed and fully constrained distributions are given. In Section 2.2, we consider the simpler case where $\mathcal{D}$ has positive measure.  Again, we suggest a general strategy for constructing the relaxed density and supply relevant theorems.  For clarity, proofs of the theorems contained in 2.1 and 2.2 are supplied in the appendix. In Section 2.3, we discuss a number of examples which highlight the methods from 2.1 and 2.2.
+%
+
 \subsection{Positive measure constrained spaces}
+\label{SEC:Positive_measure_methods}
+In this subsection, we consider the case where $\mathcal{D}$ has positive measure.  As such, the constrained posterior density, $\pi_\mathcal{D},$ for $\theta|\theta \in \mathcal{D}$ and data $Y$ is 
 
+$$\pi_\mathcal{D}(\theta|Y) = \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\mathbbm{1}_\mathcal{D}(\theta)}{\int_\mathcal{D} \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)}\propto \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\mathbbm{1}_\mathcal{D}(\theta). $$
+Unlike the previous section, this constrained density is absolutely continuous with respect to $\mu_\mathcal{R}$.  
+
+Suppose we approximate $\pi_\mathcal{D}$ with a relaxed density $$\tilde{\pi}_\lambda(\theta) = \mathcal{L}(\theta; Y) \frac{\mathcal{L}(\theta; Y)\pi_\mathcal{R}(\theta)\exp\big(-\frac{v_d(\theta)}{\lambda}\big)}{\int_{\mathcal{R}}\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\exp\big(-\frac{v_d(\theta)}{\lambda}\big) d\mu_\mathcal{R}(\theta)} \propto \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\exp\big(-\frac{v_d(\theta)}{\lambda}\big)$$
+which is also absolutely continuous with respect to $\mu_\mathcal{R}.$
+Here $\lambda >0$ and $v_d(\theta)$ is a scalar-valued function which measures the distance from $\theta$ to the constrained space $\mathcal{D}$, i.e. $v_d(\theta) = 0 $ $\forall \theta \in \mathcal{D}$ and is positive otherwise.  Formally, as $\lambda \to 0^+$, $\exp(-v_d(\theta)/\lambda) \to \mathbbm{1}_\mathcal{D}(\theta)$ pointwise.  If $\mathcal{D}$ is an open subset of $\mathcal{R}$, this limit may not hold on the boundary of $\mathcal{D}$, denoted $\partial \mathcal{D}$.  However, in general $\mu_\mathcal{R}(\partial \mathcal{D}) = 0$ and we are working with densities. Thus, we can ignore this issue.
+
+There are many possible choices for $v$ which may be selected for different reasons.  Perhaps the simplest choice is to take
+\begin{equation}
+\label{EQ:Isotrophic_relaxation}
+v_d(z) =  \inf_{x\in\mathcal{D}} ||z-x||_k
+\end{equation}
+where $||\cdot||_k$ denotes the distance using the $k$-norm. Under this choice of $v$, the relaxation is isotrophic. More generally, one could use
+\begin{equation}
+v_d(z) = \inf_{x\in\mathcal{D}} \sqrt{(x-z)^T A (x-z)}\label{EQ:anistrophic_relaxation}
+\end{equation} for some positive definite matrix $A$. In this case, the relaxation is anistrophic, and can be viewed as a form of directional relaxation. This choice of distance, $v_d$, allows for a more detailed specification of the rates at which individual components of $\theta$ relax to $\mathcal{D}$.  
+
+For most general choices of $v_d(\theta)$ it follows that $\pi_\mathcal{D}$ is the pointwise limit of $\tilde{\pi}$ for $\mu_\mathcal{R}$ a.e. $\theta$ in $\mathcal{R}.$  Furthermore, since both the constrained density, $\pi_\mathcal{D}$, and the relaxed density, $\tilde{\pi},$ are absolutely continuous with respect to $\mu_\mathcal{R}$, estimates of $E[g(\theta)|\theta\in\mathcal{D}]$ using the relaxed density can be applied to larger class of functions.
 
 \begin{theorem}
 \label{THM:positive_measure_approximation_error}
@@ -706,8 +759,35 @@ where $\tilde{E}[g(\theta)] = \int_\mathcal{R} g(\theta) \tilde{\pi}_\lambda(\th
 Suppose $g \in  \mathbb{L}^2(\mathcal{R}, \pi_\mathcal{R}d\mu_\mathcal{R})$,  $\pi_\mathcal{D}$ and $\tilde{\pi}_\lambda$ are as above, and $v_d(\theta)$ has the form of Eq. (\ref{EQ:Isotrophic_relaxation}) with $k=2$.  Then for $0<\lambda \ll 1,$
 $$ \bigg|E[g(\theta) |\theta\in\mathcal{D}] - \tilde{E}[g(\theta)]   \bigg| = O(\lambda\log(\lambda)).  $$ \leo{$\log(\lambda)<0?$}
 \end{corollary}
+This corollary follows by applying the Cauchy-Schwartz inequality to the term in the numerator of the bound given in Theorem \ref{THM:positive_measure_approximation_error}.  Some care must be taken if $\mathcal{D}$ is a unbounded subset of $\mathcal{R}$, and these technical details are discussed in the appendix.
+
+Theorem 1 and Corollary 1 have some important implications both analytically and numerically.  First, although the requirement that $\mathcal{D}$ has positive measure is much stronger than that considered in the previous section, one can use the relaxed density to approximate $E[g(\theta)|\theta\in\mathcal{D}]$ for a much larger class of functions than Lipschitz-1 functions only.  In particular, in addition to point estimates, $E[\theta|\theta\in\mathcal{D}]$, it is possible to approximate probabilities $P(\theta \in \mathcal{F}|\theta \in \mathcal{D})$ and higher moments, e.g. $E[\Pi_j \theta_j^{k_j} |\theta\in\mathcal{D}]$, so long as these moments exist for the unconstrained density $\pi_\mathcal{R}.$ 
+
+Secondly, these bounds demonstrate that the error in using the relaxed density to approximate $E[g(\theta)|\theta\in\mathcal{D}]$ is proportional to $[\int_\mathcal{D}\mathcal{L}(\theta; Y)  \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\big]^{-2}.$  Therefore, in practice $\lambda$ may need to be very small, particularly in the case where $0<P(\theta\in\mathcal{D})\ll 1.$ Of course, specific details of the scaling of $\bigg|E[g(\theta) |\theta\in\mathcal{D}] - \tilde{E}[g(\theta)]   \bigg|$ will depend upon the choice of $v_d(\theta)$. As such, one avenue for mitigating numerical difficulties which may arise when $\lambda \ll 1$ is to use Eq. \ref{EQ:anistrophic_relaxation} to relax the density in directions where accuracy is less important.
+
+\subsection{Measure zero constraints}
+\label{SEC:Zero_Measure_Methods}
+
+
+
+\section{Analytical Results}
+\subsection{Positive measure constrained spaces}
+\label{SEC:Positive_measure_theory}
+
+\begin{theorem}
+\label{THM:positive_measure_approximation_error}
+Suppose $g \in \mathbb{L}^1(\mathcal{R}, \pi_\mathcal{R}d\mu_\mathcal{R})$ and that $\pi_\mathcal{D}$ and $\tilde{\pi}_\lambda$ are taken as above.  Then,
+$$\bigg|E[g(\theta) |\theta\in\mathcal{D}] - \tilde{E}[g(\theta)]   \bigg| \le \frac{\int_{\mathcal{R}\setminus \mathcal{D}} (E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\exp(-v(\theta)/\lambda ) d\mu_\mathcal{R}(\theta)}{\big[\int_\mathcal{D} \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\big]^2 }$$
+where $\tilde{E}[g(\theta)] = \int_\mathcal{R} g(\theta) \tilde{\pi}_\lambda(\theta)d\mu_\mathcal{R}(\theta)$ is the expected value of $g(\theta)$ with respect to the relaxed density $\tilde{\pi}_\lambda.$
+\end{theorem}
+
+\begin{corollary}
+Suppose $g \in  \mathbb{L}^2(\mathcal{R}, \pi_\mathcal{R}d\mu_\mathcal{R})$,  $\pi_\mathcal{D}$ and $\tilde{\pi}_\lambda$ are as above, and $v_d(\theta)$ has the form of Eq. (\ref{EQ:Isotrophic_relaxation}) with $k=2$.  Then for $0<\lambda \ll 1,$
+$$ \bigg|E[g(\theta) |\theta\in\mathcal{D}] - \tilde{E}[g(\theta)]   \bigg| = O(\lambda|\log(\lambda)|).  $$
+\end{corollary}
 
 \subsection{Measure zero constrained spaces}
+\label{SEC:Zero_measure_theory}
 
 \begin{theorem}
 \label{THM:RCP_construction}
