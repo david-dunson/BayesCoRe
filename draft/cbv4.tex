@@ -754,37 +754,22 @@ So long as $v_d(\theta)$ is zero for $\theta \in \mathcal{D}$ and positive for $
 $$\int_\mathcal{R} g(\theta)\tilde{\pi}_\lambda(\theta) d\mu_\mathcal{R}(\theta) \approx \int_\mathcal{D} g(\theta)\pi_\mathcal{D}(\theta) d\mu_\mathcal{R}(\theta) .$$
 Rigorous details for the validity of this approximation, a suitable class of functions for which it applies, and rates of convergence in $\lambda$ are contained in Section \ref{SEC:Positive_measure_theory}. For now, we discuss the implementation in the case of a bivariate normal distribution constrained to the region below a line in the $\theta_1-\theta_2$ plane.
 
-\leo{
 \subsubsection{Example: Gaussian  under Linear Inequality}
-In this example, we consider a linear model under a system of linear inequality constraints. Although a
-recent work proposed a new customized prior with exhibits posterior conjugacy \citep{danaher2012minkowski},
-via the \core\, framework, one can make use of a general Gaussian prior. 
 
-Suppose that we wish to sample from a bivariate Gaussian $\theta=(\theta_1,\theta_2) \sim \No \left( \mu, I\sigma^2\right)$ where $\mathcal{D}=\{(\theta_1,\theta_2) |\theta\in(0,1)^2, \, \theta_1+\theta_2<1\}$,
-which forms a triangle in the $\theta_1-\theta_2$ plane.  We investigate this example for two different choices of $(\mu,\sigma^2)$. First, let $(\mu, \sigma^2)=([0.3,0.3],1/{10})$  which centers the distribution of $\theta$ near the center of $\mc D$. Secondly,  $(\mu,\sigma^2) = ([0.7,0.3]',1/10^4)$  which induces a  distribution which is concentrated on the boundary of $\mc D$. 
 
-Let $v_d(\theta)=|1-\theta_1+\theta_2|_+ + |-\theta_1|_+ + |-\theta_2|_+ +|1-\theta_1|_+ +|1-\theta_2| $ where $|x|_+ = \max(x,0)$.  Since the triangle has wide support with $\eta(\theta;\mc D)$ away from $0$, small $\lambda=10^{-8}$
- guarantees almost no approximation error. Figure~\ref{linear_inequality} contains plots which show posterior samples and contours of the constrained posterior density. Clearly, the posterior samples are all inside
-$\mc D$. To compare, we ran simple rejection sampling with untruncated normal proposal $\No ( \mu, I\sigma^2)$. As expected, it  suffers from a rapidly growing rejection rate from $12\%$ to $51\%$, as $\mu$ moves further away from the center of $\mc D$.
-
-\begin{figure}[H]
-\begin{subfigure}[b]{0.45\textwidth}
-%\includegraphics[width=1\textwidth]{linear_inequal_1}
-\caption{Constrained $\No([0.3,0.3],1/{10})$}
-\end{subfigure}
-\begin{subfigure}[b]{0.45\textwidth}
-%\includegraphics[width=1\textwidth]{linear_inequal_2}
-\caption{Constrained $\No([0.7,0.3],1/{10^4})$}
-\end{subfigure}
-\caption{Posterior sample of bivariate normal distribution subject to linear inequality constraints $\theta\in(0,1)^2,\theta_1+\theta_2<1$, using HMC with  constraint relaxation. Posterior is spread out around the center (panel (a)) or concentrated on the boundary (panel (b)) of the region.}
-\label{linear_inequality}
-\end{figure}
-
-}
-
+Suppose that $\theta = (\theta_1,\theta)$ follows a bivariate Gaussian with mean $\mu \in\mathbb{R}^2$ and covariance matrix, $\Sigma = \sigma^2 I_2$, $\sigma > 0$. Furthermore, suppose $\theta$ is constrained to the triangular region $\mathcal{D} = \{(\theta_1,\theta_2) | \, \theta_1+\theta_2\le 1, \theta_1\ge0, \theta_2 \ge 0\}.$ Let $$v_d(\theta_1,\theta_2) = \max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0).$$
+Then, $v_d(\theta_1,\theta_2) = 0$ $\forall \theta\in\mathcal{D}$. Otherwise, $v_d$ is positive.  The fully constrained density of $\theta$ given that $\theta\in \mathcal{D}$ is then,
+$$\pi_\mathcal{D}(\theta_1,\theta_2)= \pi(\theta_1,\theta_2|\theta\in\mathcal{D})= \frac{\exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg)\mathbbm{1}_\mathcal{D}(\theta)}{\int_0^1\int_0^{1-\theta_1}\exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg)d\theta_2d\theta_1}\propto \exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg) \mathbbm{1}_{\{\theta_1+\theta_2\le 1\}\cap \{\theta_1 \in [0,\infty)\}\cap \{\theta_2\in[0,\infty)\}} .$$
+Alternatively, the relaxed density, $\tilde{\pi}_\lambda(\theta)$, is
+\begin{align*}
+\tilde{\pi}_\lambda(\theta) &=\frac{\exp\bigg(-\frac{||\theta||^2}{2\sigma^2} - \frac{1}{\lambda}v_d(\theta) \bigg)}{\int_{\mathbb{R}^2} \exp\bigg(-\frac{||\theta||^2}{2\sigma^2}-\frac{1}{\lambda}v_d(\theta) \bigg)d\theta_2d\theta_1}\\
+& \propto \exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg)\exp\bigg( - \frac{1}{\lambda}[\max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0)] \bigg).
+\end{align*}
 \subsection{Measure zero constraints}
 \label{SEC:Zero_Measure_Methods}
 
+
+\subsubsection{Example: von Mises--Fisher on Unit Circle}
 
 
 \section{Analytical Results}
@@ -821,13 +806,15 @@ Thus, one can obtain sufficiently accurate estimates of $E[g|\theta\in\mathcal{D
 \begin{theorem}
 \label{THM:Positive_measure_convergence_rate}
 Suppose $g \in  \mathbb{L}^2(\mathcal{R}, \mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R})$, $v_d(\theta)$ has the form of Eq. (\ref{EQ:Isotrophic_relaxation}) with $k=2$, $\mathcal{D}$ has a piecewise smooth boundary, and that $\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)$ is continuous on a open neighborhood containing $\mathcal{D}$.  Then for $0<\lambda \ll 1,$
-$$ \bigg|E[g(\theta) |\theta\in\mathcal{D}] - E_{\tilde{\pi}_\lambda}[g(\theta)]   \bigg| = O(\sqrt{\lambda|\log(\lambda)|}).  $$
+$$ \bigg|E[g(\theta) |\theta\in\mathcal{D}] - E_{\tilde{\pi}_\lambda}[g(\theta)]   \bigg| = O(\sqrt{\lambda}).  $$
 \end{theorem}
-This theorem follows by applying the Cauchy-Schwartz inequality to the term in the numerator of the bound given in Lemma \ref{THM:positive_measure_approximation_error}.  Some care must be taken if $\mathcal{D}$ is a unbounded subset of $\mathcal{R}$. A proof of Lemma\ref{THM:positive_measure_approximation_error} and Theorem \ref{THM:Positive_measure_convergence_rate} are contained in Appendix \ref{APP:Positive_Measure_Convergence_Proofs}.
+This theorem follows by applying the Cauchy-Schwartz inequality to the term in the numerator of the bound given in Lemma \ref{THM:positive_measure_approximation_error}.  One can attain a bound depending on the surface area of $\mathcal{D}$ when its is bounded.  More generally, if $\mathcal{D}$ is a unbounded subset of $\mathcal{R}$, one can make use of the co-area formula\cite{federer2014geometric, diaconis2013manifold}. The proofs of Lemma \ref{THM:positive_measure_approximation_error} and Theorem \ref{THM:Positive_measure_convergence_rate} are contained in Appendix \ref{APP:Positive_Measure_Convergence_Proofs}.
 
 These results have some important implications both analytically and numerically.  First, in addition to point estimates, $E[\theta|\theta\in\mathcal{D}]$, it is possible to approximate probabilities $P(\theta \in \mathcal{F}|\theta \in \mathcal{D})$ and higher moments, e.g. $E[\Pi_j \theta_j^{k_j} |\theta\in\mathcal{D}]$, so long as these moments exist for the unconstrained density $\pi_\mathcal{R}.$ 
 
-Secondly, these bounds demonstrate that the error in using the relaxed density to approximate $E[g(\theta)|\theta\in\mathcal{D}]$ is proportional to $[\int_\mathcal{D}\mathcal{L}(\theta; Y)  \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\big]^{-2}.$  Therefore, in practice $\lambda$ may need to be very small, particularly in the case where $0<P(\theta\in\mathcal{D})\ll 1.$ Of course, specific details of the scaling of $\bigg|E[g(\theta) |\theta\in\mathcal{D}] - E_{\tilde{\pi}_\lambda}[g(\theta)]   \bigg|$ will depend upon the choice of $v_d(\theta)$. As such, one avenue for mitigating numerical difficulties which may arise when $\lambda \ll 1$ is to use Eq. \ref{EQ:anistrophic_relaxation} to relax the density in directions where accuracy is less important.  Fortunately, both Theorem \ref{THM:positive_measure_approximation_error} and Corollary \ref{THM:Positive_measure_convergence_rate} will still hold when $A$ is positive definite since this corresponds to a simple re-scaling of the parameter space.
+Secondly, these bounds demonstrate that the error in using the relaxed density to approximate $E[g(\theta)|\theta\in\mathcal{D}]$ is proportional to $\sqrt{\lambda} [\int_\mathcal{D}\mathcal{L}(\theta; Y)  \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\big]^{-2}$ although this rate may not be optimal.  In practice, $\lambda$ may need to be very small, particularly in the case where $0<P(\theta\in\mathcal{D})\ll 1.$ Of course, specific details of the scaling of $\bigg|E[g(\theta) |\theta\in\mathcal{D}] - E_{\tilde{\pi}_\lambda}[g(\theta)]   \bigg|$ will depend upon the choice of $\mathcal{D}$ and $v_d(\theta)$. In practice (see Sections 5), we have observed much better convergence rates.
+
+In general, one avenue for mitigating numerical difficulties which may arise when $\lambda \ll 1$ is needed is to use Eq. \ref{EQ:anistrophic_relaxation} to relax the density in directions where accuracy is less important.  Fortunately, both Lemma\ref{THM:positive_measure_approximation_error} and Theorem \ref{THM:Positive_measure_convergence_rate} will still hold when $A$ is positive definite since this corresponds to a simple re-scaling of the parameter space.
 
 
 
@@ -871,12 +858,12 @@ m &= \int_{\nu^{-1}} \frac{\pi_\mathcal{H}(\theta) \mathcal{L}(y;\theta)}{J(\nu(
 m_g &= \int_{\nu^{-1}} g(\theta)\frac{\pi_\mathcal{H}(\theta) \mathcal{L}(y;\theta)}{J(\nu(\theta))} d\mathcal{R}^{r-s}(\theta).
 \end{align*}
 Suppose that both $m$ and $m_g$ are continuous on an open interval containing the origin and that \\ $g\in\mathbb{L}^1(\mathcal{R},\pi_R\mathcal{L}(y;\theta)d\mu_\mathcal{R}) \cap\mathbb{L}^1(\mathcal{D},\frac{\pi_R\mathcal{L}(y;\theta)}{J(\nu(\theta))}d\mu_\mathcal{R})$. Then,
-$$E_{\tilde{\Pi}}[g] \to E[g|\theta \in \mathcal{D}].$$
+$$\bigg|E_{\tilde{\Pi}}[g] - E[g|\theta \in \mathcal{D}]\bigg| \to 0 \text{ as } \lambda\to 0^+.$$
 \end{theorem}
 
 \begin{corollary}
 In addition to the assumptions of Theorem \ref{THM:Relaxed_Expectation_Convergence_Measure_Zero}, suppose that both $m$ and $m_g$ are differentiable at $0$. Then
-$$|E_{\tilde{\Pi}}[g] - E[g|\theta \in \mathcal{D}] | = O()$$
+$$\bigg|E_{\tilde{\Pi}}[g] - E[g|\theta \in \mathcal{D}] \bigg| = O\bigg(\frac{\lambda}{|\log \lambda|^s}\bigg)$$
 as $\lambda \to 0^+.$
 \end{corollary}
 
@@ -991,8 +978,33 @@ In order to compare against existing approaches on computing efficiency and prov
 supporting our previous result, we run simulations on several toy examples
  in this section.
    
+\subsection{Example: Gaussian  under Linear Inequality}
+In this example, we consider a linear model under a system of linear inequality constraints. Although a
+recent work proposed a new customized prior with exhibits posterior conjugacy \citep{danaher2012minkowski},
+via the \core\, framework, one can make use of a general Gaussian prior. 
 
-\subsection{von Mises--Fisher on Unit Circle}
+Suppose that we wish to sample from a bivariate Gaussian $\theta=(\theta_1,\theta_2) \sim \No \left( \mu, I\sigma^2\right)$ where $\mathcal{D}=\{(\theta_1,\theta_2) |\theta\in(0,1)^2, \, \theta_1+\theta_2<1\}$,
+which forms a triangle in the $\theta_1-\theta_2$ plane.  We investigate this example for two different choices of $(\mu,\sigma^2)$. First, let $(\mu, \sigma^2)=([0.3,0.3],1/{10})$  which centers the distribution of $\theta$ near the center of $\mc D$. Secondly,  $(\mu,\sigma^2) = ([0.7,0.3]',1/10^4)$  which induces a  distribution which is concentrated on the boundary of $\mc D$. 
+
+Let $v_d(\theta)=|1-\theta_1+\theta_2|_+ + |-\theta_1|_+ + |-\theta_2|_+ +|1-\theta_1|_+ +|1-\theta_2| $ where $|x|_+ = \max(x,0)$.  Since the triangle has wide support with $\eta(\theta;\mc D)$ away from $0$, small $\lambda=10^{-8}$
+ guarantees almost no approximation error. Figure~\ref{linear_inequality} contains plots which show posterior samples and contours of the constrained posterior density. Clearly, the posterior samples are all inside
+$\mc D$. To compare, we ran simple rejection sampling with untruncated normal proposal $\No ( \mu, I\sigma^2)$. As expected, it  suffers from a rapidly growing rejection rate from $12\%$ to $51\%$, as $\mu$ moves further away from the center of $\mc D$.
+
+\begin{figure}[H]
+\begin{subfigure}[b]{0.45\textwidth}
+%\includegraphics[width=1\textwidth]{linear_inequal_1}
+\caption{Constrained $\No([0.3,0.3],1/{10})$}
+\end{subfigure}
+\begin{subfigure}[b]{0.45\textwidth}
+%\includegraphics[width=1\textwidth]{linear_inequal_2}
+\caption{Constrained $\No([0.7,0.3],1/{10^4})$}
+\end{subfigure}
+\caption{Posterior sample of bivariate normal distribution subject to linear inequality constraints $\theta\in(0,1)^2,\theta_1+\theta_2<1$, using HMC with  constraint relaxation. Posterior is spread out around the center (panel (a)) or concentrated on the boundary (panel (b)) of the region.}
+\label{linear_inequality}
+\end{figure}
+
+
+\subsection{Example: von Mises--Fisher on Unit Circle}
 To illustrate equality constraint relaxation, we generate a simple von Mises--Fisher distribution $\pi_{\mc D}(\theta) \propto \exp(F'\theta)$ on a unit circle $\{(\theta_1,\theta_2):\theta_1^2+\theta_2^2=1\}$. We use $F=(5,5)$ to induce a relatively spread-out  $\theta$ on the manifold.
 For sampling,
 we compare three strategies: approximate-CORE using $\exp(-\frac{|\theta'\theta -1|}{\lambda})$ for approximating the indicator, DA-CORE
@@ -1348,24 +1360,38 @@ over the sets $\{\theta: v_d(\theta)> -\lambda\log\lambda\}$ and $\{\theta: \, 0
 &\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \\
 &= \int_{\{\theta: v_d(\theta)> -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) +\int_{\{\theta: \,0 < v_d(\theta)< -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \\
 &\le \lambda^2 \int_{\{\theta: v_d(\theta)> -\lambda\log\lambda\}}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)+\int_{\{\theta: \,0< v_d(\theta)< -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\\
-&\le C_\mathcal{R}\lambda^2 +\int_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\\
-&\le C_\mathcal{R}\lambda^2 +\int_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)
+&\le C_\mathcal{R}\lambda^2 +\int_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)
 \end{align*}
 To review, to this point we have shown that
 \begin{equation}
-\big| E[g(\theta)|\theta\in\mathcal{D}]-E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \le  \frac{C_{\mathcal{R},g}}{D_\mathcal{D}^2}\bigg(C_\mathcal{R}\lambda^2 + \int_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \bigg)^{1/2}
+\big| E[g(\theta)|\theta\in\mathcal{D}]-E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \le  \frac{C_{\mathcal{R},g}}{D_\mathcal{D}^2}\bigg(C_\mathcal{R}\lambda^2 + \int_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \bigg)^{1/2}
 \end{equation}
 From the requirements of Theorem \ref{THM:Positive_measure_convergence_rate}, we now let $v_d(\theta) = \inf_{x\in \mathcal{D}}||\theta - x||_2$ and assume that $\mathcal{D}$ has a piecewise smooth boundary.  In this case, the set $\{\theta: \,0 < v_d(\theta)< -\lambda\log\lambda\}$ forms a `shell' of thickness $-\lambda \log \lambda$ which encases $\mathcal{D}.$ 
 
 For the moment, suppose that $\mathcal{D}$ is a bounded subset of $\mathcal{R}$. Furthermore, suppose we take $\lambda$ sufficiently small so that $\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)$ is continuous on $V_\lambda = \{\theta: \,0 < v_d(\theta)< -\lambda\log\lambda\}.$ Observe that  
 \begin{align*}
-\int_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)  
-&\le \sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| \int_{V\lambda} d\mu_{R}(\theta) \\
-&=\sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)|\cdot S_\mathcal{D} \cdot  \lambda|\log\lambda|.
+&\int\limits_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)  
+\le \sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| \int_{V\lambda}\exp(-2v_d(\theta)/\lambda ) d\mu_{R}(\theta)\\
+& \le \sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| \int_{V\lambda} d\mu_{R}(\theta)=  \sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)|  \cdot Vol(V_\lambda) \\
+&=  \sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| S_\mathcal{D} \cdot \lambda |\log \lambda|
 \end{align*}  
-Here $S_\mathcal{D}$ is the surface area of boundary of $\mathcal{D}$, which is finite by the assumptions that $\mathcal{D}$ is bounded and has a piecewise smooth boundary. Additionally, since $V_\lambda$ is relatively compact, it follows that $\sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| < \infty.$ 
+Here,$ S_\mathcal{D}$ is the surface area of boundary of $\mathcal{D}$, which is finite by the assumptions that $\mathcal{D}$ is bounded and has a piecewise smooth boundary. Additionally, since $V_\lambda$ is relatively compact, it follows that $\sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| < \infty.$ 
 
-Consider the more general case where $\mathcal{D}$ is not a bounded subset of $\mathcal{R}.$ Since $\int_\mathcal{R}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)$, there exists a radius $\rho$ such that $\int_{||\theta||_2 > \rho}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)< \lambda^2.$
+Consider the more general case where $\mathcal{D}$ is not a bounded subset of $\mathcal{R}.$ Since $\int_\mathcal{R}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)$, there exists a radius $\rho$ such that $\int_{||\theta||_2 > \rho}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)< \lambda^2.$  Note that, for $\theta \in V_\lambda$, $J(v_d(\theta))=\sqrt{(Dv_d)'(Dv_d)} = 2.$ By the co-area formula \cite{diaconis2013manifold,federer2014geometric}
+$$\int\limits_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)  = \int_0^{-\lambda\log\lambda} e^{-\frac{x}{\lambda}}\bigg( \int_{v_d^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg) dx$$
+Again, we may take $\lambda$ sufficiently small so that $\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) $ is continuous on $V_\lambda.$  As such, the function $ \int_{v_d^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)$ is a continuous map from the closed interval, $[0,-\lambda\log\lambda]$, to $\mathbb{R}.$ Hence it is bounded.  As a result, 
+\begin{align*}
+&\int\limits_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \\
+&\le \sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_d^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg) \cdot \int_0^{-\lambda\log \lambda} e^{-\frac{x}{\lambda}}dx \\
+& = \sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_d^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg)  \cdot (\lambda - \lambda^2) = O(\lambda)
+\end{align*}
+This result also applies to the case where $\mathcal{D}$ is bounded.  Thus, we may conclude that
+\begin{align*}
+&\big| E[g(\theta)|\theta\in\mathcal{D}]-E_{\tilde{\pi}_\lambda}[g(\theta)]\big|\\
+& \le  \frac{C_{\mathcal{R},g}}{D_\mathcal{D}^2}\bigg(C_\mathcal{R}\lambda^2 + \sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_d^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg)  \cdot (\lambda - \lambda^2) \bigg)^{1/2} \\
+&= \frac{C_{\mathcal{R},g}}{D_\mathcal{D}^2} \cdot \sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_d^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg)  \cdot \sqrt{\lambda} + o(\sqrt{\lambda})
+\end{align*}
+Since $\sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_d^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg)$ is a decreasing function in $\lambda$, we may conclude that $\big| E[g(\theta)|\theta\in\mathcal{D}]-E_{\tilde{\pi}_\lambda}[g(\theta)]\big| = O(\sqrt{\lambda}).$
 \end{proof}
 
 \section{Proofs from Section 3.2}
