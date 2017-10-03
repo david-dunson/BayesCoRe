@@ -809,40 +809,30 @@ E_{\tilde{\pi}_\lambda}[g(\theta)] = \int_\mathcal{R} g(\theta)\tilde{\pi}_\lamb
 
 We can now consider the behavior of $E_{\tilde{\pi}_\lambda}[g]$ as $\lambda \to 0^+.$
 
-\begin{theorem}
+\begin{lemma}
 \label{THM:positive_measure_approximation_error}
 Suppose $g \in \mathbb{L}^1(\mathcal{R}, \mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R})$.  Then,
 $$\bigg|E[g(\theta) |\theta\in\mathcal{D}] - E_{\tilde{\pi}_\lambda}[g(\theta)]   \bigg| \le \frac{\int_{\mathcal{R}\setminus \mathcal{D}} (C_\mathcal{R}E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\exp(-v_d(\theta)/\lambda ) d\mu_\mathcal{R}(\theta)}{\big[\int_\mathcal{D} \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\big]^2 }$$
 where $E|g(\theta)| \propto \int_\mathcal{R} |g(\theta)| \mathcal{L}(\theta;Y)\pi_\mathcal{R} d\mu_\mathcal{R}(\theta)$ is the expected value of $|g(\theta)|$ with respect to the unconstrained posterior density and $C_\mathcal{R} = \int_\mathcal{R} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)$ is the normalizing constant of this unconstrained posterior density. Furthermore, if $v_d(\theta)$ is zero for all $\theta\in\mathcal{D}$ and positive for $\theta\in(\mathcal{R}\setminus\mathcal{D})^o$, it follows from the dominated convergence theorem that $$\bigg|E[g(\theta) |\theta\in\mathcal{D}] - E_{\tilde{\pi}_\lambda}[g(\theta)]   \bigg|\to 0 \text{ as } \lambda \to 0^+.$$
-\end{theorem}
+\end{lemma}
 
-Thus, one can obtain sufficiently accurate estimates of $E[g|\theta\in\mathcal{D}]$ by sampling from $\tilde{\pi}_\lambda$ when $\lambda$ is sufficiently small.  From a practical standpoint, it is desirable to understand the rate at which $E_{\tilde{\pi}_\lambda}[g(\theta)] $ converges to $E[g(\theta)\in\mathcal{D}]$. This question is addressed in the following corollary.
-
-\begin{corollary}
-\label{THM:Positive_measure_convergence_rate}
-Suppose $g \in  \mathbb{L}^2(\mathcal{R}, \mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R})$, $v_d(\theta)$ has the form of Eq. (\ref{EQ:Isotrophic_relaxation}) with $k=2$, and $\mathcal{D}$ has a piecewise smooth boundary.  Then for $0<\lambda \ll 1,$
-$$ \bigg|E[g(\theta) |\theta\in\mathcal{D}] - E_{\tilde{\pi}_\lambda}[g(\theta)]   \bigg| = O(\lambda|\log(\lambda)|).  $$
-\end{corollary}
-This corollary follows by applying the Cauchy-Schwartz inequality to the term in the numerator of the bound given in Theorem \ref{THM:positive_measure_approximation_error}.  Some care must be taken if $\mathcal{D}$ is a unbounded subset of $\mathcal{R}$. A proof of Theorem \ref{THM:positive_measure_approximation_error} and Corollary \ref{THM:Positive_measure_convergence_rate} are contained in Appendix \ref{APP:Positive_Measure_Convergence_Proofs}.
-
-Theorem 1 and Corollary 1 have some important implications both analytically and numerically.  First, although the requirement that $\mathcal{D}$ has positive measure is much stronger than that considered in the previous section, one can use the relaxed density to approximate $E[g(\theta)|\theta\in\mathcal{D}]$ for a much larger class of functions than Lipschitz-1 functions only.  In particular, in addition to point estimates, $E[\theta|\theta\in\mathcal{D}]$, it is possible to approximate probabilities $P(\theta \in \mathcal{F}|\theta \in \mathcal{D})$ and higher moments, e.g. $E[\Pi_j \theta_j^{k_j} |\theta\in\mathcal{D}]$, so long as these moments exist for the unconstrained density $\pi_\mathcal{R}.$ 
-
-Secondly, these bounds demonstrate that the error in using the relaxed density to approximate $E[g(\theta)|\theta\in\mathcal{D}]$ is proportional to $[\int_\mathcal{D}\mathcal{L}(\theta; Y)  \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\big]^{-2}.$  Therefore, in practice $\lambda$ may need to be very small, particularly in the case where $0<P(\theta\in\mathcal{D})\ll 1.$ Of course, specific details of the scaling of $\bigg|E[g(\theta) |\theta\in\mathcal{D}] - \tilde{E}[g(\theta)]   \bigg|$ will depend upon the choice of $v_d(\theta)$. As such, one avenue for mitigating numerical difficulties which may arise when $\lambda \ll 1$ is to use Eq. \ref{EQ:anistrophic_relaxation} to relax the density in directions where accuracy is less important.  Fortunately, both Theorem \ref{THM:positive_measure_approximation_error} and Corollary \ref{THM:Positive_measure_convergence_rate} will still hold when $A$ is positive definite since this corresponds to a simple re-scaling of the parameter space.
-
-
-
+Thus, one can obtain sufficiently accurate estimates of $E[g|\theta\in\mathcal{D}]$ by sampling from $\tilde{\pi}_\lambda$ when $\lambda$ is sufficiently small.  From a practical standpoint, it is desirable to understand the rate at which $E_{\tilde{\pi}_\lambda}[g(\theta)] $ converges to $E[g(\theta)\in\mathcal{D}]$. This question is addressed in the following theorem.
 
 \begin{theorem}
-\label{THM:positive_measure_approximation_error}
-Suppose $g \in \mathbb{L}^1(\mathcal{R}, \pi_\mathcal{R}d\mu_\mathcal{R})$ and that $\pi_\mathcal{D}$ and $\tilde{\pi}_\lambda$ are taken as above.  Then,
-$$\bigg|E[g(\theta) |\theta\in\mathcal{D}] - \tilde{E}[g(\theta)]   \bigg| \le \frac{\int_{\mathcal{R}\setminus \mathcal{D}} (E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\exp(-v(\theta)/\lambda ) d\mu_\mathcal{R}(\theta)}{\big[\int_\mathcal{D} \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\big]^2 }$$
-where $\tilde{E}[g(\theta)] = \int_\mathcal{R} g(\theta) \tilde{\pi}_\lambda(\theta)d\mu_\mathcal{R}(\theta)$ is the expected value of $g(\theta)$ with respect to the relaxed density $\tilde{\pi}_\lambda.$
+\label{THM:Positive_measure_convergence_rate}
+Suppose $g \in  \mathbb{L}^2(\mathcal{R}, \mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R})$, $v_d(\theta)$ has the form of Eq. (\ref{EQ:Isotrophic_relaxation}) with $k=2$, $\mathcal{D}$ has a piecewise smooth boundary, and that $\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)$ is continuous on a open neighborhood containing $\mathcal{D}$.  Then for $0<\lambda \ll 1,$
+$$ \bigg|E[g(\theta) |\theta\in\mathcal{D}] - E_{\tilde{\pi}_\lambda}[g(\theta)]   \bigg| = O(\sqrt{\lambda|\log(\lambda)|}).  $$
 \end{theorem}
+This theorem follows by applying the Cauchy-Schwartz inequality to the term in the numerator of the bound given in Lemma \ref{THM:positive_measure_approximation_error}.  Some care must be taken if $\mathcal{D}$ is a unbounded subset of $\mathcal{R}$. A proof of Lemma\ref{THM:positive_measure_approximation_error} and Theorem \ref{THM:Positive_measure_convergence_rate} are contained in Appendix \ref{APP:Positive_Measure_Convergence_Proofs}.
 
-\begin{corollary}
-Suppose $g \in  \mathbb{L}^2(\mathcal{R}, \pi_\mathcal{R}d\mu_\mathcal{R})$,  $\pi_\mathcal{D}$ and $\tilde{\pi}_\lambda$ are as above, and $v_d(\theta)$ has the form of Eq. (\ref{EQ:Isotrophic_relaxation}) with $k=2$.  Then for $0<\lambda \ll 1,$
-$$ \bigg|E[g(\theta) |\theta\in\mathcal{D}] - \tilde{E}[g(\theta)]   \bigg| = O(\lambda|\log(\lambda)|).  $$
-\end{corollary}
+These results have some important implications both analytically and numerically.  First, in addition to point estimates, $E[\theta|\theta\in\mathcal{D}]$, it is possible to approximate probabilities $P(\theta \in \mathcal{F}|\theta \in \mathcal{D})$ and higher moments, e.g. $E[\Pi_j \theta_j^{k_j} |\theta\in\mathcal{D}]$, so long as these moments exist for the unconstrained density $\pi_\mathcal{R}.$ 
+
+Secondly, these bounds demonstrate that the error in using the relaxed density to approximate $E[g(\theta)|\theta\in\mathcal{D}]$ is proportional to $[\int_\mathcal{D}\mathcal{L}(\theta; Y)  \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\big]^{-2}.$  Therefore, in practice $\lambda$ may need to be very small, particularly in the case where $0<P(\theta\in\mathcal{D})\ll 1.$ Of course, specific details of the scaling of $\bigg|E[g(\theta) |\theta\in\mathcal{D}] - E_{\tilde{\pi}_\lambda}[g(\theta)]   \bigg|$ will depend upon the choice of $v_d(\theta)$. As such, one avenue for mitigating numerical difficulties which may arise when $\lambda \ll 1$ is to use Eq. \ref{EQ:anistrophic_relaxation} to relax the density in directions where accuracy is less important.  Fortunately, both Theorem \ref{THM:positive_measure_approximation_error} and Corollary \ref{THM:Positive_measure_convergence_rate} will still hold when $A$ is positive definite since this corresponds to a simple re-scaling of the parameter space.
+
+
+
+
+
 
 \subsection{Measure zero constrained spaces}
 \label{SEC:Zero_measure_theory}
@@ -1275,9 +1265,9 @@ more general treatment is needed. We expect our work to be compatible to the exi
 
 \alex{
 
-\section{Proofs from Section 3.1}
+\section{Proofs for Section 3.1}
 \label{APP:Positive_Measure_Convergence_Proofs}
-\begin{proof}{Proof of Theorem \ref{THM:positive_measure_approximation_error}} \\
+\begin{proof}{Proof of Lemma \ref{THM:positive_measure_approximation_error}} \\
 Recall, that the distance function $v_d(\theta)$ is chosen so that $v_d(\theta)$ is zero for all $\theta\in \mathcal{D}$. It follows that for any function $g$
 \begin{equation}
 \begin{split}
@@ -1327,12 +1317,55 @@ Thus, we have the bounds specified by the theorem,
 \begin{align*}
 &\big| E[g(\theta)|\theta\in\mathcal{D}]-E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \\
 & \le \frac{C_\mathcal{R}E|g(\theta)| \int_{\mathcal{R}\setminus \mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-v_d(\theta)/\lambda ) d\mu_\mathcal{R}(\theta)}{C_\mathcal{D}^2 } + \frac{\int_{\mathcal{R}\setminus \mathcal{D}} |g(\theta)| \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-v_d(\theta)/\lambda ) d\mu_\mathcal{R}(\theta)}{C_\mathcal{D}^2 } \\
-&= \frac{\int_{\mathcal{R}\setminus \mathcal{D}} (C_\mathcal{R}E|g(x_i)|+|g(x_i)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-v_d(\theta)/\lambda ) d\mu_\mathcal{R}(\theta)}{C_\mathcal{D}^2 }.
+&= \frac{\int_{\mathcal{R}\setminus \mathcal{D}} (C_\mathcal{R}E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-v_d(\theta)/\lambda ) d\mu_\mathcal{R}(\theta)}{C_\mathcal{D}^2 }.
 \end{align*}
 
 It remains to be shown that $$\big| E[g(\theta)|\theta\in\mathcal{D}]-E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \to 0 \text{ as }\lambda\to0^+.$$
 Again, by the assumptions that $g\in\mathbb{L}^1(\mathcal{R},\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R})$ and $v_d(\theta) >0$ for $\mu_\mathcal{R}$ a.e.  $\theta \in \mathcal{R}\setminus \mathcal{D}$, it follows that $(C_\mathcal{R}E|g(x_i)|+|g(x_i)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)$ is a dominating function of $(C_\mathcal{R}E|g(x_i)|+|g(x_i)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-v_d(\theta)/\lambda )$ which converges to zero for $\mu_\mathcal{R}$-a.e. $\theta\in\mathcal{R}\setminus\mathcal{D}$ as $\lambda\to 0^+.$ Thus, by the dominated convergence theorem, $\big| E[g(\theta)|\theta\in\mathcal{D}]-E_{\tilde{\pi}_\lambda}[g(\theta)]\big|\to 0$ as $\lambda\to0^+.$
 
+\end{proof}
+
+
+\begin{proof}{Proof of Theorem \ref{THM:Positive_measure_convergence_rate}} \\
+
+We begin with the bound from Lemma \ref{THM:positive_measure_approximation_error}. 
+$$\big| E[g(\theta)|\theta\in\mathcal{D}]-E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \le \frac{\int_{\mathcal{R}\setminus \mathcal{D}} (C_\mathcal{R}E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-v_d(\theta)/\lambda ) d\mu_\mathcal{R}(\theta)}{C_\mathcal{D}^2 }.$$
+For the moment, let us focus on the numerator of the previous expression.  By the Cauchy-Schwartz inequality,
+\begin{align*}
+&\int_{\mathcal{R}\setminus \mathcal{D}} (C_\mathcal{R}E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-v_d(\theta)/\lambda ) d\mu_\mathcal{R}(\theta) \\
+&\le \bigg(\int_{\mathcal{R}\setminus \mathcal{D}}   (C_\mathcal{R}E|g(\theta)|+|g(\theta)|)^2 \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\bigg)^{1/2} \bigg(\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\bigg)^{1/2} \\
+&\le \bigg(\int_{\mathcal{R}}   (C_\mathcal{R}E|g(\theta)|+|g(\theta)|)^2 \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\bigg)^{1/2} \bigg(\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\bigg)^{1/2} 
+\end{align*}
+By assumption, $g\in\mathbb{L}^2(\mathcal{R},\mathcal{L}(\theta;Y)\pi_\mathcal{R}\mu_\mathcal{R}).$ Thus,
+\begin{align*}
+&\int_{\mathcal{R}\setminus \mathcal{D}} (C_\mathcal{R}E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-v_d(\theta)/\lambda ) d\mu_\mathcal{R}(\theta) \\
+&=\underbrace{\bigg([C_\mathcal{R}^3+2C_\mathcal{R}^2](E|g|)^2 + C_\mathcal{R}E[|g|^2] \bigg)^{1/2}}_{C_{\mathcal{R},g}<\infty}\bigg(\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\bigg)^{1/2}\\
+&=C_{\mathcal{R},g}\bigg(\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\bigg)^{1/2}
+\end{align*}
+We separate the integral $$\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)$$
+over the sets $\{\theta: v_d(\theta)> -\lambda\log\lambda\}$ and $\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}.$
+\begin{align*}
+&\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \\
+&= \int_{\{\theta: v_d(\theta)> -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) +\int_{\{\theta: \,0 < v_d(\theta)< -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \\
+&\le \lambda^2 \int_{\{\theta: v_d(\theta)> -\lambda\log\lambda\}}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)+\int_{\{\theta: \,0< v_d(\theta)< -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\\
+&\le C_\mathcal{R}\lambda^2 +\int_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\exp(-2v_d(\theta)/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\\
+&\le C_\mathcal{R}\lambda^2 +\int_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)
+\end{align*}
+To review, to this point we have shown that
+\begin{equation}
+\big| E[g(\theta)|\theta\in\mathcal{D}]-E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \le  \frac{C_{\mathcal{R},g}}{D_\mathcal{D}^2}\bigg(C_\mathcal{R}\lambda^2 + \int_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \bigg)^{1/2}
+\end{equation}
+From the requirements of Theorem \ref{THM:Positive_measure_convergence_rate}, we now let $v_d(\theta) = \inf_{x\in \mathcal{D}}||\theta - x||_2$ and assume that $\mathcal{D}$ has a piecewise smooth boundary.  In this case, the set $\{\theta: \,0 < v_d(\theta)< -\lambda\log\lambda\}$ forms a `shell' of thickness $-\lambda \log \lambda$ which encases $\mathcal{D}.$ 
+
+For the moment, suppose that $\mathcal{D}$ is a bounded subset of $\mathcal{R}$. Furthermore, suppose we take $\lambda$ sufficiently small so that $\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)$ is continuous on $V_\lambda = \{\theta: \,0 < v_d(\theta)< -\lambda\log\lambda\}.$ Observe that  
+\begin{align*}
+\int_{\{\theta: \, 0< v_d(\theta)< -\lambda\log\lambda\}}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)  
+&\le \sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| \int_{V\lambda} d\mu_{R}(\theta) \\
+&=\sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)|\cdot S_\mathcal{D} \cdot  \lambda|\log\lambda|.
+\end{align*}  
+Here $S_\mathcal{D}$ is the surface area of boundary of $\mathcal{D}$, which is finite by the assumptions that $\mathcal{D}$ is bounded and has a piecewise smooth boundary. Additionally, since $V_\lambda$ is relatively compact, it follows that $\sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| < \infty.$ 
+
+Consider the more general case where $\mathcal{D}$ is not a bounded subset of $\mathcal{R}.$ Since $\int_\mathcal{R}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)$, there exists a radius $\rho$ such that $\int_{||\theta||_2 > \rho}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)< \lambda^2.$
 \end{proof}
 
 \section{Proofs from Section 3.2}
