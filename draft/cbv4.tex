@@ -1,6 +1,6 @@
 %&latex
 \documentclass[10pt,fleqn]{article}
-%\pdfoutput=1
+\pdfoutput=1
 
 \addtolength{\oddsidemargin}{-.875in}
 \addtolength{\evensidemargin}{-.875in}
@@ -992,11 +992,11 @@ $\mc D$. To compare, we ran simple rejection sampling with untruncated normal pr
 
 \begin{figure}[H]
 \begin{subfigure}[b]{0.45\textwidth}
-%\includegraphics[width=1\textwidth]{linear_inequal_1}
+\includegraphics[width=1\textwidth]{linear_inequal_1}
 \caption{Constrained $\No([0.3,0.3],1/{10})$}
 \end{subfigure}
 \begin{subfigure}[b]{0.45\textwidth}
-%\includegraphics[width=1\textwidth]{linear_inequal_2}
+\includegraphics[width=1\textwidth]{linear_inequal_2}
 \caption{Constrained $\No([0.7,0.3],1/{10^4})$}
 \end{subfigure}
 \caption{Posterior sample of bivariate normal distribution subject to linear inequality constraints $\theta\in(0,1)^2,\theta_1+\theta_2<1$, using HMC with  constraint relaxation. Posterior is spread out around the center (panel (a)) or concentrated on the boundary (panel (b)) of the region.}
@@ -1078,11 +1078,11 @@ to the former, which explains the similarity in performance.
 
 \begin{figure}[H]
 \begin{subfigure}[b]{0.45\textwidth}
-%\includegraphics[width=1\textwidth]{simplex001}
+\includegraphics[width=1\textwidth]{simplex001}
 \caption{$2,000$ samples from $\text{Dir}(0.01)$ on $2$-simplex.}
 \end{subfigure}
 \begin{subfigure}[b]{0.45\textwidth}
-%\includegraphics[width=1\textwidth]{simplexTrace001}
+\includegraphics[width=1\textwidth]{simplexTrace001}
 \caption{Traceplot of $\theta_1$ using 4 types of HMCs.}
 \end{subfigure}
 \caption{Sampling of Dirichlet on an simplex with distribution concentrated on the boundaries.
@@ -1244,12 +1244,12 @@ of points close to 0 in the model with shrinkage prior.
 \begin{figure}[H]
 \centering
 \begin{subfigure}[b]{0.8\textwidth}
-%\includegraphics[width=1\textwidth]{network_loading}
+\includegraphics[width=1\textwidth]{network_loading}
 \caption{Posterior mean of the loadings $v_{i,r}$ for 21 subjects using three
 models. Each line represents the loadings for one subject over $r=1,\ldots10$.}
 \end{subfigure}
 \begin{subfigure}[b]{1\textwidth}
-%\includegraphics[width=1\textwidth]{network_factor.pdf}
+\includegraphics[width=1\textwidth]{network_factor.pdf}
 \caption{Posterior mean and pointwise $95\%$ credible interval of  the factors
 $U_1,\ldots,
 U_6$ in the two constrained models. }
@@ -1264,7 +1264,6 @@ the estimated shared factors with and without the shrinkage prior (model (iii) i
 
 \section{Discussion}
 
-what
 Parameter constraint often limits the flexibility to develop new model and creates huge burden in developing efficient posterior sampling algorithms. In this article, we develop a formal strategy to utilize the large pool of distributions in the constrained space, and propose a constraint relaxation approach to allow simple implementation for posterior estimation. For common constrained space that can be projected to via a function, we propose an exact algorithm based on data augmentation; for more general problem, we propose an approximation approach.
 This strategy works well for general equality and inequality constraints.
 
@@ -1395,40 +1394,42 @@ Since $\sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_d^{-1}(x)} \frac{1}{2
 \end{proof}
 
 \section{Proofs from Section 3.2}
-We have two densities. The first is the fully constrained density for $\theta\in\mathcal{D}$.
+
+\begin{proof}
+Recall that we have two densities. The first is the fully constrained density for $\theta\in\mathcal{D}$.
 \begin{equation*}
 \pi_\mathcal{D}(\theta) = \frac{1}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)
 \end{equation*}
 where the normalizing constant $m_0$ is calculated w.r.t. Hausdorff measure
 $$m_0 = \int_\mathcal{R} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta).$$
-This density defines a probability measure, $\Pi$, w.r.t. Hausdorff measure.  For a measurable set $E$, 
-$$\Pi(E) = \int_E \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta).$$
+%This density defines a probability measure, $\Pi$, w.r.t. Hausdorff measure.  For a measurable set $E$, 
+%$$\Pi(E) = \int_E \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta).$$
 
 Secondly, we have the relaxed distribution
 $$\tilde{\pi}_\mathcal{D}(\theta) = \frac{1}{m_\lambda} \mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)$$
-where the normalizing constant is calculated w.r.t. Lebesgue measure on $\mathcal{R}$
+where the normalizing constant is calculated w.r.t. Lebesgue measure on $\mathcal{R}$, denote by $\mu_\mathcal{R}$,
 $$m_\lambda = \int_\mathcal{R}\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg) d\mu_\mathcal{R}(\theta).$$
-We use $\mu_\mathcal{R}$ to denote Lebesgue measure on $\mathcal{R}.$ This density defines a probability measure, $\tilde{\Pi}$, w.r.t. $\mu_\mathcal{R}$.  For a measurable set $E$, 
-$$\tilde{\Pi}(E) = \int_E \frac{g(\theta)}{m_\lambda} \mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)d\mu_\mathcal{R}(\theta).$$
+%We use $\mu_\mathcal{R}$ to denote Lebesgue measure on $\mathcal{R}.$ This density defines a probability measure, $\tilde{\Pi}$, w.r.t. $\mu_\mathcal{R}$.  For a measurable set $E$, 
+%$$\tilde{\Pi}(E) = \int_E \frac{g(\theta)}{m_\lambda} \mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)d\mu_\mathcal{R}(\theta).$$
 
-\noindent \textbf{Definition of expectation of $g(\theta)$ w.r.t. constrained and relaxed measures}
+%\noindent \textbf{Definition of expectation of $g(\theta)$ w.r.t. constrained and relaxed measures}
 
-For a given function, $g$, we can define the exact and approximate expectations of $g$, respectively $E_\Pi$ and $E_{\tilde{\Pi}}$, as
+For a given function, $g:\mathcal{R}\to\mathbb{R}$, we can define the exact and approximate expectations of $g$, respectively $E_\Pi$ and $E_{\tilde{\Pi}}$, as
 \begin{align*}
-E_\Pi[g(\theta)|\theta\in\mathcal{D}] &= \int_\mathcal{R} \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta) \\
+E_\Pi[g(\theta)] &= E[g(\theta)|\theta\in\mathcal{D}] = \int_\mathcal{R} \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta) \\
 &=\int_\mathcal{D} \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta)\\
 E_{\tilde{\Pi}}[g(\theta)] &= \int_\mathcal{R}  \frac{g(\theta)}{m_\lambda} \mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)d\mu_\mathcal{R}(\theta) \\
 &= \int_{\mathbb{R}^s} \frac{1}{m_\lambda} \int_{\nu^{-1}} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} \exp\bigg(-\frac{||\nu(\theta)||_1}{\lambda}\bigg) d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} \\
 &=\int_{\mathbb{R}^s} \frac{\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) }{m_\lambda} \int_{\nu^{-1}} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} 
 \end{align*}
-Let, $$m = m^{r-s} = \int_{\nu^{-1}}\frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) .$$
-By construction, $m > 0$ for $\mu_{\mathbb{R}^s}$-a.e. $x\in \mathbb{R}^s$ and $m(0)>0$. Then by Theorem 1,
+Let, $$m(x) = m^{r-s}(x) = \int_{\nu^{-1}(x)}\frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) .$$
+By construction, $m(x) > 0$ for $\mu_{\mathbb{R}^s}$-a.e. $x\in Range(\nu)$. In particular, $m_0=m(0)>0$. By Theorem 1,
 \begin{equation}
-E[g(\theta) | \nu(\theta) = x] = \frac{1}{m} \int_{\nu^{-1}} g(\theta)\frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta).
+E[g(\theta) | \nu(\theta) = x] = \frac{1}{m(x)} \int_{\nu^{-1}(x)} g(\theta)\frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta).
 \end{equation}
 As such, we may may express $E_{\tilde{\Pi}}[g(\theta)]$ as 
 \begin{equation}
-E_{\tilde{\Pi}} = \int_{\mathbb{R}^s} \frac{m}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) E\big[g(\theta)|\nu(\theta)=x\big] d\mu_{\mathbb{R}^s}.
+E_{\tilde{\Pi}}[g(\theta)] = \int_{\mathbb{R}^s} \frac{m(x)}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) E\big[g(\theta)|\nu(\theta)=x\big] d\mu_{\mathbb{R}^s}(x).
 \end{equation}
 %To show $\tilde{E}[g(\theta)] \to E[g(\theta)|\nu(\theta)=0] = E[g(\theta)|\theta\in\mathcal{D}]$ as $\lambda \to 0^+$, we first need to investigate the behavior of $m_\lambda$ for $0<\lambda \ll 1.$
 
@@ -1480,7 +1481,7 @@ E_{\tilde{\Pi}}[g(\theta)] &= \int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\l
 Therefore, $\lambda$ may be chosen sufficiently small so that $CE|g|\lambda/|\log\lambda^s| < \epsilon $ which implies that 
 $$\bigg|E_{\tilde{\Pi}}[g] - E[g(\theta)|\nu(\theta) = 0] \bigg| < C\epsilon.$$
 And we may conclude that $$E_{\tilde{\Pi}}[g] \to E[g|\nu = 0] \text{ as } \lambda\to0^+.$$
-
+\end{proof}
 }
 
 \bibliography{reference}
