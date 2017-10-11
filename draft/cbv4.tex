@@ -759,7 +759,10 @@ Rigorous details for the validity of this approximation, a suitable class of fun
 
 Suppose that $\theta = (\theta_1,\theta)$ follows a bivariate Gaussian with mean $\mu \in\mathbb{R}^2$ and covariance matrix, $\Sigma = \sigma^2 I_2$, $\sigma > 0$. Furthermore, suppose $\theta$ is constrained to the triangular region $\mathcal{D} = \{(\theta_1,\theta_2) | \, \theta_1+\theta_2\le 1, \theta_1\ge0, \theta_2 \ge 0\}.$ Let $$v_d(\theta_1,\theta_2) = \max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0).$$
 Then, $v_d(\theta_1,\theta_2) = 0$ $\forall \theta\in\mathcal{D}$. Otherwise, $v_d$ is positive.  The fully constrained density of $\theta$ given that $\theta\in \mathcal{D}$ is then,
-$$\pi_\mathcal{D}(\theta_1,\theta_2)= \pi(\theta_1,\theta_2|\theta\in\mathcal{D})= \frac{\exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg)\mathbbm{1}_\mathcal{D}(\theta)}{\int_0^1\int_0^{1-\theta_1}\exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg)d\theta_2d\theta_1}\propto \exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg) \mathbbm{1}_{\{\theta_1+\theta_2\le 1\}\cap \{\theta_1 \in [0,\infty)\}\cap \{\theta_2\in[0,\infty)\}} .$$
+\begin{align*}
+\pi_\mathcal{D}(\theta_1,\theta_2)&= \pi(\theta_1,\theta_2|\theta\in\mathcal{D})= \frac{\exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg)\mathbbm{1}_\mathcal{D}(\theta)}{\int_0^1\int_0^{1-\theta_1}\exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg)d\theta_2d\theta_1}\\
+&\propto \exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg) \mathbbm{1}_{\{\theta_1+\theta_2\le 1\}\cap \{\theta_1 \in [0,\infty)\}\cap \{\theta_2\in[0,\infty)\}} .
+\end{align*}
 Alternatively, the relaxed density, $\tilde{\pi}_\lambda(\theta)$, is
 \begin{align*}
 \tilde{\pi}_\lambda(\theta) &=\frac{\exp\bigg(-\frac{||\theta||^2}{2\sigma^2} - \frac{1}{\lambda}v_d(\theta) \bigg)}{\int_{\mathbb{R}^2} \exp\bigg(-\frac{||\theta||^2}{2\sigma^2}-\frac{1}{\lambda}v_d(\theta) \bigg)d\theta_2d\theta_1}\\
@@ -1419,8 +1422,8 @@ For a given function, $g:\mathcal{R}\to\mathbb{R}$, we can define the exact and 
 E_\Pi[g(\theta)] &= E[g(\theta)|\theta\in\mathcal{D}] = \int_\mathcal{R} \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta) \\
 &=\int_\mathcal{D} \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta)\\
 E_{\tilde{\Pi}}[g(\theta)] &= \int_\mathcal{R}  \frac{g(\theta)}{m_\lambda} \mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)d\mu_\mathcal{R}(\theta) \\
-&= \int_{\mathbb{R}^s} \frac{1}{m_\lambda} \int_{\nu^{-1}} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} \exp\bigg(-\frac{||\nu(\theta)||_1}{\lambda}\bigg) d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} \\
-&=\int_{\mathbb{R}^s} \frac{\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) }{m_\lambda} \int_{\nu^{-1}} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} 
+&= \int_{\mathbb{R}^s} \frac{1}{m_\lambda} \int_{\nu^{-1}(x)} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} \exp\bigg(-\frac{||\nu(\theta)||_1}{\lambda}\bigg) d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} \\
+&=\int_{\mathbb{R}^s} \frac{\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) }{m_\lambda} \int_{\nu^{-1}(x)} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} 
 \end{align*}
 Let, $$m(x) = m^{r-s}(x) = \int_{\nu^{-1}(x)}\frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) .$$
 By construction, $m(x) > 0$ for $\mu_{\mathbb{R}^s}$-a.e. $x\in Range(\nu)$. In particular, $m_0=m(0)>0$. By Theorem 1,
@@ -1433,49 +1436,59 @@ E_{\tilde{\Pi}}[g(\theta)] = \int_{\mathbb{R}^s} \frac{m(x)}{m_\lambda}\exp\bigg
 \end{equation}
 %To show $\tilde{E}[g(\theta)] \to E[g(\theta)|\nu(\theta)=0] = E[g(\theta)|\theta\in\mathcal{D}]$ as $\lambda \to 0^+$, we first need to investigate the behavior of $m_\lambda$ for $0<\lambda \ll 1.$
 
-\begin{center}\line(1,0){450}\end{center}
-
-At this point, I'm going to try to demonstrate the asymptotic behavior of (2) for small $\lambda.$ To write this up properly, we'll need to begin with absolute values of differences and bound above. This will require some statements about the integrability of $g$. I'm going to wait on writing the argument up in that manner until we determine what can be said about the continuity/uniform continuity/differentiability of $m$ and $E[g|\nu=x]$ near $x=0.$ For now, I'll make the following assumptions.\\
-
-\noindent\textbf{Assumption:} Both $m$ and $E\big[g(\theta)|\nu(\theta)=x\big]$ are continuous at $x=0.$
-
-\begin{center}\line(1,0){450}\end{center}
-\vspace{0.5cm}
-\noindent \textbf{Asymptotic behavior of $m_\lambda$} \\
-
-\noindent Fix $\epsilon >0$. Since $-\lambda\log(\lambda^{s+1}) \to 0$ as $\lambda\to 0^+$, we may choose $\lambda$ small enough so that $||m-m(0)||_1 < \epsilon$ for all $x\in B_1(0;\lambda|\log(\lambda^{s+1}|)$ and $\lambda < \max(\epsilon^{1/s},\epsilon^{1/(s+1)})$, the 1-ball of radius $\lambda|\log(\lambda^{s+1})|$ centered at $0.$ 
-
-Let us first consider the small $\lambda$ behavior of $m_\lambda.$ We begin by re-expressing $m_\lambda$ in terms of $m.$
+%\begin{center}\line(1,0){450}\end{center}
+%
+%At this point, I'm going to try to demonstrate the asymptotic behavior of (2) for small $\lambda.$ To write this up properly, we'll need to begin with absolute values of differences and bound above. This will require some statements about the integrability of $g$. I'm going to wait on writing the argument up in that manner until we determine what can be said about the continuity/uniform continuity/differentiability of $m$ and $E[g|\nu=x]$ near $x=0.$ For now, I'll make the following assumptions.\\
+%
+%\noindent\textbf{Assumption:} Both $m$ and $E\big[g(\theta)|\nu(\theta)=x\big]$ are continuous at $x=0.$
+%
+%\begin{center}\line(1,0){450}\end{center}
+%\vspace{0.5cm}
+%\noindent \textbf{Asymptotic behavior of $m_\lambda$} \\
+%
+%\noindent Fix $\epsilon >0$. Since $-\lambda\log(\lambda^{s+1}) \to 0$ as $\lambda\to 0^+$, we may choose $\lambda$ small enough so that $||m-m(0)||_1 < \epsilon$ for all $x\in B_1(0;\lambda|\log(\lambda^{s+1}|)$ and $\lambda < \max(\epsilon^{1/s},\epsilon^{1/(s+1)})$, the 1-ball of radius $\lambda|\log(\lambda^{s+1})|$ centered at $0.$ 
+%
+Let us first consider the small $\lambda$ behavior of $m_\lambda.$ We begin by re-expressing $m_\lambda$ in terms of $m(x)$ through the co-area formula.
 \begin{align*}
-m_\lambda &= \int_\mathcal{R} \pi_\mathcal{R}(\theta) \mathcal{L}(y;\theta) \exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg) d\mu_\mathcal{R} \\
-&= \int_{\mathbb{R}^s} \exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{\nu^{-1}} \frac{\pi_\mathcal{R}(\theta) \mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}  \\
-&=\int_{\mathbb{R}^s}m \exp\bigg(-\frac{||x||_1}{\lambda}\bigg)
+m_\lambda &= \int_\mathcal{R} \pi_\mathcal{R}(\theta) \mathcal{L}(y;\theta) \exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg) d\mu_\mathcal{R}(\theta) \\
+&= \int_{\mathbb{R}^s} \exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{\nu^{-1}(x)} \frac{\pi_\mathcal{R}(\theta) \mathcal{L}(y;\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} (x) \\
+&=\int_{\mathbb{R}^s}m(x) \exp\bigg(-\frac{||x||_1}{\lambda}\bigg)d\mu_{\mathbb{R}^s}(x)
 \end{align*}
 
-Now, split the above integral into two regions: the interior and exterior of $B_1(0;\lambda|\log(\lambda^{s+1})|)$. Note that outside of $B_1$, $\exp(-||x||_1/\lambda) \le \lambda^{s+1}.$
+Split the above integral into two regions: the interior and exterior of $B_1(0;\lambda|\log(\lambda^{s+1})|)$. Note that outside of $B_1$, $\exp(-||x||_1/\lambda) \le \lambda^{s+1}.$
 \begin{align*}
-m_\lambda &= \int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)}m \exp\bigg(-\frac{||x||_1}{\lambda}\bigg)d\mu_{\mathbb{R}^s} + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)}m \exp\bigg(-\frac{||x||_1}{\lambda}\bigg)d\mu_{\mathbb{R}^s} \\
-&=O\bigg( \lambda^{s+1} \int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)}m d\mu_{\mathbb{R}^s}\bigg) + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} (m(0)+O(\epsilon)) \bigg[1+O\bigg(\frac{1}{\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg)\bigg)\bigg]d\mu_{\mathbb{R}^s}\\
-&= O\bigg( \lambda^{s+1} \underbrace{\int_{\mathbb{R}^s}m d\mu_{\mathbb{R}^s}}_{=C}\bigg) + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} [m(0) + O(\epsilon)][1+O(\lambda^s)] d\mu_{\mathbb{R}^s}  \\
-&= O(C \lambda^{s+1}) + (m(0)+O(\epsilon))(1++ O(\lambda^s)) \underbrace{\frac{|2(s+1)\lambda \log \lambda |^s}{\Gamma(s+1)}}_{Vol(B_1(0;\lambda|\log(\lambda^{s+1})|)}   \\
-&\sim m(0) \frac{|2(s+1)\lambda \log \lambda |^s}{\Gamma(s+1)}
+m_\lambda &= \int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)}m(x) \exp\bigg(-\frac{||x||_1}{\lambda}\bigg)d\mu_{\mathbb{R}^s}(x) + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)}m(x) \exp\bigg(-\frac{||x||_1}{\lambda}\bigg)d\mu_{\mathbb{R}^s}(x) \\
+&=O\bigg( \lambda^{s+1} \int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)}m(x) d\mu_{\mathbb{R}^s}(x)\bigg) \\
+&\hspace{2cm}+ \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} m(x) \bigg[1+O\bigg(\frac{1}{\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg)\bigg)\bigg]d\mu_{\mathbb{R}^s}(x) \\
+&=O\bigg( \lambda^{s+1} \int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)}m(x) d\mu_{\mathbb{R}^s}(x)\bigg) \\
+&\hspace{2cm}+ \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} m(x) \bigg[1+O(\lambda^s) \bigg]d\mu_{\mathbb{R}^s}(x)
 \end{align*}
-at leading order for small $\lambda$.
-
-\vspace{1cm}
-\noindent \textbf{Asymptotic behavior of $E_{\tilde{\Pi}}[g(\theta)]$} \\
-
-We know turn to the small $\lambda$ behavior of $\tilde{E}[g(\theta)].$  Fix $\epsilon >0$, choose $\lambda<\epsilon^{1/s}$ such that $x\in B_1(0,\lambda|\log(\lambda)^{s+1}|)$ implies
+Since $m(x)$ is continuous on an open neighborhood containing the origin, we may choose $\lambda$ small enough so that $m(x)$ is uniformly continuous on $B_1(0;\lambda |\log \lambda^{s+1}|).$ Then, 
 \begin{align*}
-|m- m(0)| &< \epsilon \\
-|E[g(\theta)|\nu(\theta)=x] - E[g(\theta)|\nu(\theta)=0 | & < \epsilon \\
+m_\lambda&= O\bigg( \lambda^{s+1} \bigg) + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} [m(0) + o(1)][1+O(\lambda^s)] d\mu_{\mathbb{R}^s} (x) \\
+&= O(\lambda^{s+1}) + [m(0)+o(1)][1+ O(\lambda^s)] \underbrace{\frac{|2(s+1)\lambda \log \lambda |^s}{\Gamma(s+1)}}_{Vol(B_1(0;\lambda|\log(\lambda^{s+1})|)}   \\
+&= m(0) \frac{|2(s+1)\lambda \log \lambda |^s}{\Gamma(s+1)} + o(|\lambda \log \lambda|^s) 
 \end{align*}
-Similar to the study of $m$, separate the $\tilde{E}[g(\theta)]$ into integrals over the interior and exterior of $B_1(0,\lambda|\log(\lambda)^{s+1}|)$
+at leading order as $\lambda\to 0^+$.
+
+%\vspace{1cm}
+%\noindent \textbf{Asymptotic behavior of $E_{\tilde{\Pi}}[g(\theta)]$} \\
+
+We know turn to the small $\lambda$ behavior of $\tilde{E}[g(\theta)].$  Again, we may choose $\lambda$ sufficient small so that both
 \begin{align*}
-E_{\tilde{\Pi}}[g(\theta)] &= \int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{m}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) E\big[g(\theta)|\nu(\theta)=x\big] d\mu_{\mathbb{R}^s} \\
-&\hspace{0.5 cm} + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{m}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) E\big[g(\theta)|\nu(\theta)=x\big] d\mu_{\mathbb{R}^s} \\
-&= O\bigg( \frac{\lambda^{s+1}}{m_\lambda} \int_{\mathbb{R}^s} m E[g(\theta)|\nu(\theta)=x]d\mu_{\mathbb{R}^s}\bigg) + \int_{B_1} \frac{m(0)+O(\epsilon)}{m_\lambda}(1+O(\lambda^s)]\bigg(E[g(\theta)|\nu(\theta)=0] + O(\epsilon)\bigg) d\mu_{\mathbb{R}^s}  \\
-&= O\bigg( C E|g|\frac{\lambda}{|\log\lambda|^s}\bigg) + \frac{1+O(\epsilon)}{ \frac{|2(s+1)\lambda \log \lambda |^s}{\Gamma(s+1)} } E[g(\theta)|\nu(\theta) = 0] \int_{B_1}(1+O(\epsilon))d\mu_{\mathbb{R}^s} \\
+m(x)& \int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta)   \\
+m_g(x)&= \int_{\nu^{(-1)}(x)} g(\theta) \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) 
+\end{align*}
+are continuous on $B_1(0;\lambda|\log \lambda^{s+1}|)$ and hence uniformly continuous at $x=0.$ 
+
+Similar to the study of $m_\lambda$, separate the $\tilde{E}[g(\theta)]$ into integrals over the interior and exterior of $B_1(0,\lambda|\log(\lambda)^{s+1}|)$
+\begin{align*}
+E_{\tilde{\Pi}}[g(\theta)] &= \int_{\mathbb{R}^s} \frac{m(x)}{m_\lambda}\exp\bigg(-\frac{||\nu(x)||_1}{\lambda}\bigg)E[g(\theta)|\nu(\theta)=x]d\mu_{\mathbb{R}^s}(x) \\
+&= \int_{\mathbb{R}^s} \frac{1}{m_\lambda}\exp\bigg(-\frac{||\nu(x)||_1}{\lambda}\bigg)\int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}(x) \\
+&=\int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{1}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}(x) \\
+&\hspace{0.5 cm} + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{1}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta)  d\mu_{\mathbb{R}^s}(x) \\
+&= O\bigg( \frac{\lambda^{s+1}}{m_\lambda} \bigg) + \int_{B_1} \frac{m(0)+o(1)}{m_\lambda}(1+O(\lambda^s)]\bigg(E[g(\theta)|\nu(\theta)=0] + o(1) \bigg) d\mu_{\mathbb{R}^s}(x)  \\
+&= O\bigg( C E|g|\frac{\lambda}{|\log\lambda|^s}\bigg) + \frac{1+O(\epsilon)}{ \frac{|2(s+1)\lambda \log \lambda |^s}{\Gamma(s+1)} } E[g(\theta)|\nu(\theta) = 0] \int_{B_1}(1+O(\epsilon))d\mu_{\mathbb{R}^s}(x) \\
 &=O\bigg(C E|g|\frac{\lambda}{|\log\lambda|^s}\bigg)  +E[g(\theta)|\nu(\theta)=0] \frac{1+O(\epsilon)}{1-C_1\epsilon}
 \end{align*}
 Therefore, $\lambda$ may be chosen sufficiently small so that $CE|g|\lambda/|\log\lambda^s| < \epsilon $ which implies that 
