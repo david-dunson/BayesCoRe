@@ -35,7 +35,7 @@
 \usepackage{amsthm,amsmath, amssymb} 
 \usepackage{mathrsfs}
 \usepackage{subcaption}
-\usepackage{nicefrac}
+%\usepackage{nicefrac}
 
 \usepackage{xcolor}
 \newcommand{\aki}[1]{\textcolor{red}{Aki: #1}}
@@ -760,20 +760,73 @@ Rigorous details for the validity of this approximation, a suitable class of fun
 Suppose that $\theta = (\theta_1,\theta)$ follows a bivariate Gaussian with mean $\mu \in\mathbb{R}^2$ and covariance matrix, $\Sigma = \sigma^2 I_2$, $\sigma > 0$. Furthermore, suppose $\theta$ is constrained to the triangular region $\mathcal{D} = \{(\theta_1,\theta_2) | \, \theta_1+\theta_2\le 1, \theta_1\ge0, \theta_2 \ge 0\}.$ Let $$v_d(\theta_1,\theta_2) = \max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0).$$
 Then, $v_d(\theta_1,\theta_2) = 0$ $\forall \theta\in\mathcal{D}$. Otherwise, $v_d$ is positive.  The fully constrained density of $\theta$ given that $\theta\in \mathcal{D}$ is then,
 \begin{align*}
-\pi_\mathcal{D}(\theta_1,\theta_2)&= \pi(\theta_1,\theta_2|\theta\in\mathcal{D})= \frac{\exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg)\mathbbm{1}_\mathcal{D}(\theta)}{\int_0^1\int_0^{1-\theta_1}\exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg)d\theta_2d\theta_1}\\
-&\propto \exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg) \mathbbm{1}_{\{\theta_1+\theta_2\le 1\}\cap \{\theta_1 \in [0,\infty)\}\cap \{\theta_2\in[0,\infty)\}} .
+\pi_\mathcal{D}(\theta_1,\theta_2)= \pi(\theta_1,\theta_2|\theta\in\mathcal{D})&= \frac{\exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)\mathbbm{1}_\mathcal{D}(\theta)}{\int_0^1\int_0^{1-\theta_1}\exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)d\theta_2d\theta_1}\\
+&\propto \exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg) \mathbbm{1}_{\{\theta_1+\theta_2\le 1\}\cap \{\theta_1 \in [0,\infty)\}\cap \{\theta_2\in[0,\infty)\}} .
 \end{align*}
 Alternatively, the relaxed density, $\tilde{\pi}_\lambda(\theta)$, is
-\begin{align*}
-\tilde{\pi}_\lambda(\theta) &=\frac{\exp\bigg(-\frac{||\theta||^2}{2\sigma^2} - \frac{1}{\lambda}v_d(\theta) \bigg)}{\int_{\mathbb{R}^2} \exp\bigg(-\frac{||\theta||^2}{2\sigma^2}-\frac{1}{\lambda}v_d(\theta) \bigg)d\theta_2d\theta_1}\\
-& \propto \exp\bigg(-\frac{||\theta||^2}{2\sigma^2}\bigg)\exp\bigg( - \frac{1}{\lambda}[\max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0)] \bigg).
-\end{align*}
+\begin{equation}
+\begin{split}
+\tilde{\pi}_\lambda(\theta) &=\frac{\exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2} - \frac{1}{\lambda}v_d(\theta) \bigg)}{\int_{\mathbb{R}^2} \exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}-\frac{1}{\lambda}v_d(\theta) \bigg)d\theta_2d\theta_1}\\
+& \propto \exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)\exp\bigg( - \frac{1}{\lambda}[\max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0)] \bigg).
+\end{split}
+\label{EQ:Relaxed_Density_Bivariate_Normal_Triangle}
+\end{equation}
+Figure \ref{FIG:Bivariate_Normal_Triangle_Constraint_Relaxation} depicts a few plots of the relaxed density as $\lambda$ decreases.  For $\lambda=10^{-4}$ the constrained triangular region is clear. However, the relaxed density still places some small probability outside of the constrained region. This can be seen by observing the smooth decrease in the density near the boundary of the triangle.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=1\textwidth,natwidth=610,natheight=642]{Bivariate_Normal_Triangle_Constraint.jpg}
+\end{center}
+\caption{The relaxed distribution from Eq. \eqref{EQ:Relaxed_Density_Bivariate_Normal_Triangle} for decreasing is shown above when $\mu = [0.3, 0.3]^T$ and $\sigma^2 = 1/10.$  For $\lambda=1$, the distribution is similar to the unconstrained Gaussian.  As $\lambda$ decreases, the relaxation is reduced and the triangular constrained region becomes more apparent.}
+\label{FIG:Bivariate_Normal_Triangle_Constraint_Relaxation}
+\end{figure}
+In Section \ref{SEC:Gaussian_Triangle_Constraint_Sampling}, we return to this example with a focus on using the relaxed density for sampling.
+
+
 \subsection{Measure zero constraints}
 \label{SEC:Zero_Measure_Methods}
+
+In this subsection, we will focus on the case where $\mathcal{D}$ is a measure zero submanifold of $\mathcal{R}$, i.e. $\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R}(\theta)=0$, where $\dim(\mathcal{D} = d < r =\dim(\mathcal{R})$. As such, the construction of the conditional distribution of $\theta|\theta \in \mathcal{D}$ must be handled carefully. One cannot simply re-normalize by a factor of $\big[\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R}(\theta)\big]^{-1}.$  Instead, we propose to construct a \emph{regular conditional probability} (r.c.p.) which is consistent with unconstrained probability density $\pi_\mathcal{R}.$  However, it is more natural to first discuss the construction of the relaxed density.
+
+Similar to the approach of the previous section, we want a function $\nu_\mathcal{D}(\theta)$ which measures the distance from $\theta$ to $\mathcal{D}.$ If $\theta\in\mathcal{D}$, then $\nu_\mathcal{D}=0$. Otherwise, it is non-zero.  For technical reasons, discussed in Section \ref{SEC:Zero_measure_theory}, $\nu_\mathcal{D}$ is a map from $\mathcal{R}$ to $\mathbb{R}^{r-d}.$ Thus, $||\nu_\mathcal{D}(\theta)||_1 = 0$ implies that $\theta \in \mathcal{D}$ whereas, $||\nu_\mathcal{D}(\theta)||_1 >0$ implies that $\theta\notin\mathcal{D}.$ To construct the relaxed density we will multiply the unconstrained density by a factor of $\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)$. The relaxed density, $\tilde{\pi}_\lambda(\theta)$, is 
+\begin{equation}
+\begin{split}
+\tilde{\pi}_\lambda(\theta) &= \dfrac{\mathcal{L}(y;\theta) \pi_\mathcal{R}(\theta)\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)}{\int_\mathcal{R} \mathcal{L}(y;\theta) \pi_\mathcal{R}(\theta)\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg) d\mu_\mathcal{R}(\theta) }
+& \propto \mathcal{L}(y;\theta) \pi_\mathcal{R}(\theta)\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)
+\end{split}
+\end{equation}
+Much like the positive measure case, $\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)$ converges pointwise to $\mathbbm{1}_\mathcal{D}(\theta).$ As $\lambda\to0^+,$ this multiplicative factor is concentrating the probability to a smaller shell around the constrained space.
+
+
+
+We turn now to the regular conditional probability. A complete definition of the r.c.p. is given in the appendix. For now, the following intuition is sufficient.   While $\mathcal{D}$ has zero volume (i.e. zero Lebesque measure), it will have a positive, possibly infinite $d$-dimensional `surface area.' The r.c.p. allow us to construct a density with respect to this `surface area' which is consistent with the original unconstrained density. More rigorous details regarding the constrained, the construction of the regular conditional probability, and relevant convergence results are contained in Section \ref{SEC:Zero_measure_theory}.  For the moment, we state the regular conditional probability
+\begin{equation}
+\begin{split}
+\pi_\mathcal{D}(\theta) = \pi(\theta| \theta \in \mathcal{D}) 
+% =  \dfrac{\frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu_\mathcal{D}(\theta))}\mathbbm{1}_\mathcal{D}(\theta) } {\int_\mathcal{D} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu_\mathcal{D}(\theta))} d\bar{\mathcal{H}}^d(\theta)} 
+&\propto \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu_\mathcal{D}(\theta))}\mathbbm{1}_\mathcal{D}(\theta) .
+\end{split}
+\end{equation}
+Here $J(\nu_\mathcal{D}(\theta)) = \sqrt{(D\nu_\mathcal{D})'(D\nu_\mathcal{D})}$ is the $d$-dimensional Jacobian of $\nu_\mathcal{D}$ which we assume is positive.  The density is defined with respect to the normalized $d$-dimensional Hausdorff measure, $\bar{\mathcal{H}}^d$, which corresponds to $d$-dimensional surface area.  
+
+As a result, the expectation of $g(\theta)$ given $\theta\in\mathcal{D}$ is $$E[g(\theta) | \theta \in \mathcal{D}] = \dfrac{\int_\mathcal{D} g(\theta) \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu_\mathcal{D}(\theta))}d\bar{\mathcal{H}}^d(\theta) } {\int_\mathcal{D} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu_\mathcal{D}(\theta))} d\bar{\mathcal{H}}^d(\theta)}. $$
+Again, one can interpret the integration akin to the $d$-dimensional surface area of $\mathcal{D}.$ 
+
+Since the relaxed density places high probability on a shell surrounding $\mathcal{D}$, it is not unreasonable to expect that $$E[g|\theta\in\mathcal{D} ] = \int_\mathcal{D} g(\theta) \pi_\mathcal{D} d\bar{\mathcal{H}}^d(\theta) \approx \int_\mathcal{R} g(\theta) \tilde{\pi}_\lambda(\theta) d\mu_\mathcal{R}(\theta) = E_{\tilde{\Pi}}[g]$$
+when $\lambda$ is small.
+
+
 
 
 \subsubsection{Example: von Mises--Fisher on Unit Circle}
 
+\begin{figure}
+\begin{center}
+\includegraphics[width=1\textwidth]{Bivariate_Normal_Unit_Circle_Constraint.jpg}
+\caption{}
+\label{FIG:Bivariate_Normal_Unit_Circle_Constraint}
+\end{center}
+\end{figure}
 
 \section{Analytical Results}
 \subsection{Positive measure constrained spaces}
@@ -982,6 +1035,7 @@ supporting our previous result, we run simulations on several toy examples
  in this section.
    
 \subsection{Example: Gaussian  under Linear Inequality}
+\label{SEC:Gaussian_Triangle_Constraint_Sampling}
 In this example, we consider a linear model under a system of linear inequality constraints. Although a
 recent work proposed a new customized prior with exhibits posterior conjugacy \citep{danaher2012minkowski},
 via the \core\, framework, one can make use of a general Gaussian prior. 
