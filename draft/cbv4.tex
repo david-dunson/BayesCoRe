@@ -49,6 +49,7 @@
 
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{array}
 
 %\usepackage{mhequ}
 \newcommand{\be}{\begin{equation}\begin{aligned}}
@@ -757,7 +758,7 @@ Rigorous details for the validity of this approximation, a suitable class of fun
 \subsubsection{Example: Gaussian  under Linear Inequality}
 
 
-Suppose that $\theta = (\theta_1,\theta)$ follows a bivariate Gaussian with mean $\mu \in\mathbb{R}^2$ and covariance matrix, $\Sigma = \sigma^2 I_2$, $\sigma > 0$. Furthermore, suppose $\theta$ is constrained to the triangular region $\mathcal{D} = \{(\theta_1,\theta_2) | \, \theta_1+\theta_2\le 1, \theta_1\ge0, \theta_2 \ge 0\}.$ Let $$v_d(\theta_1,\theta_2) = \max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0).$$
+Suppose that $\theta = (\theta_1,\theta_2)$ follows a bivariate Gaussian with mean $\mu \in\mathbb{R}^2$ and covariance matrix, $\Sigma = \sigma^2 I_2$, $\sigma > 0$. Furthermore, suppose $\theta$ is constrained to the triangular region $\mathcal{D} = \{(\theta_1,\theta_2) | \, \theta_1+\theta_2\le 1, \theta_1\ge0, \theta_2 \ge 0\}.$ Let $$v_d(\theta_1,\theta_2) = \max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0).$$
 Then, $v_d(\theta_1,\theta_2) = 0$ $\forall \theta\in\mathcal{D}$. Otherwise, $v_d$ is positive.  The fully constrained density of $\theta$ given that $\theta\in \mathcal{D}$ is then,
 \begin{align*}
 \pi_\mathcal{D}(\theta_1,\theta_2)= \pi(\theta_1,\theta_2|\theta\in\mathcal{D})&= \frac{\exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)\mathbbm{1}_\mathcal{D}(\theta)}{\int_0^1\int_0^{1-\theta_1}\exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)d\theta_2d\theta_1}\\
@@ -786,7 +787,7 @@ In Section \ref{SEC:Gaussian_Triangle_Constraint_Sampling}, we return to this ex
 \subsection{Measure zero constraints}
 \label{SEC:Zero_Measure_Methods}
 
-In this subsection, we will focus on the case where $\mathcal{D}$ is a measure zero submanifold of $\mathcal{R}$, i.e. $\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R}(\theta)=0$, where $\dim(\mathcal{D} = d < r =\dim(\mathcal{R})$. As such, the construction of the conditional distribution of $\theta|\theta \in \mathcal{D}$ must be handled carefully. One cannot simply re-normalize by a factor of $\big[\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R}(\theta)\big]^{-1}.$  Instead, we propose to construct a \emph{regular conditional probability} (r.c.p.) which is consistent with unconstrained probability density $\pi_\mathcal{R}.$  However, it is more natural to first discuss the construction of the relaxed density.
+In this subsection, we will focus on the case where $\mathcal{D}$ is a measure zero subset of $\mathcal{R}$, i.e. $\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R}(\theta)=0$. In particular, we assume $\mathcal{D}$ is a submanifold of $\mathcal{R}$ such that $\dim(\mathcal{D} = d < r =\dim(\mathcal{R})$. As such, the construction of the conditional distribution of $\theta|\theta \in \mathcal{D}$ must be handled carefully. One cannot simply re-normalize by a factor of $\big[\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R}(\theta)\big]^{-1}.$  Instead, we propose to construct a \emph{regular conditional probability} (r.c.p.) which is consistent with unconstrained probability density $\pi_\mathcal{R}.$  However, it is more natural to first discuss the construction of the relaxed density.
 
 Similar to the approach of the previous section, we want a function $\nu_\mathcal{D}(\theta)$ which measures the distance from $\theta$ to $\mathcal{D}.$ If $\theta\in\mathcal{D}$, then $\nu_\mathcal{D}=0$. Otherwise, it is non-zero.  For technical reasons, discussed in Section \ref{SEC:Zero_measure_theory}, $\nu_\mathcal{D}$ is a map from $\mathcal{R}$ to $\mathbb{R}^{r-d}.$ Thus, $||\nu_\mathcal{D}(\theta)||_1 = 0$ implies that $\theta \in \mathcal{D}$ whereas, $||\nu_\mathcal{D}(\theta)||_1 >0$ implies that $\theta\notin\mathcal{D}.$ To construct the relaxed density we will multiply the unconstrained density by a factor of $\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)$. The relaxed density, $\tilde{\pi}_\lambda(\theta)$, is 
 \begin{equation}
@@ -795,7 +796,7 @@ Similar to the approach of the previous section, we want a function $\nu_\mathca
 & \propto \mathcal{L}(y;\theta) \pi_\mathcal{R}(\theta)\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)
 \end{split}
 \end{equation}
-Much like the positive measure case, $\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)$ converges pointwise to $\mathbbm{1}_\mathcal{D}(\theta).$ As $\lambda\to0^+,$ this multiplicative factor is concentrating the probability to a smaller shell around the constrained space.
+Much like the positive measure case, $\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)$ converges pointwise to $\mathbbm{1}_\mathcal{D}(\theta).$ As $\lambda\to0^+,$ this multiplicative factor is concentrating the probability to a small layer around the constrained space.
 
 
 
@@ -819,11 +820,39 @@ when $\lambda$ is small.
 
 
 \subsubsection{Example: von Mises--Fisher on Unit Circle}
+Again, suppose that $\theta = (\theta_1,\theta_2)$ follows a bivariate Gaussian with mean $\mu \in\mathbb{R}^2$ and covariance matrix, $\Sigma = \sigma^2 I_2$, $\sigma > 0$. In this case, we consider the case where $\theta$ is constrained to the unit circle $\mathcal{D} = \{(\theta_1,\theta_2) | \, \theta_1^2+\theta_2^2 = 1\}.$  Since the unit circle is one-dimensional and $\theta = (\theta_1,\theta_2)$ is two-dimensional, the constraint function must be (2-1)=1-dimensional. Let $$v_d(\theta_1,\theta_2) = \theta_1^2+\theta_2^2 -1.$$
+Then, $v_d(\theta_1,\theta_2) = 0$ $\forall \theta\in\mathcal{D}$. Otherwise, $v_d$ is non-zero.  Furthermore, $J(\nu_\mathcal{D}(\theta)) = 2||\theta_||_2 = 2$ for $\theta\in\mathcal{D}.$ The fully constrained density of $\theta$ given that $\theta\in \mathcal{D}$ is then,
+\begin{align*}
+\pi_\mathcal{D}(\theta_1,\theta_2)= \pi(\theta_1,\theta_2|\theta\in\mathcal{D})&= \frac{\exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)\mathbbm{1}_\mathcal{D}(\theta)}{\int_\mathcal{D} \exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)d\bar{\mathcal{H}}^{1}(\theta) }\\
+&\propto \exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg) \mathbbm{1}_{\theta_2^1 + \theta_2^2 = 1} .
+\end{align*}
+This density should be interpreted with respect to the normalized Hausdorff-1 measure on the unit circle which coincides with arclength in this case.
+
+It is more natural to parameterize the circle $(\theta_1,\theta_2) = (\cos \phi, \sin \phi) $ for $\phi \in [0,2\pi).$ The density of angle $\phi$ is 
+\begin{equation*}
+\pi_\phi(\phi) = \pi_\mathcal{D}(\cos \phi,\sin\phi) \propto \exp\bigg( \frac{r}{\sigma^2} \cos(\phi -\varphi) \bigg).
+\end{equation*}
+where $\mu = r(\cos \varphi,\sin \varphi).$ One should observe that this is the von-Mises--Fisher distribution on the unit circle with location $\varphi$ and concentration $r/\sigma^2$.  
+
+Alternatively, the relaxed density, $\tilde{\pi}_\lambda(\theta)$, is
+\begin{equation}
+\begin{split}
+\tilde{\pi}_\lambda(\theta) &=\frac{\exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2} - \frac{1}{\lambda}|v_d(\theta)| \bigg)}{\int_{\mathbb{R}^2} \exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}-\frac{1}{\lambda}|v_d(\theta)| \bigg)d\theta_2d\theta_1}\\
+& \propto \exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)\exp\bigg( - \frac{1}{\lambda}|\theta_1^1+\theta_2^2-1| \bigg).
+\end{split}
+\label{EQ:Relaxed_Density_Bivariate_Unit_Circle}
+\end{equation}
+
+Figure \ref{FIG:Bivariate_Normal_Unit_Circle_Constraint} depicts a few plots of the relaxed density as $\lambda$ decreases.  For $\lambda=10^{-2}$ the constraint along the circle is clear. While the relaxed density still places some small probability outside of the constrained region, the rightmost plot looks similar to the von-Mises distribution on the circle plotted in two dimensions.
+
+An analogous example in $\mathbb{R}^3$ is considered in Section 5. In this case, we demonstrate how one can use \core\, to generate samples from a von-Mises--Fisher distribution on $S^2$. Furthermore, we show that \core\, can be used to construct a multivariate $t$-distribution on the sphere. 
+
+
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=1\textwidth]{Bivariate_Normal_Unit_Circle_Constraint.jpg}
-\caption{}
+\caption{The relaxed distribution from Eq. \eqref{EQ:Relaxed_Density_Bivariate_Unit_Circle} for decreasing $\lambda$ is shown above when $\mu = (1/\sqrt{2},1/\sqrt{2})$ and $\sigma^2 = 1/25.$ This corresponds to a von-Mises distribution with location $\pi/4$ and concentration 1/25. As $\lambda$ decreases, the relaxation is reduced and the circular constraint becomes clear.}
 \label{FIG:Bivariate_Normal_Unit_Circle_Constraint}
 \end{center}
 \end{figure}
@@ -879,6 +908,51 @@ In general, one avenue for mitigating numerical difficulties which may arise whe
 
 \subsection{Measure zero constrained spaces}
 \label{SEC:Zero_measure_theory}
+
+We will assume $\mathcal{D}$ can be defined implicitly as the solution set to a system of $s$ equations,  $\{\nu_j(\theta)=0\}_{j=1}^s$, where 
+\begin{itemize}
+\item[(a)] $\nu_j:\mathcal{R}\to\mathbb{R}$ is Lipschitz continuous,
+\item[(b)] $v_j(\theta)=0$ only for $\theta\in\mathcal{D}$,
+\item[(c)] for $k=1,\dots, s$, the preimage $v_k^{(-1)}(x)$ is a co-dimension 1 sub-manifold of $\mathcal{R}$ for $\mu_\mathbb{R}$-a.e. $x$ in the range of $\nu_k$,
+\item[(d)] $\nu_j^{(-1)}(0)$ and $\nu_k^{(-1)}(0)$ intersect transversally for $1\le j<k\le s.$
+\end{itemize}
+Henceforth, we refer to the functions $\nu_1,\dots,\nu_s$ as constraint functions. In this case, if we let $\nu:\mathcal{R}\to \mathbb{R}^s$ be the vector-valued function $\nu(\theta) = [\nu_1(\theta),\dots,\nu_s(\theta)]^T$, then $\mathcal{D} = \ker(v)$ is a co-dimension $s$ submanifold of $\mathcal{R}$ for $\mu_{\mathbb{R}^s}$-a.e. $x$ the range of $v.$  Recall, the ambient space, $\mathcal{R}$, is $r-$dimensional. Therefore, it follows that $\mathcal{D}$ is a $(r-s)-$dimensional submanifold of $\mathcal{R}$, and it is natural to discuss the $(r-s)$-dimensional surface area of $\mathcal{D}.$
+
+The existence and uniqueness of the constraints must be addressed.  In the case where $\mathcal{D}$ is specified by a collection of equality constraints -- such as the probability simplex or the Stiefel manifold for example--  it is not difficult to find a suitable set of constraint functions. Table \ref{TABLE:Equality_constraints_examples} contains a number of examples of common constrained spaces and appropriate choices of constraint functions.
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{| c | m{4 cm} | c | c | m{6cm} |}
+\hline
+$\mathcal{R}$ & $\mathcal{D}$ & $\dim(R)$ & $\dim(D)$ & Constraint \leo{functions} \\
+\hline
+$[0,1]^r$ & Probability simplex, $\Lambda$ & $r$ & $r-1$ & $\nu(\theta) = \sum(\theta) -1$ \\
+\hline
+$\mathbb{R}^r$ & Line, span$\{\vec{u}\}$ \newline $\vec{u}\ne\vec{0}$ & $r$ & $1$ & $\nu_j(\vec{\theta}) = \vec{\theta}\,^T\vec{b}_j$ \newline $\{\vec{b}_1,\dots,\vec{b}_{r-1}\}$ a basis for span$\{\vec{u}\}^\perp$ \\
+\hline
+$\mathbb{R}^r$ & Unit sphere, $\mathbb{S}^{r-1}$ & $r$ & $r-1$ & $\nu(\theta) = \arctan(||\theta||^2 -1)$ \\
+\hline
+$\mathbb{R}^{n\times k}$ & Stiefel manifold, $V_k(\mathbb{R}^n)$ 
+\newline $\theta = [\vec{\theta}_1 | \dots | \vec{\theta}_k], \, \vec{\theta}_j \in \mathbb{R}^n$ & $nk$ & $nk - \frac{1}{2}k(k+1)$ & $\nu_{i,j}(\theta) = \arctan( \vec{\theta}_i'\vec{\theta}_j- \delta_{i,j})$ \newline $1\le i \le j \le k$ and $\delta_{i,j} = \mathbbm{1}_{i=j}$ \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Table of constraints for some commonly used constrained spaces.}
+\label{TABLE:Equality_constraints_examples}
+\end{table}
+
+In the more difficult situation where equality constraints are not given, finding $\{\nu_j\}_{j=1}^s$ may be very difficult. For the moment, we will assume that one can construct sufficiently accurate numerical approximations perhaps through cubic-splines or Fourier series, so that we may ignore the issue of existence. 
+
+With regards to uniqueness, unfortunately, we note that the constraints cannot be unique in any case.  For example, given any constraints $\{\nu_{j}\}_{j=1}^s$ which satisfy (a)-(d) and non-zero constants $\{\lambda_j\}_{j=1}^s$, the constraints $\{\lambda_j \nu_j\}_{j=1}^s$ will also satisfy (a)-(d). It is then natural to wonder if one can find an optimal choice of the  constraints. An optimal choice will depend largely on the properties of the constrained distribution that one wishes to estimate making the choice of $\{\nu_j\}_{j=1}^s$ context dependent.  As such, we will address this issue in the examples contained in later sections. For now, let us proceed assuming that a suitable choice of $\{\nu_j(\theta)\}_{j=1}^s$ has been made.
+
+
+
+
+
+
+
+
+
+
 
 \begin{theorem}
 \label{THM:RCP_construction}
