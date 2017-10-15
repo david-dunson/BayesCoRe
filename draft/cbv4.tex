@@ -45,6 +45,7 @@
 \newtheorem{corollary}{Corollary}
 \newtheorem{remark}{Remark}
 \newtheorem{example}{Example}
+\newtheorem*{Hausdorff_def}{Definition - Hausdorff Measure}
 
 
 \usepackage{algorithm}
@@ -691,13 +692,9 @@ applications.
 %
 %The first part shows the asymptotic accuracy of the approximation. The second part shows the rate with non-asymptotic $\lambda$ under mild assumptions. The interpretation for these assumptions is that if in a small space expansion of $\mc D$, defined as $\{\theta^*: v(\theta^*)\in [0,t] \}$, the marginal density of $v(\theta^*)$ and the conditional expectation of Lipschitz functions are bounded $k_1,k_2= \mc O(1)$, and the expected norm of Lipschitz function are smaller than a bound that grows near exponentially $k_3 = \mc O(\lambda \exp(t/\lambda))$, then the distance $W_1(\Pi,\tilde\Pi)$ converges to $0$ in $\mc O(\lambda)$ as $\lambda\rightarrow 0$.
 
-\alex{
+
 \section{Constrained Relaxation Methodology}
-Suppose $\theta$ is an $\mathcal{R}$-valued random variable with $\dim(\mathcal{R})=r<\infty$ and that $\theta$ is subject to some constraints which restrict it to a subset $\mathcal{D} \subset \mathcal{R}$. In the Bayesian setting, of principle interest here, $\theta$ is a parameter which is known to satisfy some constraints such that it resides in $\mathcal{D}$.  In this case, a common approach is to choose a prior distribution with support $\mathcal{D}.$ However, aside from some special cases, a suitable choice of prior may be limited.
- \leo{In my opinion, constructing/choosing prior for constrained space
-is a separate issue, which does not involve  `relaxation', so perhaps we
-can have a short section before and motivated for more computational stuffs.  }
-  Moreover, sampling $\theta$ from the constrained space, when possible, may be difficult or computationally intractable.
+Suppose $\theta$ is an $\mathcal{R}$-valued random variable with $\dim(\mathcal{R})=r<\infty$ and that $\theta$ is subject to some constraints which restrict it to a subset $\mathcal{D} \subset \mathcal{R}$. In the Bayesian setting, of principle interest here, $\theta$ is a parameter where constraints arise from some given prior information.  General approaches for sampling from the posterior in this case, are limited. Typically, it is necessary to find a reparameterization of $\theta$ or to build specialty sampling schemes. Thus, sampling $\theta$ from the constrained space, outside of some special cases is often difficult or computationally intractable.
 
 One potential strategy to alleviate this issue is to construct an approximate distribution which places a high probability on $\mathcal{D}$ but has support in $\mathcal{R}$ by `relaxing' the constraints.   As a motivating example, consider the case where $\theta$ has density $\pi_\mathcal{R}(\theta)$ with support $\mathcal{R}$ and $\mathcal{D}$ is a measureable subset with positive measure.  The posterior density of $\theta$ given data $Y$ and $\theta \in \mathcal{D}$ is, $$\pi(\theta | \theta \in \mathcal{D}, Y) \propto \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_\mathcal{D} (\theta)$$ with likelihood function $\mathcal{L}(\theta;Y)$, and data $Y$. 
 As an approximation, suppose we used the density 
@@ -710,16 +707,13 @@ Note that $\mathbbm{1}_\mathcal{D}(\theta)$ is the pointwise limit of $\exp\big(
 
 These observations motivate a number of questions about \core\, which we investigate in the article.  (i) For what types of distributions and constraints is CORE suitable? (ii) Is there a general approach for constructing the `relaxed' constraint? (iii) How well do samples from the relaxed constraint represent those from the fully conditioned distribution? (iv) How does the approximation depend on the tuning parameter $\lambda$? 
 
-The answers to (ii) - (iv) depend largely upon (i).  Therefore, beginning with (i), we assume $\theta$ is a continuous random variable (e.g. $\mathcal{R}$ is $\mathcal{R}$, $[0,\infty)^d$, $\mathbb{R}^{n\times k}$) and $\theta$ has an unconstrained prior density $\pi_\mathcal{R}(\theta)$ which is absolutely continuous with respect to Lebesque measure on $\mathcal{R}$ hereby denoted as $\mu_\mathcal{R}$.  We investigate two general types of constraints. 
+The answers to (ii) - (iv) depend largely upon (i).  Therefore, beginning with (i), we assume $\theta$ is a continuous random variable (e.g. $\mathcal{R}$ is $\mathcal{R}$, $[0,\infty)^d$, $\mathbb{R}^{n\times k}$) and $\theta$ has an unconstrained distribution, $\pi_\mathcal{R}(\theta)$,  which is absolutely continuous with respect to Lebesque measure on $\mathcal{R}$ hereby denoted as $\mu_\mathcal{R}$.  We investigate two general types of constraints. 
 
 
 
-First, we consider the simpler case where $\mathcal{D}$ has positive measure, i.e. $\int_\mathcal{D} \pi(\theta) \mu_\mathcal{R}(d\theta) >0.$ \leo{Generally,} Inequality constraints (e.g. $a_i < \theta_i < b_i$, $a^T\theta < 0$, $||\theta||_2^2 < 1$) fall into this category. The analysis in this case will be more straightforward as we can follow traditional approaches to conditional probability. Here, the construction of the relaxed constraint will follow the form of Eq. (\ref{EQ:Rel_Dens_Motivation}).
+First, we consider the simpler case where $\mathcal{D}$ has positive measure, i.e. $\int_\mathcal{D} \pi(\theta) \mu_\mathcal{R}(d\theta) >0.$ Generally, inequality constraints (e.g. $a_i < \theta_i < b_i$, $a^T\theta < 0$, $||\theta||_2^2 < 1$) fall into this category. The analysis in this case will be more straightforward as we can follow traditional approaches to conditional probability. Here, the construction of the relaxed constraint will follow the form of Eq. (\ref{EQ:Rel_Dens_Motivation}).
 
-Secondly, we consider the case where $\mathcal{D}$ is a measure zero subset of $\mathcal{R}$. In particular, we restrict ourselves to the setting where $\mathcal{D}$ can be represented implicitly as the solution set of a consistent system of equations $\{\nu_i(\theta) = 0\}_{i=1}^s$ so that $\mathcal{D} =\{\theta | v_j(\theta) =0, \, j = 1, \dots,s\}$ is a co-dimension $s$ submanifold of $\mathcal{R}$.  For a given constrained space, $\mathcal{D}$, there may be multiple choices of the constraints $v_i$. However, there are technical requirements, discussed in Section \ref{SEC:Zero_measure_theory}, which limit the potential choice of the constraint questions \leo{perhaps avoid cross-referencing
-later section, by simplifying this sentence
-to `There are some limitations on the types of constraint one could use,
-however we note that ...'}. 
+Secondly, we consider the case where $\mathcal{D}$ is a measure zero subset of $\mathcal{R}$. In particular, we restrict ourselves to the setting where $\mathcal{D}$ can be represented implicitly as the solution set of a consistent system of equations $\{\nu_i(\theta) = 0\}_{i=1}^s$ so that $\mathcal{D} =\{\theta | v_j(\theta) =0, \, j = 1, \dots,s\}$ is a co-dimension $s$ submanifold of $\mathcal{R}$.  Additional requirement for the constraint functions are discussed in Section \ref{SEC:Zero_measure_theory}. 
 
 While these criteria may seem restrictive, we note that many common constraints (e.g. $||\theta||^2 = 1$, $\sum_i \theta_i = 1$, $\theta \in V_k(\mathbb{R}^n)$ where $V_k(\mathbb{R}^n$) is the Stiefel manifold) fall into this category.  In this case, the conditional distribution of $\theta$ given $\theta \in \mathcal{D}$, must be handled with care since $\int_D \pi_R(\theta) d\mu_\mathcal{R} (\theta) =0$.  However, the requirement that $\mathcal{D}$ has codimension $s$ will serve two purposes.  First, it will make the construction of conditional distributions on $\mathcal{D}$ using the tools of geometric measure theory more intuitive.  Secondly, it will motivate a general strategy for choosing appropriate constraint equations and in constructing a relaxed density similar to (1). 
 
@@ -732,10 +726,10 @@ Prior to discussing rigorous details on the use of \core, we first review the  p
 
 \subsection{Positive measure constrained spaces}
 \label{SEC:Positive_measure_methods}
-In this subsection, we consider the case where $\mathcal{D}$ has positive measure.  As such, the constrained posterior density, $\pi_\mathcal{D},$ for $\theta|\theta \in \mathcal{D}$ and data $Y$ is 
+Consider the case where $\mathcal{D}$ has positive measure.  The constrained posterior density, $\pi_\mathcal{D},$ for $\theta|\theta \in \mathcal{D}$ and data $Y$ is 
 
 $$\pi_\mathcal{D}(\theta|Y) = \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\mathbbm{1}_\mathcal{D}(\theta)}{\int_\mathcal{D} \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)}\propto \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\mathbbm{1}_\mathcal{D}(\theta). $$
-This constrained density is absolutely continuous with respect to $\mu_\mathcal{R}$.  
+This constrained density is defined with respect to $\mu_\mathcal{R}$.  
 
 Suppose we approximate $\pi_\mathcal{D}$ with a relaxed density $$\tilde{\pi}_\lambda(\theta) = \mathcal{L}(\theta; Y) \frac{\mathcal{L}(\theta; Y)\pi_\mathcal{R}(\theta)\exp\big(-\frac{v_d(\theta)}{\lambda}\big)}{\int_{\mathcal{R}}\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\exp\big(-\frac{v_d(\theta)}{\lambda}\big) d\mu_\mathcal{R}(\theta)} \propto \mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta)\exp\big(-\frac{v_d(\theta)}{\lambda}\big)$$
 which is also absolutely continuous with respect to $\mu_\mathcal{R}.$
@@ -751,14 +745,14 @@ where $||\cdot||_k$ denotes the distance using the $k$-norm. Under this choice o
 v_d(z) = \inf_{x\in\mathcal{D}} \sqrt{(x-z)^T A (x-z)}\label{EQ:anistrophic_relaxation}
 \end{equation} for some positive definite matrix $A$. In this case, the relaxation is anistrophic, and can be viewed as a form of directional relaxation. This choice of distance, $v_d$, allows for a more detailed specification of the rates at which individual components of $\theta$ relax to $\mathcal{D}$.  In fact, if one seeks to constrain $\theta$ within a neighborhood containing $\mathcal{D}$, the matrix $A$ can be chosen to preferentially relax the constraint and limit deviations from $\mathcal{D}$ in certain directions.
 
-So long as $v_d(\theta)$ is zero for $\theta \in \mathcal{D}$ and positive for $\theta\in\mathcal{D}^c$, it follows that $\pi_\mathcal{D}$ is the pointwise limit of $\tilde{\pi}$ for $\mu_\mathcal{R}$ a.e. $\theta$ in $\mathcal{R}.$  It is natural to expect that estimates of $E[g(\theta)|\theta\in\mathcal{D}]$ can be obtained by using the relaxed posterior density, $\tilde{\pi}_\lambda$, rather than the fully constrained posterior density $\pi_\mathcal{D}$. For small $\lambda$, we anticipate
+So long as $v_d(\theta)$ is zero for $\theta \in \mathcal{D}$ and positive for $\theta\in\mathcal{D}^c$, it follows that $\pi_\mathcal{D}$ is the pointwise limit of $\tilde{\pi}_\lambda$ for $\mu_\mathcal{R}$ a.e. $\theta$ in $\mathcal{R}.$  It is natural to expect that estimates of $E[g(\theta)|\theta\in\mathcal{D}]$ can be obtained by using the relaxed posterior density, $\tilde{\pi}_\lambda$, rather than the fully constrained posterior density $\pi_\mathcal{D}$. For small $\lambda$, we anticipate
 $$\int_\mathcal{R} g(\theta)\tilde{\pi}_\lambda(\theta) d\mu_\mathcal{R}(\theta) \approx \int_\mathcal{D} g(\theta)\pi_\mathcal{D}(\theta) d\mu_\mathcal{R}(\theta) .$$
-Rigorous details for the validity of this approximation, a suitable class of functions for which it applies, and rates of convergence in $\lambda$ are contained in Section \ref{SEC:Positive_measure_theory}. For now, we discuss the implementation in the case of a bivariate normal distribution constrained to the region below a line in the $\theta_1-\theta_2$ plane.
+Rigorous details for the validity of this approximation, a suitable class of functions for which it applies, and rates of convergence in $\lambda$ are contained in Section \ref{SEC:Positive_measure_theory}. For now, we discuss the implementation in the case of a bivariate normal distribution constrained to a triangular region in the $\theta_1-\theta_2$ plane.
 
 \subsubsection{Example: Gaussian  under Linear Inequality}
 
 
-Suppose that $\theta = (\theta_1,\theta_2)$ follows a bivariate Gaussian with mean $\mu \in\mathbb{R}^2$ and covariance matrix, $\Sigma = \sigma^2 I_2$, $\sigma > 0$. Furthermore, suppose $\theta$ is constrained to the triangular region $\mathcal{D} = \{(\theta_1,\theta_2) | \, \theta_1+\theta_2\le 1, \theta_1\ge0, \theta_2 \ge 0\}.$ Let $$v_d(\theta_1,\theta_2) = \max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0).$$
+Suppose that $\theta = (\theta_1,\theta_2)$ follows a bivariate Gaussian with mean $\mu \in\mathbb{R}^2$ and covariance matrix, $\Sigma = \sigma^2 I_2$, $\sigma > 0$, and that $\theta$  is constrained to the triangular region $\mathcal{D} = \{(\theta_1,\theta_2) | \, \theta_1+\theta_2\le 1, \theta_1\ge0, \theta_2 \ge 0\}.$ Let $$v_d(\theta_1,\theta_2) = \max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0).$$
 Then, $v_d(\theta_1,\theta_2) = 0$ $\forall \theta\in\mathcal{D}$. Otherwise, $v_d$ is positive.  The fully constrained density of $\theta$ given that $\theta\in \mathcal{D}$ is then,
 \begin{align*}
 \pi_\mathcal{D}(\theta_1,\theta_2)= \pi(\theta_1,\theta_2|\theta\in\mathcal{D})&= \frac{\exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)\mathbbm{1}_\mathcal{D}(\theta)}{\int_0^1\int_0^{1-\theta_1}\exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)d\theta_2d\theta_1}\\
@@ -781,15 +775,15 @@ Figure \ref{FIG:Bivariate_Normal_Triangle_Constraint_Relaxation} depicts a few p
 \caption{The relaxed distribution from Eq. \eqref{EQ:Relaxed_Density_Bivariate_Normal_Triangle} for decreasing is shown above when $\mu = [0.3, 0.3]^T$ and $\sigma^2 = 1/10.$  For $\lambda=1$, the distribution is similar to the unconstrained Gaussian.  As $\lambda$ decreases, the relaxation is reduced and the triangular constrained region becomes more apparent.}
 \label{FIG:Bivariate_Normal_Triangle_Constraint_Relaxation}
 \end{figure}
-In Section \ref{SEC:Gaussian_Triangle_Constraint_Sampling}, we return to this example with a focus on using the relaxed density for sampling.
+In Section \ref{SEC:Gaussian_Triangle_Constraint_Sampling}, we return to this example and use the relaxed density to sample.
 
 
 \subsection{Measure zero constraints}
 \label{SEC:Zero_Measure_Methods}
 
-In this subsection, we will focus on the case where $\mathcal{D}$ is a measure zero subset of $\mathcal{R}$, i.e. $\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R}(\theta)=0$. In particular, we assume $\mathcal{D}$ is a submanifold of $\mathcal{R}$ such that $\dim(\mathcal{D} = d < r =\dim(\mathcal{R})$. As such, the construction of the conditional distribution of $\theta|\theta \in \mathcal{D}$ must be handled carefully. One cannot simply re-normalize by a factor of $\big[\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R}(\theta)\big]^{-1}.$  Instead, we propose to construct a \emph{regular conditional probability} (r.c.p.) which is consistent with unconstrained probability density $\pi_\mathcal{R}.$  However, it is more natural to first discuss the construction of the relaxed density.
+Alternatively, assume that $\mathcal{D}$ is a measure zero subset of $\mathcal{R}$, i.e. $\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R}(\theta)=0$. In particular, we assume $\mathcal{D}$ is a submanifold of $\mathcal{R}$ such that $\dim(\mathcal{D}) = d= < r =\dim(\mathcal{R})$. The codimension of $\mathcal{D}$ is $s=r-d$. As such, the construction of the conditional distribution of $\theta|\theta \in \mathcal{D}$ must be handled carefully. One cannot simply re-normalize by a factor of $\big[\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R}(\theta)\big]^{-1}.$  Instead, we propose to construct a \emph{regular conditional probability} (r.c.p.) which is consistent with unconstrained probability density $\pi_\mathcal{R}.$  However, it is more natural to first discuss the construction of the relaxed density.
 
-Similar to the approach of the previous section, we want a function $\nu_\mathcal{D}(\theta)$ which measures the distance from $\theta$ to $\mathcal{D}.$ If $\theta\in\mathcal{D}$, then $\nu_\mathcal{D}=0$. Otherwise, it is non-zero.  For technical reasons, discussed in Section \ref{SEC:Zero_measure_theory}, $\nu_\mathcal{D}$ is a map from $\mathcal{R}$ to $\mathbb{R}^{r-d}.$ Thus, $||\nu_\mathcal{D}(\theta)||_1 = 0$ implies that $\theta \in \mathcal{D}$ whereas, $||\nu_\mathcal{D}(\theta)||_1 >0$ implies that $\theta\notin\mathcal{D}.$ To construct the relaxed density we will multiply the unconstrained density by a factor of $\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)$. The relaxed density, $\tilde{\pi}_\lambda(\theta)$, is 
+Similar to the approach of the previous section, we want a function $\nu_\mathcal{D}(\theta)$ which measures the distance from $\theta$ to $\mathcal{D}.$ If $\theta\in\mathcal{D}$, then $\nu_\mathcal{D}=0$. Otherwise, it is non-zero.  For technical reasons, discussed in Section \ref{SEC:Zero_measure_theory}, $\nu_\mathcal{D}$ is a map from $\mathcal{R}$ to $\mathbb{R}^{r-d}.$ Thus, $||\nu_\mathcal{D}(\theta)||_1 = 0$ implies that $\theta \in \mathcal{D}$ whereas, $||\nu_\mathcal{D}(\theta)||_1 >0$ implies that $\theta\notin\mathcal{D}.$ To construct the relaxed density we will multiply the unconstrained density by a factor of $\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)$. Therefore, the relaxed density, denoted $\tilde{\pi}_\lambda(\theta)$, is 
 \begin{equation}
 \begin{split}
 \tilde{\pi}_\lambda(\theta) &= \dfrac{\mathcal{L}(y;\theta) \pi_\mathcal{R}(\theta)\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)}{\int_\mathcal{R} \mathcal{L}(y;\theta) \pi_\mathcal{R}(\theta)\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg) d\mu_\mathcal{R}(\theta) }
@@ -799,9 +793,9 @@ Similar to the approach of the previous section, we want a function $\nu_\mathca
 Much like the positive measure case, $\exp\bigg(-\frac{1}{\lambda}||\nu_\mathcal{D}(\theta)||\bigg)$ converges pointwise to $\mathbbm{1}_\mathcal{D}(\theta).$ As $\lambda\to0^+,$ this multiplicative factor is concentrating the probability to a small layer around the constrained space.
 
 
-
-We turn now to the regular conditional probability. A complete definition of the r.c.p. is given in the appendix. For now, the following intuition is sufficient.   While $\mathcal{D}$ has zero volume (i.e. zero Lebesque measure), it will have a positive, possibly infinite $d$-dimensional `surface area.' The r.c.p. allow us to construct a density with respect to this `surface area' which is consistent with the original unconstrained density. More rigorous details regarding the constrained, the construction of the regular conditional probability, and relevant convergence results are contained in Section \ref{SEC:Zero_measure_theory}.  For the moment, we state the regular conditional probability
+A complete definition of the r.c.p. is given in the appendix. For now, the following intuition is sufficient.   While $\mathcal{D}$ has zero volume (i.e. zero Lebesque measure), it will have a positive, possibly infinite $d$-dimensional `surface area.' The r.c.p. allow us to construct a density with respect to this surface area which is consistent with the original unconstrained posterior. More rigorous details regarding the constrained space, the construction of the regular conditional probability, and relevant convergence results are contained in Section \ref{SEC:Zero_measure_theory}.  For the moment, we state the regular conditional probability
 \begin{equation}
+\label{EQ:RCP_posterior}
 \begin{split}
 \pi_\mathcal{D}(\theta) = \pi(\theta| \theta \in \mathcal{D}) 
 % =  \dfrac{\frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu_\mathcal{D}(\theta))}\mathbbm{1}_\mathcal{D}(\theta) } {\int_\mathcal{D} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu_\mathcal{D}(\theta))} d\bar{\mathcal{H}}^d(\theta)} 
@@ -811,16 +805,16 @@ We turn now to the regular conditional probability. A complete definition of the
 Here $J(\nu_\mathcal{D}(\theta)) = \sqrt{(D\nu_\mathcal{D})'(D\nu_\mathcal{D})}$ is the $d$-dimensional Jacobian of $\nu_\mathcal{D}$ which we assume is positive.  The density is defined with respect to the normalized $d$-dimensional Hausdorff measure, $\bar{\mathcal{H}}^d$, which corresponds to $d$-dimensional surface area.  
 
 As a result, the expectation of $g(\theta)$ given $\theta\in\mathcal{D}$ is $$E[g(\theta) | \theta \in \mathcal{D}] = \dfrac{\int_\mathcal{D} g(\theta) \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu_\mathcal{D}(\theta))}d\bar{\mathcal{H}}^d(\theta) } {\int_\mathcal{D} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu_\mathcal{D}(\theta))} d\bar{\mathcal{H}}^d(\theta)}. $$
-Again, one can interpret the integration akin to the $d$-dimensional surface area of $\mathcal{D}.$ 
+Again, one can interpret the integration as a $d$-dimensional integral of surface area over $\mathcal{D}.$ 
 
 Since the relaxed density places high probability on a shell surrounding $\mathcal{D}$, it is not unreasonable to expect that $$E[g|\theta\in\mathcal{D} ] = \int_\mathcal{D} g(\theta) \pi_\mathcal{D} d\bar{\mathcal{H}}^d(\theta) \approx \int_\mathcal{R} g(\theta) \tilde{\pi}_\lambda(\theta) d\mu_\mathcal{R}(\theta) = E_{\tilde{\Pi}}[g]$$
 when $\lambda$ is small.
-
+Like the positive measure case, we provide details for the validity of this approximation, a suitable class of functions for which it applies, and rates of convergence in $\lambda$.. 
 
 
 
 \subsubsection{Example: von Mises--Fisher on Unit Circle}
-Again, suppose that $\theta = (\theta_1,\theta_2)$ follows a bivariate Gaussian with mean $\mu \in\mathbb{R}^2$ and covariance matrix, $\Sigma = \sigma^2 I_2$, $\sigma > 0$. In this case, we consider the case where $\theta$ is constrained to the unit circle $\mathcal{D} = \{(\theta_1,\theta_2) | \, \theta_1^2+\theta_2^2 = 1\}.$  Since the unit circle is one-dimensional and $\theta = (\theta_1,\theta_2)$ is two-dimensional, the constraint function must be (2-1)=1-dimensional. Let $$v_d(\theta_1,\theta_2) = \theta_1^2+\theta_2^2 -1.$$
+Again, suppose that $\theta = (\theta_1,\theta_2)$ follows a bivariate Gaussian with mean $\mu \in\mathbb{R}^2$ and covariance matrix, $\Sigma = \sigma^2 I_2$, $\sigma > 0$ which is constrained to the unit circle $\mathcal{D} = \{(\theta_1,\theta_2) | \, \theta_1^2+\theta_2^2 = 1\}.$  Since the unit circle is one-dimensional and $\theta = (\theta_1,\theta_2)$ is two-dimensional, the constraint function must be (2-1)=1-dimensional. Let $$v_d(\theta_1,\theta_2) = \theta_1^2+\theta_2^2 -1.$$
 Then, $v_d(\theta_1,\theta_2) = 0$ $\forall \theta\in\mathcal{D}$. Otherwise, $v_d$ is non-zero.  Furthermore, $J(\nu_\mathcal{D}(\theta)) = 2||\theta_||_2 = 2$ for $\theta\in\mathcal{D}.$ The fully constrained density of $\theta$ given that $\theta\in \mathcal{D}$ is then,
 \begin{align*}
 \pi_\mathcal{D}(\theta_1,\theta_2)= \pi(\theta_1,\theta_2|\theta\in\mathcal{D})&= \frac{\exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)\mathbbm{1}_\mathcal{D}(\theta)}{\int_\mathcal{D} \exp\bigg(-\frac{||\theta-\mu||^2}{2\sigma^2}\bigg)d\bar{\mathcal{H}}^{1}(\theta) }\\
@@ -845,7 +839,7 @@ Alternatively, the relaxed density, $\tilde{\pi}_\lambda(\theta)$, is
 
 Figure \ref{FIG:Bivariate_Normal_Unit_Circle_Constraint} depicts a few plots of the relaxed density as $\lambda$ decreases.  For $\lambda=10^{-2}$ the constraint along the circle is clear. While the relaxed density still places some small probability outside of the constrained region, the rightmost plot looks similar to the von-Mises distribution on the circle plotted in two dimensions.
 
-An analogous example in $\mathbb{R}^3$ is considered in Section 5. In this case, we demonstrate how one can use \core\, to generate samples from a von-Mises--Fisher distribution on $S^2$. Furthermore, we show that \core\, can be used to construct a multivariate $t$-distribution on the sphere. 
+An analogous example in $\mathbb{R}^3$ is considered in Section 5, in which we use \core\, to generate samples from a von-Mises--Fisher distribution on $S^2$. Furthermore, we show that \core\, can be used to generalize the von-Mises--Fisher distribution by constraining a multivariate $t$-distribution to the sphere. 
 
 
 
@@ -893,37 +887,51 @@ Thus, one can obtain sufficiently accurate estimates of $E[g|\theta\in\mathcal{D
 Suppose $g \in  \mathbb{L}^2(\mathcal{R}, \mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R})$, $v_d(\theta)$ has the form of Eq. (\ref{EQ:Isotrophic_relaxation}) with $k=2$, $\mathcal{D}$ has a piecewise smooth boundary, and that $\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)$ is continuous on a open neighborhood containing $\mathcal{D}$.  Then for $0<\lambda \ll 1,$
 $$ \bigg|E[g(\theta) |\theta\in\mathcal{D}] - E_{\tilde{\pi}_\lambda}[g(\theta)]   \bigg| = O(\sqrt{\lambda}).  $$
 \end{theorem}
-This theorem follows by applying the Cauchy-Schwartz inequality to the term in the numerator of the bound given in Lemma \ref{THM:positive_measure_approximation_error}.  One can attain a bound depending on the surface area of $\mathcal{D}$ when its is bounded.  More generally, if $\mathcal{D}$ is a unbounded subset of $\mathcal{R}$, one can make use of the co-area formula\cite{federer2014geometric, diaconis2013manifold}. The proofs of Lemma \ref{THM:positive_measure_approximation_error} and Theorem \ref{THM:Positive_measure_convergence_rate} are contained in Appendix \ref{APP:Positive_Measure_Convergence_Proofs}.
+This theorem follows by applying the Cauchy-Schwartz inequality to the term in the numerator of the bound given in Lemma \ref{THM:positive_measure_approximation_error}.  One can attain a bound depending on the surface area of $\mathcal{D}$ when it is bounded.  More generally, if $\mathcal{D}$ is a unbounded subset of $\mathcal{R}$, one can make use of the co-area formula \cite{federer2014geometric, diaconis2013manifold} which is stated in the next section. The proofs of Lemma \ref{THM:positive_measure_approximation_error} and Theorem \ref{THM:Positive_measure_convergence_rate} are contained in Appendix \ref{APP:Positive_Measure_Convergence_Proofs}.
 
-These results have some important implications both analytically and numerically.  First, in addition to point estimates, $E[\theta|\theta\in\mathcal{D}]$, it is possible to approximate probabilities $P(\theta \in \mathcal{F}|\theta \in \mathcal{D})$ and higher moments, e.g. $E[\Pi_j \theta_j^{k_j} |\theta\in\mathcal{D}]$, so long as these moments exist for the unconstrained density $\pi_\mathcal{R}.$ 
+These results have some important implications both analytically and numerically.  First, in addition to point estimates, $E[\theta|\theta\in\mathcal{D}]$, it is possible to approximate probabilities $P(\theta \in \mathcal{F}|\theta \in \mathcal{D})$ and higher moments, e.g. $E[\Pi_j \theta_j^{k_j} |\theta\in\mathcal{D}]$, so long as these moments exist for the unconstrained posterior density. 
 
 Secondly, these bounds demonstrate that the error in using the relaxed density to approximate $E[g(\theta)|\theta\in\mathcal{D}]$ is proportional to $\sqrt{\lambda} [\int_\mathcal{D}\mathcal{L}(\theta; Y)  \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\big]^{-2}$ although this rate may not be optimal.  In practice, $\lambda$ may need to be very small, particularly in the case where $0<P(\theta\in\mathcal{D})\ll 1.$ Of course, specific details of the scaling of $\bigg|E[g(\theta) |\theta\in\mathcal{D}] - E_{\tilde{\pi}_\lambda}[g(\theta)]   \bigg|$ will depend upon the choice of $\mathcal{D}$ and $v_d(\theta)$. In practice (see Sections 5), we have observed much better convergence rates.
 
-In general, one avenue for mitigating numerical difficulties which may arise when $\lambda \ll 1$ is needed is to use Eq. \ref{EQ:anistrophic_relaxation} to relax the density in directions where accuracy is less important.  Fortunately, both Lemma\ref{THM:positive_measure_approximation_error} and Theorem \ref{THM:Positive_measure_convergence_rate} will still hold when $A$ is positive definite since this corresponds to a simple re-scaling of the parameter space.
-
-
-
-
+In general, one avenue for mitigating numerical difficulties which may arise when $\lambda \ll 1$ is needed is to use Eq. \ref{EQ:anistrophic_relaxation} to relax the density in directions where accuracy is less important.  Fortunately, both Lemma \ref{THM:positive_measure_approximation_error} and Theorem \ref{THM:Positive_measure_convergence_rate} will still hold when $A$ is positive definite since this corresponds to a  linear re-scaling of the parameter space.
 
 
 \subsection{Measure zero constrained spaces}
 \label{SEC:Zero_measure_theory}
+Prior to investigating the application of \core\, in the measure zero case, we review a few important concepts of geometric measure theory which are used throughout this section.  First, recall the definition of Hausdorff measure.
+\begin{Hausdorff_def} Let $A\subset\mathcal{R}^r$. Fix $s \le r$. Then
+$$\mc H^{s}(A)= \underset{\delta\rightarrow 0}\lim \inf \bigg\{ \sum \left[{\text{diam}(S_i)}\right]^s: {A\subseteq \cup S_i, \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in S}\|x-y\|\bigg\}$$. 
+\end{Hausdorff_def}
+We denote the normalized Hausdorff measure as $\bar{\mc H}^{s}(A) =\frac{\Gamma(\frac{1}{2})^{s}}{2^s \Gamma(\frac{s}{2}+1)} \mc H^{s}(A)$. When $s=r$, Lebesgue and normalized Hausdorff measures coincide  $\mu_{\mathbb{R}^m}(A)= \bar{\mc H}^{s}(A)$ \citep{evans2015measure}.  Additionally, for a subset $\mathcal{D}$, there exists a unique, critical value $d$ such that $$\bar{\mathcal{H}}^s(\mathcal{D}) = \begin{cases} 0, & s > d  \\ \infty, & s < d. \end{cases}$$
+The critical value, $d$, is referred to as the Hausdorff dimension of $\mathcal{D}$. We note that, when $\mathcal{D}$ is a compact, $d$-dimensional submanifold of $\mathbb{R}^m$, it will have Hausdorff dimension $d$ and $\bar{\mathcal{H}}^d(\mathcal{D})$ is the $d$-dimensional surface area of $A.$ 
 
-We will assume $\mathcal{D}$ can be defined implicitly as the solution set to a system of $s$ equations,  $\{\nu_j(\theta)=0\}_{j=1}^s$, where 
+We now state the co-area formula which is used to define a regular conditional probability on the measure zero constrained space $\mathcal{D}$ and is pivotal in all of the proofs of the theorems.
+\begin{theorem}{Co-area formula \citep{diaconis2013manifold, federer2014geometric}} Suppose $\nu:\mathbb{R}^r\to\mathbb{R}^s$ with $ s<r$ is Lipschitz and that $g\in\mathbb{L}^1(\mathbb{R}^r,\mu_{\mathbb{R}^r}).$ Assume $J(\nu(\theta))>0$, then 
+\begin{equation}
+ \int_{\mathbb{R}^r}  g(\theta)J\nu(\theta)d\mu_{\mathbb{R}^r}( \theta)= \int_{\mathbb{R}^s} \bigg( \int_{\nu^{-1}(y)}g(\theta) d\bar{\mathcal{H}}^{r-s}(\theta)\bigg)d\mu_{\mathbb{R}^s}(y),
+ \end{equation}
+\end{theorem}
+The behavior of the pre-images $\nu^{-1}(y)$ in the co-area formula are important for the convergence results presented later in this section.  As such,  we require the following properties of $\mathcal{D}$. 
+
+Hereafter, we assume that $\mathcal{D}$ can be defined implicitly as the solution set to a system of $s$ equations,  $\{\nu_j(\theta)=0\}_{j=1}^s$, where 
 \begin{itemize}
 \item[(a)] $\nu_j:\mathcal{R}\to\mathbb{R}$ is Lipschitz continuous,
 \item[(b)] $v_j(\theta)=0$ only for $\theta\in\mathcal{D}$,
 \item[(c)] for $k=1,\dots, s$, the preimage $v_k^{(-1)}(x)$ is a co-dimension 1 sub-manifold of $\mathcal{R}$ for $\mu_\mathbb{R}$-a.e. $x$ in the range of $\nu_k$,
 \item[(d)] $\nu_j^{(-1)}(0)$ and $\nu_k^{(-1)}(0)$ intersect transversally for $1\le j<k\le s.$
 \end{itemize}
-Henceforth, we refer to the functions $\nu_1,\dots,\nu_s$ as constraint functions. In this case, if we let $\nu:\mathcal{R}\to \mathbb{R}^s$ be the vector-valued function $\nu(\theta) = [\nu_1(\theta),\dots,\nu_s(\theta)]^T$, then $\mathcal{D} = \ker(v)$ is a co-dimension $s$ submanifold of $\mathcal{R}$ for $\mu_{\mathbb{R}^s}$-a.e. $x$ the range of $v.$  Recall, the ambient space, $\mathcal{R}$, is $r-$dimensional. Therefore, it follows that $\mathcal{D}$ is a $(r-s)-$dimensional submanifold of $\mathcal{R}$, and it is natural to discuss the $(r-s)$-dimensional surface area of $\mathcal{D}.$
+We refer to the functions $\nu_1,\dots,\nu_s$ as constraint functions. In this case, if we let $\nu:\mathcal{R}\to \mathbb{R}^s$ be the vector-valued function $\nu(\theta) = [\nu_1(\theta),\dots,\nu_s(\theta)]^T$, then $\mathcal{D} = \ker(v)$ is a co-dimension $s$ submanifold of $\mathcal{R}$ for $\mu_{\mathbb{R}^s}$-a.e. $x$ the range of $v.$  Recall, the ambient space, $\mathcal{R}$, is $r-$dimensional. Therefore, it follows that $\mathcal{D}$ is a $(r-s)-$dimensional submanifold of $\mathcal{R}$, and it is natural to discuss the $(r-s)$-dimensional surface area of $\mathcal{D}.$
+
+Property (a), guarantees that $\nu$ is itself Lipschitz.  The remaining properties (b)-(d) are constructed so that $\nu^{(-1)}(x)$ for $x\in\mathbb{R}^s$ is also a submanifold which is close to $\mathcal{D}=\nu^{(-1)}(0)$ when $x$ is near zero.  In particular, the assumption of transversality ensures that $\nu^{(-1)}(x)$ with also be $r-s$ dimensional for $x$ sufficiently close to 0. 
+
 
 The existence and uniqueness of the constraints must be addressed.  In the case where $\mathcal{D}$ is specified by a collection of equality constraints -- such as the probability simplex or the Stiefel manifold for example--  it is not difficult to find a suitable set of constraint functions. Table \ref{TABLE:Equality_constraints_examples} contains a number of examples of common constrained spaces and appropriate choices of constraint functions.
+\renewcommand{\arraystretch}{1.5}
 \begin{table}[h!]
 \begin{center}
 \begin{tabular}{| c | m{4 cm} | c | c | m{6cm} |}
 \hline
-$\mathcal{R}$ & $\mathcal{D}$ & $\dim(R)$ & $\dim(D)$ & Constraint \leo{functions} \\
+$\mathcal{R}$ & $\mathcal{D}$ & $\dim(R)$ & $\dim(D)$ & Constraint functions \\
 \hline
 $[0,1]^r$ & Probability simplex, $\Lambda$ & $r$ & $r-1$ & $\nu(\theta) = \sum(\theta) -1$ \\
 \hline
@@ -940,24 +948,13 @@ $\mathbb{R}^{n\times k}$ & Stiefel manifold, $V_k(\mathbb{R}^n)$
 \label{TABLE:Equality_constraints_examples}
 \end{table}
 
-In the more difficult situation where equality constraints are not given, finding $\{\nu_j\}_{j=1}^s$ may be very difficult. For the moment, we will assume that one can construct sufficiently accurate numerical approximations perhaps through cubic-splines or Fourier series, so that we may ignore the issue of existence. 
+In the more difficult situation where equality constraints are not given, finding $\{\nu_j\}_{j=1}^s$ may be very challenging. For the moment, we will assume that one can construct sufficiently accurate numerical approximations perhaps through cubic-splines or Fourier series, so that we may ignore the issue of existence. 
 
-With regards to uniqueness, unfortunately, we note that the constraints cannot be unique in any case.  For example, given any constraints $\{\nu_{j}\}_{j=1}^s$ which satisfy (a)-(d) and non-zero constants $\{\lambda_j\}_{j=1}^s$, the constraints $\{\lambda_j \nu_j\}_{j=1}^s$ will also satisfy (a)-(d). It is then natural to wonder if one can find an optimal choice of the  constraints. An optimal choice will depend largely on the properties of the constrained distribution that one wishes to estimate making the choice of $\{\nu_j\}_{j=1}^s$ context dependent.  As such, we will address this issue in the examples contained in later sections. For now, let us proceed assuming that a suitable choice of $\{\nu_j(\theta)\}_{j=1}^s$ has been made.
+With regards to uniqueness, we note that the constraints cannot be unique in any case.  For example, given any constraints $\{\nu_{j}\}_{j=1}^s$ which satisfy (a)-(d) and non-zero constants $\{\lambda_j\}_{j=1}^s$, the constraints $\{\lambda_j \nu_j\}_{j=1}^s$ will also satisfy (a)-(d). It is then natural to wonder if one can find an optimal choice of the  constraints. An optimal choice will depend largely on the properties of the constrained distribution that one wishes to estimate making the choice of $\{\nu_j\}_{j=1}^s$ context dependent.  As such, we will address this issue in the examples contained in later sections. For now, let us proceed assuming that a suitable choice of $\{\nu_j(\theta)\}_{j=1}^s$ has been made.
 
-
-
-
-
-
-
-
-
-
-
-\begin{theorem}
+Under the given construction of the constrained space, we can now specify the regular conditional probability of $\theta$, given $\theta \in \mathcal{D}.$
+\begin{theorem}\cite{[diaconis2013manifold]}
 \label{THM:RCP_construction}
-\alex{We'll need to decide on a choice of notation for this definition: 
-
 Assume that $J(v(\theta)) > 0$ and that for each $z\in\mathbb{R}^s$ there is a finite non-negative integer $p_z$ such that,  $$m^{p_z}(z) = \int_{\mathbb{R}^ {s}} \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_{v(\theta)=z}}{J(v(\theta))} d\bar{\mathcal{H}}^{p}(z) \in (0,\infty).$$
 Then, for any Borel subset, $E$, of $\mathcal{R}$, it follows that 
 $$P(E|v(\theta) = z) = 
@@ -965,39 +962,53 @@ $$P(E|v(\theta) = z) =
 \frac{1}{m^{p_z}(z)} \int_E \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_{v(\theta)=z}}{J(v(\theta))} d\bar{\mathcal{H}}^{p}(z)  & m^s(z)\in (0,\infty)  \\
 \delta (E) & m^p(z) \in \{0,\infty\}
 \end{cases}$$
-is a valid regular conditional probability for $\theta\in\mathcal{D}.$ Here, $\delta (E)=1$ if $0\in E$ and $0$ otherwise. }
-\leo{I suggest we use the $r$ and $(r-s)$ for dimensionality as before,
-this changes to:\\
-Assume that $J(v(\theta)) > 0$ and that there exists $z\in\mathbb{R}^s$  such that,  $$m^{s}(z) = \int_{\mathbb{R}^ {r-s}} \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_{v(\theta)=z}}{J(v(\theta))} d\bar{\mathcal{H}}^{(r-s)}(\theta) \in (0,\infty).$$
-Then, for any Borel subset, $E$, of $\mathcal{R}$, it follows that 
-$$P(E|v(\theta) = z) = 
-\begin{cases}
-\frac{1}{m^{s}(z)} \int_E \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_{v(\theta)=z}}{J(v(\theta))} d\bar{\mathcal{H}}^{(r-s)}(\theta)  & m^s(z)\in (0,\infty)  \\
-\delta (E) & m^s(z) \in \{0,\infty\}
-\end{cases}$$
 is a valid regular conditional probability for $\theta\in\mathcal{D}.$ Here, $\delta (E)=1$ if $0\in E$ and $0$ otherwise. 
-}
 \end{theorem}
 
+By construction, $\{\theta:v(\theta)=z\}$ is a $(r-s)$ dimensional submanifold of $\mathcal{R}$ for $\mu_{\mathbb{R}^s}$-a.e. $z$ in the range of $\nu$. As such, it follows that one should take $p_z=r-s$.  To reiterate, when $\mathcal{D}$ is contained in a compact subset of $\mathcal{R}$, which is the case for the unit circle and the Stiefel manifold, it follows that $m^{r-s}(z)\in (0,\infty)$ for $\mu_{\mathbb{R}^s}$-a.e. $z$ in the range of $\nu.$ 
+It is possible that $m^p(z)\in\{0,\infty\}$ for $p=1,\dots,r-1$.  For example, if $\mathcal{D}$ is an unbounded subset of $\mathcal{R}$ and $\frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_{v(\theta)=z}}{J(v(\theta))}$ decays sufficiently slowly, then $m^{r-s}(z)=\infty.$ See Diaconis et al. (2013) for additional discussion of this issue. 
+However, in most practical applications Theorem \ref{THM:RCP_construction} allows us to define 
+
+\begin{equation}
+\label{EQ:Constrained_rcp}
+\pi_\mathcal{D}(\theta|\theta\in\mathcal{D},Y) = \frac{1}{m^{r-s}(\bf{0})} \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_{v(\theta)=\bf{0}}}{J(v(\theta))}
+\end{equation} 
+as the fully constrained posterior density as long as $\pi_\mathcal{R}$ decays sufficiently fast when $\mathcal{D}$ is an unbounded subset of $\mathcal{R}.$ 
+  
+Note that $\pi_D$ is absolutely continuous with respect to the $(r-s)$-dimensional Hausdorff measure on $\mathcal{D}$ in the sense that $$P(\theta \in F|\theta\in\mathcal{D},Y) =  \int_F \frac{1}{m^{r-s}(\bf{0})} \frac{\mathcal{L}(\theta; Y) \pi_\mathcal{R}(\theta) \mathbbm{1}_{v(\theta)=\bf{0}}}{J(v(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta)$$ for all measurable sets $\mathcal{F}\subset \mathcal{R}$. As a result, we can define the conditional  expectation of $g(\theta)$ given $\theta \in \mathcal{D}$ as 
+$$E[g(\theta) | \theta\in\mathcal{D}] = E[g(\theta) | \nu(\theta) =0\,] = \int_\mathcal{R} g(\theta) \pi_\mathcal{D}(\theta) d\bar{\mathcal{H}}^{r-s}(\theta).$$
+Alternatively, the expected value of $g(\theta)$ with respect to the relaxed density, denote $E_{\tilde{\Pi}}[g(\theta)] $, is 
+\begin{equation}
+\begin{split}
+E_{\tilde{\Pi}}[g(\theta)] &= \dfrac{\int_\mathcal{R} g(\theta) \pi_\mathcal{R}(\theta) \mathcal{L}(Y;\theta) \exp\bigg(-\frac{1}{\lambda}||\nu (\theta)||_1\bigg) d\mu_\mathcal{R}(\theta) }{\int_\mathcal{R} \pi_\mathcal{R}(\theta) \mathcal{L}(Y;\theta) d\mu_\mathcal{R}(\theta) } \\
+&= \frac{1}{m_\lambda} \int_\mathcal{R} g(\theta) \pi_\mathcal{R}(\theta) \mathcal{L}(Y;\theta)\exp\bigg(-\frac{1}{\lambda}||\nu (\theta)||_1\bigg) d\mu_\mathcal{R}(\theta)
+\end{split}
+\end{equation}
+where $$m_\lambda = \int_\mathcal{R} g(\theta) \pi_\mathcal{R}(\theta) \mathcal{L}(Y;\theta)\exp\bigg(-\frac{1}{\lambda}||\nu (\theta)||_1\bigg) d\mu_\mathcal{R}(\theta).$$
+
+
+The primary results of the section are the following statements regarding the use of $E_{\tilde{\Pi}}[g]$ to estimate $E[g|\theta\in\mathcal{D}]$.
 
 \begin{theorem}
 \label{THM:Relaxed_Expectation_Convergence_Measure_Zero}
-Let $m:\mathbb{R}^s\to \mathbb{R}$ and $m_g:\mathbb{R}^s\to \mathbb{R}$ be defined as follows
+Let $m:\mathbb{R}^s\to \mathbb{R}$ and $G\mathbb{R}^s\to \mathbb{R}$ be defined as follows
 \begin{align*}
-m &= \int_{\nu^{-1}} \frac{\pi_\mathcal{H}(\theta) \mathcal{L}(y;\theta)}{J(\nu(\theta))} d\mathcal{R}^{r-s}(\theta) \\
-m_g &= \int_{\nu^{-1}} g(\theta)\frac{\pi_\mathcal{H}(\theta) \mathcal{L}(y;\theta)}{J(\nu(\theta))} d\mathcal{R}^{r-s}(\theta).
+m(x) &= \int_{\nu^{-1}(x)} \frac{\pi_\mathcal{R}(\theta) \mathcal{L}(y;\theta)}{J(\nu(\theta))} d\mathcal{R}^{r-s}(\theta) \\
+G(x) &= \int_{\nu^{-1}(x)} g(\theta)\frac{\pi_\mathcal{R}(\theta) \mathcal{L}(y;\theta)}{J(\nu(\theta))} d\mathcal{R}^{r-s}(\theta).
 \end{align*}
-Suppose that both $m$ and $m_g$ are continuous on an open interval containing the origin and that \\ $g\in\mathbb{L}^1(\mathcal{R},\pi_R\mathcal{L}(y;\theta)d\mu_\mathcal{R}) \cap\mathbb{L}^1(\mathcal{D},\frac{\pi_R\mathcal{L}(y;\theta)}{J(\nu(\theta))}d\mu_\mathcal{R})$. Then,
+Suppose that both $m$ and $G$ are continuous on an open interval containing the origin and that \\ $g\in\mathbb{L}^1(\mathcal{R},\pi_R\mathcal{L}(y;\theta)d\mu_\mathcal{R})$. Then,
 $$\bigg|E_{\tilde{\Pi}}[g] - E[g|\theta \in \mathcal{D}]\bigg| \to 0 \text{ as } \lambda\to 0^+.$$
 \end{theorem}
 
 \begin{corollary}
-In addition to the assumptions of Theorem \ref{THM:Relaxed_Expectation_Convergence_Measure_Zero}, suppose that both $m$ and $m_g$ are differentiable at $0$. Then
+In addition to the assumptions of Theorem \ref{THM:Relaxed_Expectation_Convergence_Measure_Zero}, suppose that both $m$ and $G$ are differentiable at $0$. Then
 $$\bigg|E_{\tilde{\Pi}}[g] - E[g|\theta \in \mathcal{D}] \bigg| = O\bigg(\frac{\lambda}{|\log \lambda|^s}\bigg)$$
 as $\lambda \to 0^+.$
 \end{corollary}
 
-}
+Like the results from Section 3.1, the convergence rates are sub-linear.  However, unlike the positive measure case, the convergence rates are dimension dependent.  Again, one can alter the individual constraints $\nu_j$ to alleviate computational demands if small values of $\lambda$ are needed to attained desired accuracy when estimating $E[g|\theta\in\mathcal{D}].$ These issues are discussed further in the Examples contained in Section 5. For now, we review details regarding sampling algorithms which can be used in conjunction with \core.
+
+
  
 \section{Posterior Computation}
 
@@ -1405,7 +1416,6 @@ more general treatment is needed. We expect our work to be compatible to the exi
 \appendix
 
 
-\alex{
 
 \section{Proofs for Section 3.1}
 \label{APP:Positive_Measure_Convergence_Proofs}
@@ -1605,25 +1615,24 @@ at leading order as $\lambda\to 0^+$.
 We know turn to the small $\lambda$ behavior of $\tilde{E}[g(\theta)].$  Again, we may choose $\lambda$ sufficient small so that both
 \begin{align*}
 m(x)& \int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta)   \\
-m_g(x)&= \int_{\nu^{(-1)}(x)} g(\theta) \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) 
+G(x)&= \int_{\nu^{(-1)}(x)} g(\theta) \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) =m(x)E[g|\nu(\theta)=x]
 \end{align*}
 are continuous on $B_1(0;\lambda|\log \lambda^{s+1}|)$ and hence uniformly continuous at $x=0.$ 
 
-Similar to the study of $m_\lambda$, separate the $\tilde{E}[g(\theta)]$ into integrals over the interior and exterior of $B_1(0,\lambda|\log(\lambda)^{s+1}|)$
+Similar to the study of $m_\lambda$, separate the $\tilde{E}[g(\theta)]$ into integrals over the interior and exterior of $B_1(0,\lambda|\log(\lambda)^{s+1}|)$. Again, we assume $\lambda$ is taken to be sufficiently small so that both $m(x)$ and $G(x)$ are uniformly continuous on $B_1$. Then 
 \begin{align*}
 E_{\tilde{\Pi}}[g(\theta)] &= \int_{\mathbb{R}^s} \frac{m(x)}{m_\lambda}\exp\bigg(-\frac{||\nu(x)||_1}{\lambda}\bigg)E[g(\theta)|\nu(\theta)=x]d\mu_{\mathbb{R}^s}(x) \\
 &= \int_{\mathbb{R}^s} \frac{1}{m_\lambda}\exp\bigg(-\frac{||\nu(x)||_1}{\lambda}\bigg)\int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}(x) \\
 &=\int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{1}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}(x) \\
 &\hspace{0.5 cm} + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{1}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta)  d\mu_{\mathbb{R}^s}(x) \\
 &= O\bigg( \frac{\lambda^{s+1}}{m_\lambda} \bigg) + \int_{B_1} \frac{m(0)+o(1)}{m_\lambda}(1+O(\lambda^s)]\bigg(E[g(\theta)|\nu(\theta)=0] + o(1) \bigg) d\mu_{\mathbb{R}^s}(x)  \\
-&= O\bigg( C E|g|\frac{\lambda}{|\log\lambda|^s}\bigg) + \frac{1+O(\epsilon)}{ \frac{|2(s+1)\lambda \log \lambda |^s}{\Gamma(s+1)} } E[g(\theta)|\nu(\theta) = 0] \int_{B_1}(1+O(\epsilon))d\mu_{\mathbb{R}^s}(x) \\
-&=O\bigg(C E|g|\frac{\lambda}{|\log\lambda|^s}\bigg)  +E[g(\theta)|\nu(\theta)=0] \frac{1+O(\epsilon)}{1-C_1\epsilon}
+&= O\bigg( C E|g|\frac{\lambda}{|\log\lambda|^s}\bigg) + E[g(\theta)|\theta \in \mathcal{D}] + o(1).
 \end{align*}
-Therefore, $\lambda$ may be chosen sufficiently small so that $CE|g|\lambda/|\log\lambda^s| < \epsilon $ which implies that 
-$$\bigg|E_{\tilde{\Pi}}[g] - E[g(\theta)|\nu(\theta) = 0] \bigg| < C\epsilon.$$
-And we may conclude that $$E_{\tilde{\Pi}}[g] \to E[g|\nu = 0] \text{ as } \lambda\to0^+.$$
+And we may conclude that $$\bigg|E[g|\theta\in\mathcal{D} - E_{\tilde{\Pi}}[g] \bigg| \to O \text{ as } \lambda\to0^+.$$
+
+The proof of the corollary follows from changing the $o(1)$ correction within the integrals over $B_1(0;\lambda|\log \lambda^{s+1}|)$ with $O(\lambda |\log \lambda^{s+1}|)$ corrections. 
 \end{proof}
-}
+
 
 \bibliography{reference}
 \bibliographystyle{chicago}
