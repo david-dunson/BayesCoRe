@@ -336,9 +336,11 @@ The constrained density of $\theta$ is
 [0,\infty)\}\cap \{\theta_2\in[0,\infty)\}} .\end{align*}
 
 When considering $\mc R=\bb R^2$, observe that $\pi_{\mc R}(\theta)$ is the
-bivariate Gaussian density with mean $\mu$ and $\Sigma$. We take a simple
-distance function $\|v_{\mc D}(\theta_1,\theta_2)\| =
-\max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0)$.
+bivariate Gaussian density with mean $\mu$ and $\Sigma$. We first take a
+distance function 
+$\|v_{\mc D}(\theta)\| =
+\inf_{x\in\mathcal{D}} \|\theta-x\|_2
+$
 Then, $\|v_{\mc D}(\theta_1,\theta_2)\| = 0$ $\forall \theta\in\mathcal{D}$.
 Otherwise, $\|v_{\mc D}\|$ is positive. The relaxed density,
 $\tilde{\pi}_\lambda(\theta)$, is \begin{equation} \begin{split}
@@ -350,9 +352,7 @@ $\tilde{\pi}_\lambda(\theta)$, is \begin{equation} \begin{split}
 D}(\theta)\|
 \bigg)d\theta_2d\theta_1}\\ & \propto
 \exp\bigg(-\frac{\|\theta-\mu\|^2}{2\sigma^2}\bigg)\exp\bigg(
-- \frac{1}{\lambda}[\max(\theta_1+\theta_2 -1,0) +
-\max(-\theta_1,0) +
-\max(-\theta_2,0)] \bigg).  \end{split}
+- \frac{1}{\lambda}\inf_{x\in\mathcal{D}} \|\theta-x\|_2\bigg).  \end{split}
 \label{EQ:Relaxed_Density_Bivariate_Normal_Triangle} \end{equation}
 
 Figure \ref{FIG:Bivariate_Normal_Triangle_Constraint_Relaxation} depicts
@@ -360,7 +360,17 @@ a few plots of the relaxed density as $\lambda$ decreases.  For $\lambda=
 10^{-2}$, the relaxed density still places non-negligible probability outside
 of the constrained region, as fuzzy edges due to slowly decreasing density
 can be observed near the boundary of the triangle. For $\lambda=10^{-4}$,
-the edges become sharp as the density rapidly drops to $0$ outside of $\mc D$.
+the edges become sharp as the density rapidly drops to $0$ outside of $\mc
+D$. 
+
+As we discuss in details in the theory section, the choice for
+$\|v_{\mc D}(\theta)\|$ is often not unique. In this example, we choose $\|v_{\mc D}(\theta)\|$ as the minimal
+distance to the constrained space for an intuitive illustration of the
+constraint relaxation; alternatively, one could use a
+distance that is easier to compute, such as $\|v_{\mc D}(\theta)\| =
+\max(\theta_1+\theta_2 -1,0) + \max(-\theta_1,0) + \max(-\theta_2,0)$,
+which also satisfies $\theta\in\mc D$ if and only if $\|v_{\mc
+D}(\theta)\|=0$. 
 
 \begin{figure}[H] \begin{center}
 \includegraphics[width=1\textwidth]{Bivariate_Normal_Triangle_Constraint}
