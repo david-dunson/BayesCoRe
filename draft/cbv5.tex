@@ -412,13 +412,13 @@ measure, denoted by $\bar{\mathcal{H}}^{(r-s)}$ . We can use it as the
 normalizing constant to obtain a r.c.p density:
 
 $$\pi_{\mc D}(\theta \mid Y) = \dfrac{
-{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))
+{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))
 \mathbbm{1}_{\mc D}(\theta)
 }
 } {\int_\mathcal{D}
-{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))}
+{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))}
 d\bar{\mathcal{H}}^{(r-s)}(\theta)} \propto
-{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))
+{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))
 \mathbbm{1}_{\mc D}(\theta)
 }.
 $$
@@ -451,12 +451,12 @@ consider a Lebesgue measure over a Borel set $\mc F \subset \mc R$:
 
 $$\int_{\mc F} \tilde{\pi}_\lambda(\theta) d \mu(\theta)= \frac{\int_{\mc X}
 \bigg[ \int_{ \{\theta:v(\theta)=x\}\cap \mc F }
-{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))}
+{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))}
 d\bar{\mathcal{H}}^{(r-s)}(\theta) \bigg] \exp\bigg(-{\lambda^{-1}}\|x\|\bigg
 )dx
 }
 {\int_{\mc X} \bigg[ \int_{\{\theta:v(\theta)=x\}}
-{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))}
+{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))}
 d\bar{\mathcal{H}}^{(r-s)}(\theta) \bigg] \exp\bigg(-{\lambda^{-1}}\|x\|\bigg
 )dx }$$
 Using co-area formula \citep{federer2014geometric}, we can now
@@ -466,13 +466,13 @@ $\mc F$, this simplifies to a density:
 \begin{split}
 \label{EQ:relaxedDensityZeroMeasure}
 \tilde{\pi}_\lambda(\theta) &=
-\dfrac{\mathcal{L}(y;\theta)
+\dfrac{\mathcal{L}(\theta;Y)
 \pi_\mathcal{R}(\theta)\exp\bigg(-\frac{1}{\lambda}\|\nu_\mathcal{D}(\theta)\|\bigg)
 \mathbbm{1}_{\mc X}(v(\theta))
-}{\int_\mathcal{R} \mathcal{L}(y;\theta)
+}{\int_\mathcal{R} \mathcal{L}(\theta;Y)
 \pi_\mathcal{R}(\theta)\exp\bigg(-\frac{1}{\lambda}\|\nu_\mathcal{D}(\theta)\|\bigg)
 \mathbbm{1}_{\mc X}(v(\theta)) d\mu_\mathcal{R}(\theta)
-} & \propto \mathcal{L}(y;\theta)
+} & \propto \mathcal{L}(\theta;Y)
 \pi_\mathcal{R}(\theta)\exp\bigg(-\frac{1}{\lambda}\|\nu_\mathcal{D}(\theta)\|\bigg)
 \mathbbm{1}_{\mc X}(v(\theta)),
 \end{split}
@@ -824,11 +824,11 @@ $\bb E_{\tilde{\Pi}}[g(\theta)] $, is
 
 $$\bb E_{\tilde{\Pi}}[g(\theta)] = \frac{1}{m_\lambda}
 \int_\mathcal{R} g(\theta) \pi_\mathcal{R}(\theta)
-\mathcal{L}(Y;\theta)\exp\bigg(-\frac{1}{\lambda}\|\nu (\theta)\|_1\bigg)
+\mathcal{L}(\theta;Y)\exp\bigg(-\frac{1}{\lambda}\|\nu (\theta)\|_1\bigg)
 d\mu_\mathcal{R}(\theta) $$
 with $m_\lambda =
 \int_\mathcal{R}  \pi_\mathcal{R}(\theta)
-\mathcal{L}(Y;\theta)\exp(-{\lambda^{-1}}\|\nu (\theta)\|_1)
+\mathcal{L}(\theta;Y)\exp(-{\lambda^{-1}}\|\nu (\theta)\|_1)
 d\mu_\mathcal{R}(\theta).$
 The primary results of the section are the following statements regarding
 the use of $\bb E_{\tilde{\Pi}}[g]$ to estimate $\bb E[g|\theta\in\mathcal{D}]$.
@@ -837,13 +837,13 @@ the use of $\bb E_{\tilde{\Pi}}[g]$ to estimate $\bb E[g|\theta\in\mathcal{D}]$.
 Let $m:\mathbb{R}^s\to \mathbb{R}$ and $G:\mathbb{R}^s\to
 \mathbb{R}$ be defined as follows \begin{align*} m(x) & =
 \int_{\nu^{-1}(x)} \frac{\pi_\mathcal{R}(\theta)
-\mathcal{L}(y;\theta)}{J(\nu(\theta))}
+\mathcal{L}(\theta;Y)}{J(\nu(\theta))}
 d\mathcal{R}^{r-s}(\theta) \\ G(x) &= \int_{\nu^{-1}(x)}
 g(\theta)\frac{\pi_\mathcal{R}(\theta)
-\mathcal{L}(y;\theta)}{J(\nu(\theta))} d\mathcal{R}^{r-s}(\theta).
+\mathcal{L}(\theta;Y)}{J(\nu(\theta))} d\mathcal{R}^{r-s}(\theta).
 \end{align*} Suppose that both $m$ and $G$ are continuous on an open
 interval containing the origin and that \\
-$g\in\mathbb{L}^1(\mathcal{R},\pi_R\mathcal{L}(y;\theta)d\mu_\mathcal{R})$.
+$g\in\mathbb{L}^1(\mathcal{R},\pi_R\mathcal{L}(\theta;Y)d\mu_\mathcal{R})$.
 Then, $$\bigg|\bb E_{\tilde{\Pi}}[g] - \bb E[g|\theta \in \mathcal{D}]\bigg| \to 0
 \text{ as } \lambda\to 0^+.$$ \end{theorem}
 
@@ -1249,54 +1249,54 @@ Recall, that the distance function $\|v_{\mc D}(\theta)\|$ is chosen so that $\|
 &\int_{\mathcal{R}}  g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda) d\mu_\mathcal{R}(\theta) \\
 &=  \int_{\mathcal{R}\setminus \mathcal{D}}g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda) d\mu_\mathcal{R}(\theta) + \int_{ \mathcal{D}} g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda) d\mu_\mathcal{R}(\theta) .
 \end{split}
+\label{EQ:Expectation_Identity_Positive_Measure}
 \end{equation}
 
-Then,
+For brevity, we let $f(\theta) = \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)$ and use $df(\theta) = \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)$ throughout the proof. Then,
 \begin{align*}
 &\bigg| \bb \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb \bb E_{\tilde{\pi}_\lambda}[g(\theta)]\bigg| \\
 &= \bigg|\frac{ \int_\mathcal{D} g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)}{\int_\mathcal{D} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)} - \frac{\int_{\mathcal{R}} g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp\big(-\|v_{\mc D}(\theta)\|/\lambda)d\mu_\mathcal{R}(\theta)}{\int_{\mathcal{R}}  \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp\big(-\|v_{\mc D}(\theta)\|/\lambda)d\mu_\mathcal{R}(\theta)} \bigg| \\
-& = \bigg|\frac{\int_{\mathcal{R}\setminus \mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \cdot \int_\mathcal{D}g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)-\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta) \cdot \int_{\mathcal{R}\setminus \mathcal{D} } g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda) d\mu_\mathcal{R}(\theta)}{\int_\mathcal{D} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)[\int_\mathcal{D} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta) + \int_{\mathcal{R}\setminus\mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) \exp(-\|v_{\mc D}(\theta)\|/\lambda) d\mu_\mathcal{R}(\theta)] }  \bigg|
+& = \bigg|\frac{\int_{\mathcal{R}\setminus \mathcal{D}} \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \cdot \int_\mathcal{D}g(\theta) df(\theta)-\int_\mathcal{D}df(\theta) \cdot \int_{\mathcal{R}\setminus \mathcal{D} } g(\theta) \exp(-\|v_{\mc D}(\theta)\|/\lambda) df(\theta)}{\int_\mathcal{D} df(\theta)[\int_\mathcal{D} df(\theta) + \int_{\mathcal{R}\setminus\mathcal{D}}  \exp(-\|v_{\mc D}(\theta)\|/\lambda) df(\theta)] }  \bigg|
 \end{align*}
-where the second equality follows from combining the fractions and making use of (3). We can bound the denominator from below by  $ \big[\int_\mathcal{D} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \big]^2>0$ so that 
+where the second equality follows from combining the fractions and making use of \eqref{EQ:Expectation_Identity_Positive_Measure}. We can bound the denominator from below by  $ C_\mathcal{D}^2 = \big[\int_\mathcal{D} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \big]^2>0$ so that 
 
 \begin{equation*}
 \begin{split}
 &\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \\ 
-&\le \frac{\big|\int_{\mathcal{R}\setminus \mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \cdot \int_\mathcal{D}g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta) -\int_\mathcal{D}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta) \cdot \int_{\mathcal{R}\setminus \mathcal{D} } g(\theta)\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)(z)\exp(-\|v_{\mc D}(\theta)\|/\lambda) d\mu_\mathcal{R}(\theta)\big|}{C_\mathcal{D}^2 } 
+&\le \frac{\big|\int_{\mathcal{R}\setminus \mathcal{D}} \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \cdot \int_\mathcal{D}g(\theta) df(\theta) -\int_\mathcal{D}df(\theta) \cdot \int_{\mathcal{R}\setminus \mathcal{D} } g(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda) df(\theta)\big|}{C_\mathcal{D}^2 } 
 \end{split}
-\end{equation*}
-where $C_\mathcal{D} = \int_\mathcal{D} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta).$  
+\end{equation*} 
 If we add and subtract $$\int_{\mathcal{R}\setminus \mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \cdot \int_{\mathcal{R}\setminus \mathcal{D}} g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)  $$ within the numerator, we can apply the triangle inequality. Thus,
 
 \begin{align*}
 &\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \\
-& \le \frac{ \bigg| \int_{\mathcal{R}\setminus \mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \bigg| \cdot \bigg|\int_\mathcal{D}g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta) - \int_{\mathcal{R}\setminus \mathcal{D}} g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)  \bigg|}{C_\mathcal{D}^2 }\dots \\
-& \hspace{0.5cm} + \frac{\bigg| \int_{\mathcal{R}\setminus \mathcal{D}} g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \bigg| \cdot \bigg|\int_\mathcal{D} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)- \int_{\mathcal{R}\setminus \mathcal{D}}  \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)  \bigg|}{C_\mathcal{D}^2 }
+& \le \frac{ \bigg| \int_{\mathcal{R}\setminus \mathcal{D}} \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \bigg| \cdot \bigg|\int_\mathcal{D}g(\theta)df(\theta) - \int_{\mathcal{R}\setminus \mathcal{D}} g(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \bigg|}{C_\mathcal{D}^2 }\\
+& \hspace{2cm} + \frac{\bigg| \int_{\mathcal{R}\setminus \mathcal{D}} g(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \bigg| \cdot \bigg|\int_\mathcal{D} df(\theta)- \int_{\mathcal{R}\setminus \mathcal{D}}  \exp(-\|v_{\mc D}(\theta)\|/\lambda )df(\theta) \bigg|}{C_\mathcal{D}^2 }
 \end{align*}
 Since $g\in\mathbb{L}^1(\mathcal{R},\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R})$, we can then bound the numerators as follows.  First,
 \begin{align*}
-&\bigg| \int_{\mathcal{R}\setminus \mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \bigg| \cdot \bigg|\int_\mathcal{D} g(y_i) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta) - \int_{\mathcal{R}\setminus \mathcal{D}} g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda )d\mu_\mathcal{R}(\theta) \bigg| \\
-& \le \bigg| \int_{\mathcal{R}\setminus \mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \bigg| \cdot \bigg( \bigg| \int_\mathcal{D}g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta) \bigg| + \bigg| \int_{\mathcal{R}\setminus \mathcal{D}} g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \bigg| \bigg) \\
-&\le \int_{\mathcal{R}\setminus \mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)  \cdot \bigg(\int_\mathcal{D}|g(y_i)| \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)  + \int_{\mathcal{R}\setminus \mathcal{D}} |g(\theta)| \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)  \bigg) \\
-&\le \int_{\mathcal{R}\setminus \mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)  \cdot  \int_{\mathcal{R}} |g(x_i)| \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)   = C_\mathcal{R} \bb E|g(x_i)| \int_{\mathcal{R}\setminus \mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta).
+&\bigg| \int_{\mathcal{R}\setminus \mathcal{D}} \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \bigg| \cdot \bigg|\int_\mathcal{D} g(\theta) df(\theta) - \int_{\mathcal{R}\setminus \mathcal{D}} g(\theta) \exp(-\|v_{\mc D}(\theta)\|/\lambda )df(\theta) \bigg| \\
+& \le \bigg| \int_{\mathcal{R}\setminus \mathcal{D}} \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \bigg| \cdot \bigg( \bigg| \int_\mathcal{D}g(\theta)df(\theta) \bigg| + \bigg| \int_{\mathcal{R}\setminus \mathcal{D}} g(\theta) \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \bigg| \bigg) \\
+&\le \int_{\mathcal{R}\setminus \mathcal{D}} \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \cdot \bigg(\int_\mathcal{D}|g(\theta)| df(\theta)  + \int_{\mathcal{R}\setminus \mathcal{D}} |g(\theta)|\exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \bigg) \\
+&\le \int_{\mathcal{R}\setminus \mathcal{D}} \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta)  \cdot  \int_{\mathcal{R}} |g(\theta)| df(\theta)   = C_\mathcal{R} \bb E|g(x_i)| \int_{\mathcal{R}\setminus \mathcal{D}}\exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta).
 \end{align*}
-Here, $C_\mathcal{R} = \int_\mathcal{R} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)$ is the normalizing constant of $\mathcal{L}(\theta;Y)\pi_\mathcal{R}.$
+Here, $C_\mathcal{R} = \int_\mathcal{R} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)$ is the normalizing constant of $\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta).$
 Secondly,
 \begin{align*}
-&\bigg| \int_{\mathcal{R}\setminus \mathcal{D}} g(\theta) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \bigg| \cdot \bigg|\int_\mathcal{D} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta) - \int_{\mathcal{R}\setminus \mathcal{D}}  \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)  \bigg| \\
-& \le \int_{\mathcal{R}\setminus \mathcal{D}} |g(\theta)| \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) dx  \cdot \bigg|\int_\mathcal{D} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta) \bigg| + \bigg| \int_{\mathcal{R}\setminus \mathcal{D}}  \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \bigg| \\
-&\le  \int_{\mathcal{R}\setminus \mathcal{D}} |g(\theta)| \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \bigg(\int_\mathcal{D} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta) +  \int_{\mathcal{R}\setminus \mathcal{D}}  \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \bigg)  \\
-& = \int_{\mathcal{R}\setminus \mathcal{D}} |g(\theta)| \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta).
+&\bigg| \int_{\mathcal{R}\setminus \mathcal{D}} g(\theta) \exp(-\|v_{\mc D}(\theta)\|/\lambda )df(\theta) \bigg| \cdot \bigg|\int_\mathcal{D} df(\theta) - \int_{\mathcal{R}\setminus \mathcal{D}} \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta)  \bigg| \\
+& \le \int_{\mathcal{R}\setminus \mathcal{D}} |g(\theta)| \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta)  \cdot \bigg|\int_\mathcal{D} df(\theta) \bigg| + \bigg| \int_{\mathcal{R}\setminus \mathcal{D}}  \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \bigg| \\
+&\le  \int_{\mathcal{R}\setminus \mathcal{D}} |g(\theta)| \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta) \bigg(\int_\mathcal{D} df(\theta) +  \int_{\mathcal{R}\setminus \mathcal{D}}  df(\theta)\bigg)  \\
+& = C_\mathcal{R}\int_{\mathcal{R}\setminus \mathcal{D}} |g(\theta)| \exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta).
 \end{align*}
 Thus, we have the bounds specified by the theorem,
 \begin{align*}
 &\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \\
-& \le \frac{C_\mathcal{R}\bb E|g(\theta)| \int_{\mathcal{R}\setminus \mathcal{D}} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)}{C_\mathcal{D}^2 } + \frac{\int_{\mathcal{R}\setminus \mathcal{D}} |g(\theta)| \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)}{C_\mathcal{D}^2 } \\
-&= \frac{\int_{\mathcal{R}\setminus \mathcal{D}} (C_\mathcal{R}\bb E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)}{C_\mathcal{D}^2 }.
+& \le \frac{C_\mathcal{R}\bb E|g(\theta)| \int_{\mathcal{R}\setminus \mathcal{D}}\exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta)}{C_\mathcal{D}^2 } + \frac{C_\mathcal{R}\int_{\mathcal{R}\setminus \mathcal{D}} |g(\theta)|\exp(-\|v_{\mc D}(\theta)\|/\lambda ) df(\theta)}{C_\mathcal{D}^2 } \\
+&= \frac{C_\mathcal{R}\int_{\mathcal{R}\setminus \mathcal{D}} (\bb E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)}{C_\mathcal{D}^2 }.
 \end{align*}
 
 It remains to be shown that $$\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \to 0 \text{ as }\lambda\to0^+.$$
-Again, by the assumptions that $g\in\mathbb{L}^1(\mathcal{R},\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R})$ and $\|v_{\mc D}(\theta)\| >0$ for $\mu_\mathcal{R}$ a.e.  $\theta \in \mathcal{R}\setminus \mathcal{D}$, it follows that $(C_\mathcal{R}\bb E|g(x_i)|+|g(x_i)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)$ is a dominating function of $(C_\mathcal{R}\bb E|g(x_i)|+|g(x_i)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda )$ which converges to zero for $\mu_\mathcal{R}$-a.e. $\theta\in\mathcal{R}\setminus\mathcal{D}$ as $\lambda\to 0^+.$ Thus, by the dominated convergence theorem, $\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big|\to 0$ as $\lambda\to0^+.$
+Again, by the assumptions that $g\in\mathbb{L}^1(\mathcal{R},\mathcal{L}(\theta;Y)\pi_\mathcal{R}d\mu_\mathcal{R})$ and $\|v_{\mc D}(\theta)\| >0$ for $\mu_\mathcal{R}$ a.e.  $\theta \in \mathcal{R}\setminus \mathcal{D}$, it follows that $( E|g(x_i)|+|g(x_i)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)$ is a dominating function of $( E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda )$ which converges to zero for $\mu_\mathcal{R}$-a.e. $\theta\in\mathcal{R}\setminus\mathcal{D}$ as $\lambda\to 0^+.$ Thus, by the dominated convergence theorem, $\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big|\to 0$ as $\lambda\to0^+.$
 
 \end{proof}
 
@@ -1304,44 +1304,43 @@ Again, by the assumptions that $g\in\mathbb{L}^1(\mathcal{R},\mathcal{L}(\theta;
 \begin{proof}{Proof of Theorem \ref{THM:Positive_measure_convergence_rate}} \\
 
 We begin with the bound from Lemma \ref{THM:positive_measure_approximation_error}. 
-$$\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \le \frac{\int_{\mathcal{R}\setminus \mathcal{D}} (C_\mathcal{R}\bb E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)}{C_\mathcal{D}^2 }.$$
+$$\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \le \frac{ C_\mathcal{R}\int_{\mathcal{R}\setminus \mathcal{D}} (\bb E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta)}{C_\mathcal{D}^2 }.$$
 For the moment, let us focus on the numerator of the previous expression.  By the Cauchy-Schwartz inequality,
 \begin{align*}
-&\int_{\mathcal{R}\setminus \mathcal{D}} (C_\mathcal{R}\bb E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \\
-&\le \bigg(\int_{\mathcal{R}\setminus \mathcal{D}}   (C_\mathcal{R}\bb E|g(\theta)|+|g(\theta)|)^2 \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\bigg)^{1/2} \bigg(\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\bigg)^{1/2} \\
-&\le \bigg(\int_{\mathcal{R}}   (C_\mathcal{R}\bb E|g(\theta)|+|g(\theta)|)^2 \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)\bigg)^{1/2} \bigg(\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\bigg)^{1/2} 
+&C_\mathcal{R} \int_{\mathcal{R}\setminus \mathcal{D}} (\bb E|g(\theta)|+|g(\theta)|)\exp(-\|v_{\mc D}(\theta)\|/\lambda )df(\theta) \\
+&\le C_\mathcal{R}\bigg(\int_{\mathcal{R}\setminus \mathcal{D}}   (\bb E|g(\theta)|+|g(\theta)|)^2 df(\theta)\bigg)^{1/2} \bigg(\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )df(\theta)\bigg)^{1/2} %\\
+%&\le \bigg(\int_{\mathcal{R}}   (C_\mathcal{R}\bb E|g(\theta)|+|g(\theta)|)^2 %\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}%(\theta)\bigg)^{1/2} \bigg(\int_{\mathcal{R}\setminus %\mathcal{D}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}%(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\bigg)^{1/2} 
 \end{align*}
 By assumption, $g\in\mathbb{L}^2(\mathcal{R},\mathcal{L}(\theta;Y)\pi_\mathcal{R}\mu_\mathcal{R}).$ Thus,
 \begin{align*}
-&\int_{\mathcal{R}\setminus \mathcal{D}} (C_\mathcal{R}\bb E|g(\theta)|+|g(\theta)|) \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp(-\|v_{\mc D}(\theta)\|/\lambda ) d\mu_\mathcal{R}(\theta) \\
-&=\underbrace{\bigg([C_\mathcal{R}^3+2C_\mathcal{R}^2](\bb E|g|)^2 + C_\mathcal{R}\bb E[|g|^2] \bigg)^{1/2}}_{C_{\mathcal{R},g}<\infty}\bigg(\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\bigg)^{1/2}\\
-&=C_{\mathcal{R},g}\bigg(\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\bigg)^{1/2}
+&C_\mathcal{R} \int_{\mathcal{R}\setminus \mathcal{D}} (\bb E|g(\theta)|+|g(\theta)|)\exp(-\|v_{\mc D}(\theta)\|/\lambda )df(\theta) \\
+&=\underbrace{\bigg(3C_\mathcal{R}^2(\bb E|g|)^2 + C_\mathcal{R}\bb E[|g|^2] \bigg)^{1/2}}_{C_g}\bigg(\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\bigg)^{1/2}=C_{g}\bigg(\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )df(\theta)\bigg)^{1/2}
 \end{align*}
-We separate the integral $$\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)$$
+We separate the integral $$\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )df(\theta)$$
 over the sets $\{\theta: \|v_{\mc D}(\theta)\|> -\lambda\log\lambda\}$ and $\{\theta: \, 0< \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}.$
 \begin{align*}
-&\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \\
-&= \int_{\{\theta: \|v_{\mc D}(\theta)\|> -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) +\int_{\{\theta: \,0 < \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \\
-&\le \lambda^2 \int_{\{\theta: \|v_{\mc D}(\theta)\|> -\lambda\log\lambda\}}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)+\int_{\{\theta: \,0< \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)\\
-&\le C_\mathcal{R}\lambda^2 +\int_{\{\theta: \, 0< \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)
+&\int_{\mathcal{R}\setminus \mathcal{D}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )df(\theta) \\
+&= \int_{\{\theta: \|v_{\mc D}(\theta)\|> -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )df(\theta) +\int_{\{\theta: \,0 < \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )df(\theta)\\
+&\le \lambda^2 \int_{\{\theta: \|v_{\mc D}(\theta)\|> -\lambda\log\lambda\}}df(\theta) +\int_{\{\theta: \,0< \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda ) df(\theta)\\
+&\le C_\mathcal{R}\lambda^2 +\int_{\{\theta: \, 0< \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )df(\theta)
 \end{align*}
 To review, to this point we have shown that
 \begin{equation}
-\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \le  \frac{C_{\mathcal{R},g}}{D_\mathcal{D}^2}\bigg(C_\mathcal{R}\lambda^2 + \int_{\{\theta: \, 0< \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \bigg)^{1/2}
+\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big| \le  \frac{C_{g}}{C_\mathcal{D}^2}\bigg(C_\mathcal{R}\lambda^2 + \int_{\{\theta: \, 0< \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )df(\theta) \bigg)^{1/2}
 \end{equation}
 From the requirements of Theorem \ref{THM:Positive_measure_convergence_rate}, we now let $\|v_{\mc D}(\theta)\| = \inf_{x\in \mathcal{D}}||\theta - x||_2$ and assume that $\mathcal{D}$ has a piecewise smooth boundary.  In this case, the set $\{\theta: \,0 < \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}$ forms a `shell' of thickness $-\lambda \log \lambda$ which encases $\mathcal{D}.$ 
 
 For the moment, suppose that $\mathcal{D}$ is a bounded subset of $\mathcal{R}$. Furthermore, suppose we take $\lambda$ sufficiently small so that $\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)$ is continuous on $V_\lambda = \{\theta: \,0 < \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}.$ Observe that  
 \begin{align*}
-&\int\limits_{\{\theta: \, 0< \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)  
+&\int\limits_{V_\lambda}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )df(\theta)
 \le \sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| \int_{V\lambda}\exp(-2\|v_{\mc D}(\theta)\|/\lambda ) d\mu_{R}(\theta)\\
 & \le \sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| \int_{V\lambda} d\mu_{R}(\theta)=  \sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)|  \cdot Vol(V_\lambda) \\
-&=  \sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| S_\mathcal{D} \cdot \lambda |\log \lambda|
+&\approx  \sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| S_\mathcal{D} \cdot \lambda |\log \lambda|
 \end{align*}  
-Here,$ S_\mathcal{D}$ is the surface area of boundary of $\mathcal{D}$, which is finite by the assumptions that $\mathcal{D}$ is bounded and has a piecewise smooth boundary. Additionally, since $V_\lambda$ is relatively compact, it follows that $\sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| < \infty.$ 
+Here, $ S_\mathcal{D}$ is the surface area of boundary of $\mathcal{D}$, which is finite by the assumptions that $\mathcal{D}$ is bounded and has a piecewise smooth boundary. Additionally, since $V_\lambda$ is relatively compact, it follows that $\sup_{V_\lambda}|\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)| < \infty.$ 
 
-Consider the more general case where $\mathcal{D}$ is not a bounded subset of $\mathcal{R}.$ Since $\int_\mathcal{R}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)$, there exists a radius $\rho$ such that $\int_{||\theta||_2 > \rho}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)< \lambda^2.$  Note that, for $\theta \in V_\lambda$, $J(v_{\mc D}(\theta))=\sqrt{(Dv_{\mc D})'(Dv_{\mc D})} = 2.$ By the co-area formula \cite{diaconis2013manifold,federer2014geometric}
-$$\int\limits_{\{\theta: \, 0< \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)  = \int_0^{-\lambda\log\lambda} e^{-\frac{x}{\lambda}}\bigg( \int_{v_{\mc D}^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg) dx$$
+Consider the more general case where $\mathcal{D}$ is not a bounded subset of $\mathcal{R}.$ Note that, for $\theta \in V_\lambda$, $J(v_{\mc D}(\theta))=\sqrt{(Dv_{\mc D})'(Dv_{\mc D})} = 2.$ By the co-area formula \cite{diaconis2013manifold,federer2014geometric}
+$$\int\limits_{V_\lambda}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta)  = \int_0^{-\lambda\log\lambda} e^{-\frac{x}{\lambda}}\bigg( \int_{v_{\mc D}^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg) dx$$
 Again, we may take $\lambda$ sufficiently small so that $\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) $ is continuous on $V_\lambda.$  As such, the function $ \int_{v_{\mc D}^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)$ is a continuous map from the closed interval, $[0,-\lambda\log\lambda]$, to $\mathbb{R}.$ Hence it is bounded.  As a result, 
 \begin{align*}
 &\int\limits_{\{\theta: \, 0< \|v_{\mc D}(\theta)\|< -\lambda\log\lambda\}}\exp(-2\|v_{\mc D}(\theta)\|/\lambda )\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta) d\mu_\mathcal{R}(\theta) \\
@@ -1351,10 +1350,11 @@ Again, we may take $\lambda$ sufficiently small so that $\mathcal{L}(\theta;Y) \
 This result also applies to the case where $\mathcal{D}$ is bounded.  Thus, we may conclude that
 \begin{align*}
 &\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big|\\
-& \le  \frac{C_{\mathcal{R},g}}{D_\mathcal{D}^2}\bigg(C_\mathcal{R}\lambda^2 + \sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_{\mc D}^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg)  \cdot (\lambda - \lambda^2) \bigg)^{1/2} \\
-&= \frac{C_{\mathcal{R},g}}{D_\mathcal{D}^2} \cdot \sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_{\mc D}^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg)  \cdot \sqrt{\lambda} + o(\sqrt{\lambda})
+& \le  \frac{C_{g}}{C_\mathcal{D}^2}\bigg(C_\mathcal{R}\lambda^2 + \sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_{\mc D}^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg)  \cdot (\lambda - \lambda^2) \bigg)^{1/2} \\
+&= \frac{C_{g}}{C_\mathcal{D}^2} \cdot \sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_{\mc D}^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg)  \cdot \sqrt{\lambda} + o(\sqrt{\lambda})
 \end{align*}
-Since $\sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_{\mc D}^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg)$ is a decreasing function in $\lambda$, we may conclude that $\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big| = O(\sqrt{\lambda}).$
+Since $\sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_{\mc D}^{-1}(x)} \frac{1}{2}\mathcal{L}(\theta;Y) \pi_\mathcal{R}(\theta) d\bar{\mathcal{H}}^{r-1}(\theta)\bigg)$ is a decreasing function in $\lambda$, it follows that $$\big| \bb E[g(\theta)|\theta\in\mathcal{D}]-\bb E_{\tilde{\pi}_\lambda}[g(\theta)]\big| = O(\sqrt{\lambda})$$
+as $\lambda \to 0^+.$
 \end{proof}
 
 \section{Proofs from Section 3.2}
@@ -1362,39 +1362,39 @@ Since $\sup_{x \in [0,-\lambda\log\lambda]} \bigg( \int_{v_{\mc D}^{-1}(x)} \fra
 \begin{proof}
 Recall that we have two densities. The first is the fully constrained density for $\theta\in\mathcal{D}$.
 \begin{equation*}
-\pi_\mathcal{D}(\theta) = \frac{1}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(v(\theta))}\mathbbm{1}_\mathcal{D}(\theta)
+\pi_\mathcal{D}(\theta) = \frac{1}{m_0} \frac{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)
 \end{equation*}
 where the normalizing constant $m_0$ is calculated w.r.t. Hausdorff measure
-$$m_0 = \int_\mathcal{R} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(v(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta).$$
+$$m_0 = \int_\mathcal{R} \frac{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta).$$
 %This density defines a probability measure, $\Pi$, w.r.t. Hausdorff measure.  For a measurable set $\bb E$, 
-%$$\Pi(\bb E) = \int_\bb E \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(v(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta).$$
+%$$\Pi(\bb E) = \int_\bb E \frac{g(\theta)}{m_0} \frac{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J(v(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta).$$
 
 Secondly, we have the relaxed distribution
-$$\tilde{\pi}_\mathcal{D}(\theta) = \frac{1}{m_\lambda} \mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)$$
-where the normalizing constant is calculated w.r.t. Lebesgue measure on $\mathcal{R}$, denote by $\mu_\mathcal{R}$,
-$$m_\lambda = \int_\mathcal{R}\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg) d\mu_\mathcal{R}(\theta).$$
+$$\tilde{\pi}_\mathcal{D}(\theta) = \frac{1}{m_\lambda} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||\nu(\theta)||_1}{\lambda}\bigg)$$
+where the normalizing constant is calculated w.r.t. Lebesgue measure on $\mathcal{R}$, denoted by $\mu_\mathcal{R}$,
+$$m_\lambda = \int_\mathcal{R}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||\nu(\theta)||_1}{\lambda}\bigg) d\mu_\mathcal{R}(\theta).$$
 %We use $\mu_\mathcal{R}$ to denote Lebesgue measure on $\mathcal{R}.$ This density defines a probability measure, $\tilde{\Pi}$, w.r.t. $\mu_\mathcal{R}$.  For a measurable set $\bb E$, 
-%$$\tilde{\Pi}(\bb E) = \int_\bb E \frac{g(\theta)}{m_\lambda} \mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)d\mu_\mathcal{R}(\theta).$$
+%$$\tilde{\Pi}(\bb E) = \int_\bb E \frac{g(\theta)}{m_\lambda} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)d\mu_\mathcal{R}(\theta).$$
 
 %\noindent \textbf{Definition of expectation of $g(\theta)$ w.r.t. constrained and relaxed measures}
 
 
 For a given function, $g:\mathcal{R}\to\mathbb{R}$, we can define the exact and approximate expectations of $g$, respectively $\bb E_\Pi$ and $\bb E_{\tilde{\Pi}}$, as
 \begin{align*}
-\bb E_\Pi[g(\theta)] &= \bb E[g(\theta)|\theta\in\mathcal{D}] = \int_\mathcal{R} \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(v(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta) \\
-&=\int_\mathcal{D} \frac{g(\theta)}{m_0} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(v(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta)\\
-\bb E_{\tilde{\Pi}}[g(\theta)] &= \int_\mathcal{R}  \frac{g(\theta)}{m_\lambda} \mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)d\mu_\mathcal{R}(\theta) \\
-&= \int_{\mathbb{R}^s} \frac{1}{m_\lambda} \int_{v^{-1}(x)} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(v(\theta))} \exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg) d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} \\
-&=\int_{\mathbb{R}^s} \frac{\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) }{m_\lambda} \int_{v^{-1}(x)} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(v(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} 
+\bb E_\Pi[g(\theta)] &= \bb E[g(\theta)|\theta\in\mathcal{D}] = \int_\mathcal{R} \frac{g(\theta)}{m_0} \frac{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}\mathbbm{1}_\mathcal{D}(\theta)d\bar{\mathcal{H}}^{r-s}(\theta) \\
+&=\int_\mathcal{D} \frac{g(\theta)}{m_0} \frac{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta)\\
+\bb E_{\tilde{\Pi}}[g(\theta)] &= \int_\mathcal{R}  \frac{g(\theta)}{m_\lambda} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||\nu(\theta)||_1}{\lambda}\bigg)d\mu_\mathcal{R}(\theta) \\
+&= \int_{\mathbb{R}^s} \frac{1}{m_\lambda} \int_{\nu^{-1}(x)} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(\theta;Y)}{J(\nu(\theta))} \exp\bigg(-\frac{||\nu(\theta)||_1}{\lambda}\bigg) d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} \\
+&=\int_{\mathbb{R}^s} \frac{\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) }{m_\lambda} \int_{\nu^{-1}(x)} g(\theta) \frac{\pi_\mathcal{R}(\theta)\mathcal{L}(\theta;Y)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} 
 \end{align*}
-Let, $$m(x) = m^{r-s}(x) = \int_{v^{-1}(x)}\frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(v(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) .$$
-By construction, $m(x) > 0$ for $\mu_{\mathbb{R}^s}$-a.e. $x\in Range(v)$. In particular, $m_0=m(0)>0$. By Theorem 1,
+Let, $$m(x) = m^{r-s}(x) = \int_{\nu^{-1}(x)}\frac{\pi_\mathcal{R}(\theta)\mathcal{L}(\theta;Y)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) .$$
+By construction, $m(x) > 0$ for $\mu_{\mathbb{R}^s}$-a.e. $x\in \text{Range}(\nu)$. In particular, $m_0=m(0)>0$. By Theorem 1,
 \begin{equation}
-\bb E[g(\theta) | v(\theta) = x] = \frac{1}{m(x)} \int_{v^{-1}(x)} g(\theta)\frac{\pi_\mathcal{R}(\theta)\mathcal{L}(y;\theta)}{J(v(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta).
+\bb E[g(\theta) | \nu(\theta) = x] = \frac{1}{m(x)} \int_{\nu^{-1}(x)} g(\theta)\frac{\pi_\mathcal{R}(\theta)\mathcal{L}(\theta;Y)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta).
 \end{equation}
 As such, we may may express $\bb E_{\tilde{\Pi}}[g(\theta)]$ as 
 \begin{equation}
-\bb E_{\tilde{\Pi}}[g(\theta)] = \int_{\mathbb{R}^s} \frac{m(x)}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \bb E\big[g(\theta)|v(\theta)=x\big] d\mu_{\mathbb{R}^s}(x).
+\bb E_{\tilde{\Pi}}[g(\theta)] = \int_{\mathbb{R}^s} \frac{m(x)}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \bb E\big[g(\theta)|\nu(\theta)=x\big] d\mu_{\mathbb{R}^s}(x).
 \end{equation}
 %To show $\tilde{\bb E}[g(\theta)] \to \bb E[g(\theta)|v(\theta)=0] = \bb E[g(\theta)|\theta\in\mathcal{D}]$ as $\lambda \to 0^+$, we first need to investigate the behavior of $m_\lambda$ for $0<\lambda \ll 1.$
 
@@ -1412,8 +1412,8 @@ As such, we may may express $\bb E_{\tilde{\Pi}}[g(\theta)]$ as
 %
 Let us first consider the small $\lambda$ behavior of $m_\lambda.$ We begin by re-expressing $m_\lambda$ in terms of $m(x)$ through the co-area formula.
 \begin{align*}
-m_\lambda &= \int_\mathcal{R} \pi_\mathcal{R}(\theta) \mathcal{L}(y;\theta) \exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg) d\mu_\mathcal{R}(\theta) \\
-&= \int_{\mathbb{R}^s} \exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{v^{-1}(x)} \frac{\pi_\mathcal{R}(\theta) \mathcal{L}(y;\theta)}{J(v(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} (x) \\
+m_\lambda &= \int_\mathcal{R} \pi_\mathcal{R}(\theta) \mathcal{L}(\theta;Y) \exp\bigg(-\frac{||\nu(\theta)||_1}{\lambda}\bigg) d\mu_\mathcal{R}(\theta) \\
+&= \int_{\mathbb{R}^s} \exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{\nu^{-1}(x)} \frac{\pi_\mathcal{R}(\theta) \mathcal{L}(\theta;Y)}{J(v(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s} (x) \\
 &=\int_{\mathbb{R}^s}m(x) \exp\bigg(-\frac{||x||_1}{\lambda}\bigg)d\mu_{\mathbb{R}^s}(x)
 \end{align*}
 
@@ -1436,25 +1436,25 @@ at leading order as $\lambda\to 0^+$.
 %\vspace{1cm}
 %\noindent \textbf{Asymptotic behavior of $\bb E_{\tilde{\Pi}}[g(\theta)]$} \\
 
-We know turn to the small $\lambda$ behavior of $\tilde{\bb E}[g(\theta)].$  Again, we may choose $\lambda$ sufficient small so that both
+We now turn to the small $\lambda$ behavior of $\tilde{\bb E}[g(\theta)].$  Again, we may choose $\lambda$ sufficient small so that both
 \begin{align*}
-m(x)& \int_{v^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(v(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta)   \\
-G(x)&= \int_{v^{(-1)}(x)} g(\theta) \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(v(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) =m(x)\bb E[g|v(\theta)=x]
+m(x)&= \int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta)   \\
+G(x)&= \int_{\nu^{(-1)}(x)} g(\theta) \frac{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))} d\bar{\mathcal{H}}^{r-s}(\theta) =m(x)\bb E[g|\nu(\theta)=x]
 \end{align*}
 are continuous on $B_1(0;\lambda|\log \lambda^{s+1}|)$ and hence uniformly continuous at $x=0.$ 
 
-Similar to the study of $m_\lambda$, separate the $\tilde{\bb E}[g(\theta)]$ into integrals over the interior and exterior of $B_1(0,\lambda|\log(\lambda)^{s+1}|)$. Again, we assume $\lambda$ is taken to be sufficiently small so that both $m(x)$ and $G(x)$ are uniformly continuous on $B_1$. Then 
+Similar to the study of $m_\lambda$, separate the $\bb E_{\tilde{\Pi}}[g(\theta)]$ into integrals over the interior and exterior of $B_1(0,\lambda|\log(\lambda)^{s+1}|)$. Again, we assume $\lambda$ is taken to be sufficiently small so that both $m(x)$ and $G(x)$ are uniformly continuous on $B_1$. Then 
 \begin{align*}
-\bb E_{\tilde{\Pi}}[g(\theta)] &= \int_{\mathbb{R}^s} \frac{m(x)}{m_\lambda}\exp\bigg(-\frac{||v(x)||_1}{\lambda}\bigg)\bb E[g(\theta)|v(\theta)=x]d\mu_{\mathbb{R}^s}(x) \\
-&= \int_{\mathbb{R}^s} \frac{1}{m_\lambda}\exp\bigg(-\frac{||v(x)||_1}{\lambda}\bigg)\int_{v^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(v(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}(x) \\
-&=\int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{1}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{v^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(v(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}(x) \\
-&\hspace{0.5 cm} + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{1}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{v^{(-1)}(x)} \frac{\mathcal{L}(y;\theta)\pi_\mathcal{R}(\theta)}{J(v(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta)  d\mu_{\mathbb{R}^s}(x) \\
-&= O\bigg( \frac{\lambda^{s+1}}{m_\lambda} \bigg) + \int_{B_1} \frac{m(0)+o(1)}{m_\lambda}(1+O(\lambda^s)]\bigg(\bb E[g(\theta)|v(\theta)=0] + o(1) \bigg) d\mu_{\mathbb{R}^s}(x)  \\
+\bb E_{\tilde{\Pi}}[g(\theta)] &= \int_{\mathbb{R}^s} \frac{m(x)}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg)\bb E[g(\theta)|\nu(\theta)=x]d\mu_{\mathbb{R}^s}(x) \\
+&= \int_{\mathbb{R}^s} \frac{1}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg)\int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}(x) \\
+&=\int_{\mathbb{R}^s \setminus B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{1}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta) d\mu_{\mathbb{R}^s}(x) \\
+&\hspace{0.5 cm} + \int_{B_1(0;\lambda|\log(\lambda^{s+1})|)} \frac{1}{m_\lambda}\exp\bigg(-\frac{||x||_1}{\lambda}\bigg) \int_{\nu^{(-1)}(x)} \frac{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J(\nu(\theta))}d\bar{\mathcal{H}}^{r-s}(\theta)  d\mu_{\mathbb{R}^s}(x) \\
+&= O\bigg( \frac{\lambda^{s+1}}{m_\lambda} \bigg) + \int_{B_1} \frac{m(0)+o(1)}{m_\lambda}(1+O(\lambda^s)]\bigg(\bb E[g(\theta)|\nu(\theta)=0] + o(1) \bigg) d\mu_{\mathbb{R}^s}(x)  \\
 &= O\bigg( C \bb E|g|\frac{\lambda}{|\log\lambda|^s}\bigg) + \bb E[g(\theta)|\theta \in \mathcal{D}] + o(1).
 \end{align*}
-And we may conclude that $$\bigg|\bb E[g|\theta\in\mathcal{D} - \bb E_{\tilde{\Pi}}[g] \bigg| \to O \text{ as } \lambda\to0^+.$$
+And we may conclude that $$\bigg|\bb E[g|\theta\in\mathcal{D}] - \bb E_{\tilde{\Pi}}[g] \bigg| \to 0 \text{ as } \lambda\to0^+.$$
 
-The proof of the corollary follows from changing the $o(1)$ correction within the integrals over $B_1(0;\lambda|\log \lambda^{s+1}|)$ with $O(\lambda |\log \lambda^{s+1}|)$ corrections. 
+The proof of the corollary follows by changing the $o(1)$ correction within the integrals over $B_1(0;\lambda|\log \lambda^{s+1}|)$ to $O(\lambda |\log \lambda^{s+1}|)$ corrections.  As a result, the leading order approximation error is then $O(\lambda|\log \lambda|^{-s})$ as $\lambda\to 0^+.$
 \end{proof}
 
 
