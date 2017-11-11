@@ -1,7 +1,7 @@
 %&latex
 \documentclass[10pt,fleqn]{article} 
 
-\pdfoutput=1
+% \pdfoutput=1
 
 \addtolength{\oddsidemargin}{-.875in}
 \addtolength{\evensidemargin}{-.875in} \addtolength{\textwidth}{1.75in}
@@ -187,7 +187,9 @@ In attempting to address these problems, we propose to replace (\ref{eq:sharp}) 
 \mathcal{L}(\theta; Y)  \pi_\mathcal{R}(\theta)
 \exp\bigg(-\frac{1}{\lambda} \|v_\mathcal{D}(\theta)\|\bigg),
 \end{equation}
-where we repress the conditioning on data $Y$ in $\tilde{\pi}_{\lambda}(\theta)$ for concise notation.  We assume the the initial prior $\pi_{\mc R}(\theta)$ is proper, and use $\|v_\mathcal{D}(\theta)\|$ as
+where we repress the conditioning on data $Y$ in $\tilde{\pi}_{\lambda}(\theta)$ for concise notation. \leo{$\pi_{\mc R}(\theta)$ is
+a density related to (often, proportional to) $\pi_\mathcal{D}(\theta)$,  except with a different support.}
+  We assume the the initial prior $\pi_{\mc R}(\theta)$ is proper, and use $\|v_\mathcal{D}(\theta)\|$ as
 a distance from $\theta$ to the constrained space.  For example, $\|v_\mathcal{D}(\theta)\| = \inf_{x\in\mathcal{D}} \|\theta-x\|_2$ with $\|.\|$ an appropriate metric.
 
 The hyperparameter $\lambda > 0$ controls how concentrated the prior is around 
@@ -198,30 +200,29 @@ posterior sampling algorithms, making it easier to consider a much wider
 variety of models.
 
 In this article, we assume $\theta$ is a continuous random variable with $\pi_{\mc R}(\theta)$
-absolutely continuous with respect to Lebesgue measure $\mu_\mathcal{R}$ on $\mathcal{R}$. To construct a relaxed distribution, we first start by considering a neighborhood of ${\mc D}$
-$$\{\theta\in \mc R: \|v_\mathcal{D}(\theta)\|< d) \}.$$
+absolutely continuous with respect to Lebesgue measure $\mu_\mathcal{R}$ on $\mathcal{R}$. To construct a relaxed distribution, we first start by considering a $d$-neighborhood of ${\mc D}$
+$$\{\theta\in \mc R: \|v_\mathcal{D}(\theta)\| \le d) \}.$$
 Clearly, the definition of distance $\|v_\mathcal{D}(\theta)\|$ is critical as it describes how support expansion occurs around $\mc D$. We elaborate the details in the next section.
 
 \subsection{Distance to Constrained Space}
 
-To induce an neighborhood surrounding only $\mc D$, a minimal condition is that $\|v_{\mc D}(\theta)\|$ is zero for $\theta \in \mathcal{D}$ and positive for $\theta\not\in\mathcal{D}$. There are many choices of distances that satisfy this condition; however, for two useful purposes, one may be interested in one of the distances.
+To induce a neighborhood surrounding only $\mc D$, a minimal condition is that $\|v_{\mc D}(\theta)\|$ is zero for $\theta \in \mathcal{D}$ and positive for $\theta\not\in\mathcal{D}$. There are many choices of distances that satisfy this condition; however, for two useful purposes, one may be interested in one of the distances.
 
-(I) The ones measuring how far $\theta \in \mc R$ is from the original constrained space $\mc D$. This is useful when one hopes to directly control and/or measure the support expansion based on $\theta$. For example, when $\mc D$ is a symmetric compact manifold, one might be interested in uniformly expanding the support of $\theta$, so that the relaxation does not create any directional asymmetry. In this article, we consider a simple isotropic distance
+(I) The ones directly measuring how far $\theta \in \mc R$ is from the original constrained space $\mc D$. This is useful when one hopes to directly control and/or measure the support expansion based on $\theta$. For example, when $\mc D$ is a symmetric compact manifold, one might be interested in uniformly expanding the support of $\theta$, so that the relaxation does not create any directional asymmetry. In this article, we consider a simple isotropic distance
 
 \begin{eqnarray}
 \|v_{\mc D}(\theta)\| = \inf_{x\in\mathcal{D}} \|\theta-x\|_k,
 \end{eqnarray}
 where $\|\cdot\|_k$ denotes a $k$-norm distance, commonly $k=1$ or $2$.
 
-(II) The ones measuring how far a function of $\theta \in \mc R$ is from the one of $\theta\in \mc D$. This is particularly useful when the interest of relaxation is on the function that defines the constraint, instead of on the parameter $\theta$. For example, when a model is constrained by a function under a equality, one may be interested in how much the function deviates from the constrained condition. Similar to (i), we also consider a simple distance
+(II) The ones measuring how far a function of $\theta \in \mc R$ is from the constrained value when \theta\in \mc D$. This is particularly useful when the interest of relaxation is not on parameter $\theta$, but on the function $f(\theta)$\ associated with the constraint. For example, when a model is constrained by assigning an inequality to a function, one may be interested in how much the function deviates from the constrained value. Similar to (i), we also consider a simple distance
 
 \begin{eqnarray}
 \|v_{\mc D}(\theta)\| = \inf_{x\in\mathcal{D}} \|f(\theta)-f(x)\|_k.
 \end{eqnarray}
-This distance has a simple closed form, if $f(x)$ is a constant for $\theta\in \mc D$.
+This distance has a simple closed form, when $f(x)$ is a constant for $\theta\in \mc D$.
 
-For illustration, we consider a simple constrained space $\mc D=\{(\theta_1,\theta_2):  \theta_1 >0, \theta_2>0, \theta_1+\theta_2<1\}$ and compare those two types of distances. For type-I distance, we use $2$-norm to allow uniform
-expansion of the space $\mc D$. Another function of interest is the total violation to the three inequalities $f((\theta))= (-\theta_1)_+ + (-\theta_2)_+ + (1-\theta_1-\theta_2)_+$ where $(x)_+ = x$ if $x>0$ and $0$ otherwise. As $f(\theta)=0$ when $\theta\in \mc D$, the type-II distance is simply
+To illustrate their difference, we consider a simple constrained space $\mc D=\{(\theta_1,\theta_2):  \theta_1 >0, \theta_2>0, \theta_1+\theta_2<1\}$. For type-I distance, we use $2$-norm $\inf_{x\in\mathcal{D}} \|\theta-x\|_{2}$ around space $\mc D$. One function of interest is the total violation to the three inequalities $f((\theta))= (-\theta_1)_+ + (-\theta_2)_+ + (1-\theta_1-\theta_2)_+$ where $(x)_+ = x$ if $x>0$ and $0$ otherwise. As $f(\theta)=0$ when $\theta\in \mc D$, the associated type-II distance is simply
 $\|v_{\mc D}(\theta)\| =f (\theta)$. Figure~\ref{fig:two_distances}
 plots the expanded space of $\{\theta: \|v_{\mc D}(\theta)\|< 0.1\}$ and the values of $f(\theta)$ along $\|v_{\mc D}(\theta)\| = 0.1$, using those
 two distances.
@@ -289,27 +290,43 @@ two distances.
         \caption{Expanded support using type-II distance}
     \end{subfigure}
 
- \caption{ The boundary (dashed line) along $\|v_{\mc D}(\theta)\| = 0.1$  formed by two type of distances, around a space formed by three inequalities (in gray) \label{fig:two_distances}. Panel(a) shows type-I distance uniformly expands
+ \caption{ The boundary (blue dashed line) along $\|v_{\mc D}(\theta)\| = 0.1$  formed by two type of distances, around a space formed by three inequalities (gray area) \label{fig:two_distances}. Panel(a) shows type-I distance uniformly expands
 the support of the $\theta$; panel (b) shows type-II distance, while does
 not uniformly expands the support, retains the same amount of total violation
- to constraints (quantified by a function $f(\theta)$) along the boundary.}
+ to constraints (quantified in a function $f(\theta)$) along the boundary.}
 \end{figure}
 
 
 
 
+\subsection{Constraint Relaxation}
+Intuitively, the exactly constrained model can be viewed as the result of fixing the distance $\|v_\mathcal{D}(\theta)\| = 0$.  one could achieve constraint relaxation by assigning
+a distribution that allows $\|v_\mathcal{D}(\theta)\|$ to be slightly greater than $0$. However, this raises two important questions:
+(i) how are the  constrained density and
+relaxed density related to each other? (ii) what are
+the limiting conditions that apply to this methodology?
+It turns out the answers are very different depending
+on whether the constrained space $\mc D$ has a zero
+measure with respect to $\mu_{\mc R}$. Therefore, we
+discuss them separately in the next two subsections.
 
-\subsection{Constrained Space with Positive Measure}
-\label{SEC:Positive_measure_methods}
+\subsubsection{Constrained Space with Positive Measure}
 
-We first consider the simpler case where $\mathcal{D}$ has positive measure with respect to $\mu_\mathcal{R}$.  Some common examples include linear inequality constraints $a^T\theta < 0$, non-linear inequality constraints such as $\|\theta\|_2^2<1$, and simplex constraints.  When $\mathcal{D}$ is measurable, the sharply constrained prior is simply a truncated version of the unconstrained prior 
+
+We start with
+the case when $\mathcal{D}$ is a subset of $\mc R$ with positive measure with respect to a unconstrained
+density $\pi_{\mc R}(\theta)$, that is $\mu_\mathcal{R}(\mc D)>0$.
+  Some common examples include linear inequality constraints $a^T\theta < 0$ or non-linear inequality constraints.  The sharply constrained prior is simply a space-truncated version of the unconstrained prior 
 $\pi_{\mc R}(\theta)$, leading to the posterior density
 $$\pi_\mathcal{D}(\theta\mid Y) = \frac{\mathcal{L}(\theta; Y)
 \pi_\mathcal{R}(\theta)\mathbbm{1}_\mathcal{D}(\theta)}{\int_\mathcal{D}
 \mathcal{L}(\theta; Y)
 \pi_\mathcal{R}(\theta)d\mu_\mathcal{R}(\theta)}\propto \mathcal{L}(\theta;
 Y) \pi_\mathcal{R}(\theta)\mathbbm{1}_\mathcal{D}(\theta), $$
-which is defined with respect to $\mu_\mathcal{R}$.  In contrast, the relaxed posterior is
+which is defined with respect to $\mu_\mathcal{R}$. 
+
+For constraint relaxation, one could simply replace
+the indicator  with the exponential function
 \begin{equation}
 \label{EQ:relaxedDensityPosMeasure}
 \tilde{\pi}_\lambda(\theta) =
