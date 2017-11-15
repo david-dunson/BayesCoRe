@@ -161,7 +161,7 @@ Bypassing the need to develop or code complex and specialized algorithms is a ma
 
 \section{Constraint Relaxation Methodology}
 
-Assume that $\theta \in \mathcal{D} \subset \mathcal{R}$ is an unknown parameter, 
+Assume that $\theta \in \mathcal{D} \subset \mathcal{R}$ is an unknown continuous parameter, 
 with $\dim(\mathcal{R})=r < \infty$.  The constrained sample space $\mathcal{D}$ is 
 embedded in the $r$-dimensional Euclidean space $\mathcal{R}$, and can have 
 either zero or positive measure with respect to Lesbesgue measure on $\mathcal{R}$.  
@@ -190,45 +190,40 @@ In attempting to address these problems, we propose to replace (\ref{eq:sharp}) 
 \mathcal{L}(\theta; Y)  \pi_\mathcal{R}(\theta)
 \exp\bigg(-\frac{1}{\lambda} \|v_\mathcal{D}(\theta)\|\bigg),
 \end{equation}
-where we repress the conditioning on data $Y$ in $\tilde{\pi}_{\lambda}(\theta)$ for concise notation. \leo{$\pi_{\mc R}(\theta)$ is
-a density related to (often, proportional to) $\pi_\mathcal{D}(\theta)$,  except with a different support.}
-  We assume the the initial prior $\pi_{\mc R}(\theta)$ is proper, and use $\|v_\mathcal{D}(\theta)\|$ as
-a distance from $\theta$ to the constrained space.  For example, $\|v_\mathcal{D}(\theta)\| = \inf_{x\in\mathcal{D}} \|\theta-x\|_2$ with $\|.\|$ an appropriate metric.
+where we repress the conditioning on data $Y$ in $\tilde{\pi}_{\lambda}(\theta)$ for concise notation. 
+  We assume the the initial prior $\pi_{\mc R}(\theta)$ is proper  and absolutely continuous with respect to Lesbesgue measure $\mu_\mathcal{R}$ on $\mathcal{R}$. We use $\|v_\mathcal{D}(\theta)\|$ as
+a distance from $\theta$ to the constrained space.  For example, $\|v_\mathcal{D}(\theta)\| = \inf_{x\in\mathcal{D}} \|\theta-x\|$ with $\|.\|$ an appropriate metric.
 
 The hyperparameter $\lambda > 0$ controls how concentrated the prior is around 
 ${\mc D}$, and as $\lambda \to 0$ the kernel $\exp\big(- \lambda^{-1}\|v_\mathcal{D}(\theta)\|)$
-converges to $\mathbbm{1}_\mathcal{D}(\theta)$ in a pointwise manner, excluding $\theta \in \partial {\mc D}$ on the boundary of ${\mc D}$.  For all $\lambda > 0$, $\tilde{\pi}(\theta)$ has 
-support $\mathcal{R}$.  This unrestricted support greatly simplifies the design of 
-posterior sampling algorithms, making it easier to consider a much wider
-variety of models.
+converges to $\mathbbm{1}_\mathcal{D}(\theta)$ in a pointwise manner, excluding $\theta \in \partial {\mc D}$ on the boundary of ${\mc D}$.  For all $\lambda > 0$, $\tilde{\pi}(\theta)$ introduces support outside
+of $\mc D$, creating a relaxation of the constraint.
 
-In this article, we assume $\theta$ is a continuous random variable with $\pi_{\mc R}(\theta)$
-absolutely continuous with respect to Lebesgue measure $\mu_\mathcal{R}$ on $\mathcal{R}$. To construct a relaxed distribution, we first start by considering a $d$-neighborhood of ${\mc D}$
+
+The relaxation is carried out by placing a probability
+in a neighborhood surruonding $\mc D$. One could consider a $d$-neighborhood of ${\mc D}$
 $$\{\theta\in \mc R: \|v_\mathcal{D}(\theta)\| \le d) \}.$$
-Clearly, the definition of distance $\|v_\mathcal{D}(\theta)\|$ is critical as it describes how support expansion occurs around $\mc D$. We elaborate the details in the next section.
+ Clearly, the choice of distance $\|v_\mathcal{D}(\theta)\|$ is critical as it describes how support expansion occurs around $\mc D$. We first discuss the distances in the next subsection, then describe the relaxation strategy.
 
-\subsection{Distance to Constrained Space}
+ \subsection{Distance to Constrained Space}
 
-To induce a neighborhood surrounding only $\mc D$, a minimal condition is that $\|v_{\mc D}(\theta)\|$ is zero for $\theta \in \mathcal{D}$ and positive for $\theta\not\in\mathcal{D}$. There are many choices of distances that satisfy this condition; however, for two useful purposes, one may be interested in one of the distances.
+To induce a neighborhood surrounding only $\mc D$, a minimal condition is that $\|v_{\mc D}(\theta)\|$ is zero for $\theta \in \mathcal{D}$ and positive for $\theta\not\in\mathcal{D}$. There are many choices of distances that satisfy this minimal condition; however, depending on the focus of relaxation, one may be interested in choosing one of following two distances:
 
-(I) The ones directly measuring how far $\theta \in \mc R$ is from the original constrained space $\mc D$. This is useful when one hopes to directly control and/or measure the support expansion based on $\theta$. For example, when $\mc D$ is a symmetric compact manifold, one might be interested in uniformly expanding the support of $\theta$, so that the relaxation does not create any directional asymmetry. In this article, we consider a simple isotropic distance
+(I) The ones directly measuring how far the parameter $\theta \in \mc R$ is from the original constrained space $\mc D$. This is useful when one hopes to directly control and/or measure the support expansion based on the parameter $\theta$. For example, when $\mc D$ is a symmetric compact manifold, one might be interested in isotropically expanding the support of $\theta$, so that the relaxation does not create any directional asymmetry. In this article, we consider a simple distance
 
 \begin{eqnarray}
 \|v_{\mc D}(\theta)\| = \inf_{x\in\mathcal{D}} \|\theta-x\|_k,
 \end{eqnarray}
-where $\|\cdot\|_k$ denotes a $k$-norm distance, commonly $k=1$ or $2$.
+where $\|\cdot\|_k$ denotes a $k$-norm distance, typically $k=1$ or $2$.
 
-(II) The ones measuring how far a function of $\theta \in \mc R$ is from the constrained value when $\theta\in \mc D$. This is particularly useful when the interest of relaxation is not on parameter $\theta$, but on the function $f(\theta)$\ associated with the constraint. For example, when a model is constrained by assigning an inequality to a function, one may be interested in how much the function deviates from the constrained value. Similar to (i), we also consider a simple distance
+(II) The ones measuring how far a {\em function} of $\theta \in \mc R$ is from its constrained value when $\theta\in \mc D$. This is particularly useful when the interest of relaxation is not on parameter $\theta$, but on the function $f(\theta)$ associated with the constraint. For example, when a model is constrained by assigning an upper bound to a function, one may be interested in how much the posterior of the function deviates from that bound. Similar to (i), we also consider a simple distance
 
 \begin{eqnarray}
 \|v_{\mc D}(\theta)\| = \inf_{x\in\mathcal{D}} \|f(\theta)-f(x)\|_k.
 \end{eqnarray}
-This distance has a simple closed form, when $f(x)$ is a constant for $\theta\in \mc D$.
+Note that when $f(x)$ is a constant for $\theta\in \mc D$, this distance has a  closed form.
 
-To illustrate their difference, we consider a simple constrained space $\mc D=\{(\theta_1,\theta_2):  \theta_1 >0, \theta_2>0, \theta_1+\theta_2<1\}$. For type-I distance, we use $2$-norm $\inf_{x\in\mathcal{D}} \|\theta-x\|_{2}$ around space $\mc D$. One function of interest is the total violation to the three inequalities $f((\theta))= (-\theta_1)_+ + (-\theta_2)_+ + (1-\theta_1-\theta_2)_+$ where $(x)_+ = x$ if $x>0$ and $0$ otherwise. As $f(\theta)=0$ when $\theta\in \mc D$, the associated type-II distance is simply
-$\|v_{\mc D}(\theta)\| =f (\theta)$. Figure~\ref{fig:two_distances}
-plots the expanded space of $\{\theta: \|v_{\mc D}(\theta)\|< 0.1\}$ and the values of $f(\theta)$ along $\|v_{\mc D}(\theta)\| = 0.1$, using those
-two distances.
+The two distances create different geometries of the neighborhood $\{\theta\in \mc R: \|v_\mathcal{D}(\theta)\| \le d) \}$. To illustrate, we consider a  constrained space under $3$ inequalities $\mc D=\{(\theta_1,\theta_2):  \theta_1 >0, \theta_2>0, \theta_1+\theta_2<1\}$. For type-I distance, we use $2$-norm $\inf_{x\in\mathcal{D}} \|\theta-x\|_{2}$. This creates a space expansion of $\theta$ equally along the boundary $\partial\mc D$ ( Figure~\ref{fig:two_distances}(a)). On the other hand, one might be interested in the total violation to the inequalities, as represented in a function $f(\theta)= (-\theta_1)_+ + (-\theta_2)_+ + (\theta_1+\theta_2-1)_+$ where $(x)_+ = x$ if $x>0$ and $0$ otherwise. The associated type-II distance is $\|v_{\mc D}(\theta)\| =f (\theta)$. Using type-II distance, its expanded neighborhood has same value of $f(\theta)$  along its boundary (Figure~\ref{fig:two_distances}(b)).
 
 
 \begin{figure}[H]
@@ -260,7 +255,7 @@ two distances.
 \node[rotate=-45] at (0.65,0.65) {$f(\theta)=0.1 \sqrt{2}$};
 \end{tikzpicture}
         }
-        \caption{Expanded support using type-I distance}
+        \caption{Expanded neighborhood using type-I distance}
     \end{subfigure}
 % type 2 distance
 \begin{subfigure}[b]{0.45\textwidth}
@@ -290,25 +285,31 @@ two distances.
 
 
 \end{tikzpicture}}
-        \caption{Expanded support using type-II distance}
+        \caption{Expanded neighborhood using type-II distance}
     \end{subfigure}
 
- \caption{ The boundary (blue dashed line) along $\|v_{\mc D}(\theta)\| = 0.1$  formed by two type of distances, around a space formed by three inequalities (gray area) \label{fig:two_distances}. Panel(a) shows type-I distance uniformly expands
-the support of the $\theta$; panel (b) shows type-II distance, while does
-not uniformly expands the support, retains the same amount of total violation
- to constraints (quantified in a function $f(\theta)$) along the boundary.}
+ \caption{ The boundary of the neighborhood (blue dashed line) along $\|v_{\mc D}(\theta)\| = 0.1$  formed by two type of distances, around a constrained space formed by three inequalities (gray area). Panel(a) shows type-I distance expands
+the support of the $\theta$ equally further from the original boundary of $\mc D$; panel (b) shows type-II distance, while does
+not equally expands the support, maintains a constant amount of total violation
+ to the three inequalities (quantified by a function $f(\theta)$) along $\|v_{\mc D}(\theta)\| = 0.1$. \label{fig:two_distances}}
 \end{figure}
 
-
+The choice of distance largely depends on the prior belief about how the probability should decrease outside $\mc D$. For instance, for expanding support from a compact constrained space (assuming a uniform prior), simple isotropic type-I distance reflects the belief that $\theta$ should be found eqaully likely at a given distance away from $\mc D$; whereas simple type-II distance reflects the belief that the prior probability would drop at a rate depending on a function, such as total violation to inequalities in the last example. The former can be particularly useful
+for modeling geometric object, while the latter could
+be utilized in settings such as hypothesis testing about certain function.
+Obviously, customized
+distance might be needed for specific tasks. As our focus is to demonstrate  the methodology, in this article we focus on the simple distances.
 
 
 \subsection{Constraint Relaxation}
-Intuitively, the exactly constrained model can be viewed as the result of fixing the distance $\|v_\mathcal{D}(\theta)\| = 0$.  one could achieve constraint relaxation by assigning
-a distribution that allows $\|v_\mathcal{D}(\theta)\|$ to be slightly greater than $0$. However, this raises two important questions:
-(i) how are the  constrained density and
-relaxed density related to each other? (ii) what are
-the limiting conditions that apply to this methodology?
-It turns out the answers are very different depending
+
+The sharply constrained space is equivalent to fixing the distance $\|v_\mathcal{D}(\theta)\| = 0$. Intuitively,
+one could achieve constraint relaxation by assigning
+a distribution that allows $\|v_\mathcal{D}(\theta)\|$ to be slightly positive. However, this raises two important questions:
+(i) what is the relationship between the relaxed  and constrained
+ densities? (ii) what are
+the limitations of this methodology?
+It turns out the answers are quite different depending
 on whether the constrained space $\mc D$ has a zero
 measure with respect to $\mu_{\mc R}$. Therefore, we
 discuss them separately in the next two subsections.
@@ -317,10 +318,8 @@ discuss them separately in the next two subsections.
 
 
 We start with
-the case when $\mathcal{D}$ is a subset of $\mc R$ with positive measure with respect to a unconstrained
-density $\pi_{\mc R}(\theta)$, that is $\mu_\mathcal{R}(\mc D)>0$.
-  Some common examples include linear inequality constraints $a^T\theta < 0$ or non-linear inequality constraints.  The sharply constrained prior is simply a space-truncated version of the unconstrained prior 
-$\pi_{\mc R}(\theta)$, leading to the posterior density
+the case when $\mathcal{D}$ is a subset of $\mc R$ with positive Lesbesgue measure, $\mu_\mathcal{R}(\mc D)>0$.
+The sharply constrained density is simply a space-truncated version of the unconstrained one, for posterior
 $$\pi_\mathcal{D}(\theta\mid Y) = \frac{\mathcal{L}(\theta; Y)
 \pi_\mathcal{R}(\theta)\mathbbm{1}_\mathcal{D}(\theta)}{\int_\mathcal{D}
 \mathcal{L}(\theta; Y)
@@ -328,8 +327,8 @@ $$\pi_\mathcal{D}(\theta\mid Y) = \frac{\mathcal{L}(\theta; Y)
 Y) \pi_\mathcal{R}(\theta)\mathbbm{1}_\mathcal{D}(\theta), $$
 which is defined with respect to $\mu_\mathcal{R}$. 
 
-For constraint relaxation, one could simply replace
-the indicator  with the exponential function
+For constraint relaxation, we replace
+the indicator with an exponential function of distance
 \begin{equation}
 \label{EQ:relaxedDensityPosMeasure}
 \tilde{\pi}_\lambda(\theta \mid Y) =
@@ -346,28 +345,40 @@ D}(\theta)\|}\big)
 \end{equation}
 which is also absolutely continuous with respect to $\mu_\mathcal{R} $. 
 
-The exponential function can be view as part of a folded Laplace kernel
+To understand the role of the exponential function, one could view it as part of a folded Laplace density
 $$\frac{1}{\lambda}\exp(-\frac{w}{\lambda})$$
- for random variable $w=\|v_{\mc D}(\theta) \|$ with scale $\lambda$. Laplace enjoys sharp sharp concentration near zero with small $\lambda$ and is routinely used in shrinkage literature. This is useful when one wants to allow only a small relaxation from $\|v_{\mc D}(\theta) \|=0$ with a fixed small $\lambda$, or apply shrinkage towards a constrained space by estimating $\lambda$ posteriori. Naturally, one could consider other kernel such as folded generalized double Pareto (REFS). In this article, we focus on the folded Laplace case for its simplicity.
+ for random variable $w=\|v_{\mc D}(\theta) \|$ with scale $\lambda$. Laplace has a sharp  concentration near $0$ with small $\lambda$ and is routinely used in shrinkage literature.
+Observing the exponential tail probability for folded Laplace $P( w> k \lambda) = \exp( -k)$, one could fix
+a small $\lambda$ and induce only a small relaxation from $\|v_{\mc D}(\theta) \|=0$ as a priori. Alternatively, one could take a fully Bayesian approach by treating $\lambda$ as a hyper-parameter and estimating it from
+its posterior.
+ More generally, one could consider other densities such as folded generalized double Pareto (REFS). In this article, we focus on the folded Laplace case for its simplicity.
 
-To address the two motivating questions at the beginning, provided $\|v(\theta)\|=0$ if and only if $\theta\in \mc D$, the constrained density is obviously the pointwise limit of relaxed density when $\lambda\to 0$, and this relaxation method is generally applicable with little restriction.
-   
-As shown in the last section, the choice of distance has an impact on the geometry of the posterior support. Therefore, care must be taken to ensure the choice is coherent with the prior belief. In the previous example of triangular constrained region, assuming $\pi_\mc R(\theta)$ is a uniform density over a compact $\mc R$, choosing type-I distance reflects the belief that the parameter $\theta$ can depart from $\mc D$ at equal distance with same prior probability; choosing type-II distance reflects the belief that the prior probability would drop at a rate depending on the total violation to inequalities. On the other hand, if $\lambda$ is arbitrarily small, their difference  vanishes, we will quantify this behavior in the theory section.
+For this relaxation, we now address the two motivating questions regarding
+its relationship to sharply constrained density and
+its suitability. First, as $\lambda\to 0$, the relaxed density converges to the constrained density pointwise.
+On the other hand, even with small $\lambda>0$, the relaxed density
+always has positive support outside of $\mc D$, as opposed to
+$0$ support in sharply constrained case. As illustrated in the following example, this can be more realistic for modeling. Second, the limitation is that relaxation should yield proper density $\int_{\mc R} \mathcal{L}(\theta;
+Y)\pi_\mathcal{R}(\theta)\exp\big(-
+\lambda^{-1}{\|v_{\mc D}(\theta) \|}) d\mu_\mathcal{R}(\theta)< \infty$, which can be guaranteed if $\pi_\mathcal{R}(\theta)$ is proper.
 
 
 \textbf{Example: Gaussian under relaxed inequality}
 
 For now, we illustrate a Gaussian with a relaxed inequality. Suppose $\theta$ is the normal mean of the data, with the prior of $\theta$ follows a weakly informative Gaussian
- $$y_i \stackrel{iid}{\sim} \No(\theta,1) \text{ for } i =1,\ldots,n, \qquad \theta \sim\No(0, 1000)$$ 
- with an prior belief of inequality $\theta<1$. The posterior under a sharply constrained model is
+ $$y_i \stackrel{iid}{\sim} \No(\theta,1) \text{ for } i =1,\ldots,n, \qquad \theta \sim\No(0, 1000).$$ 
+ Suppose there is  a prior belief that inequality $\theta<1$. The posterior under a sharply constrained model is
 
 $$ \pi_{\mc D}(\theta \mid Y) \propto {\sigma^{-1}}\phi(\frac{\theta- \mu}{\sigma}) \mathbbm{1}_{\theta<1}, \quad \mu=    \frac{ \bar yn}{ 1/1000 + n },   \quad \sigma^2 = \frac{1}{ 1/1000 + n },$$
 where $\phi$ denotes the density of standard Gaussian. 
-However, suppose the average data $\bar y=1.2$ and let $n$ grow. The posterior become increasingly concentrated on the boundary and the sharp inequality becomes much less plausible (Figure~\ref{fig:gaussian_inequality}(a)). In contrast, consider the posterior under relaxed constraint:
+However, suppose the sample size $n$ keeps growing, but the data sample mean remains $\bar y=1.2>1$. This
+suggests that the inequality is much less plausible, as the posterior become increasingly concentrated on the boundary (Figure~\ref{fig:gaussian_inequality}(a)). Instead, it is more appealing to consider model under a relaxed constraint, with some preference in upholding
+the constraint as a priori, but allows the posterior
+to possibly deviate from this presumption:
 
 $$ \pi_{\lambda}(\theta \mid Y) \propto {\sigma^{-1}}\phi(\frac{\theta- \mu}{\sigma}) \exp(-\frac{(\theta-1)_+ }{\lambda}) , \quad \mu=    \frac{ \bar y n}{ 1/1000 + n },   \quad \sigma^2 = \frac{1}{ 1/1000 + n }$$
 where $(\theta-1)_+$ is both type-I and type-II distance to constrained space. With $\lambda=10^{-2}$, at $n=10$ and $100$, the relaxed posteriors are similar to the sharply constrained
-ones; however, $\bar y=1.2$ with a large sample size $n=1000$ leads to result that show the true mean is
+ones; however, a large sample size $n=1000$  with $\bar y=1.2$ leads to result that show the true normal mean is
 very likely outside the presumed constrained region.
 
 \begin{figure}[H]
@@ -379,26 +390,30 @@ very likely outside the presumed constrained region.
  \includegraphics[width=1\textwidth]{gaussianInequalityRelaxed.png}
  \caption{Constraint relaxed posterior}
 \end{subfigure}
- \caption{Density of posteriors for Gaussian mean under sharp and relaxed constraints. With small data ($n=10$ and $100$), relaxed constraint behaves very similar to the sharp one; however, with strong evidence of sample mean $\bar y=1.2>0$ in large sample ($n=1000$), the relaxed constraint allow the likelihood to overpower the constraint, generating more reasonable estimated
+ \caption{Densities of posteriors for Gaussian mean under sharp and relaxed constraints. With small sample ($n=10$ and $100$), relaxed constraint behaves very similarly to the sharp one; however, with strong evidence of sample mean $\bar y=1.2>1$ in large sample ($n=1000$), the relaxed constraint allow the likelihood to dominate
+in the posterior, generating more reasonable estimated
  mean outside the constrained region.  \label{fig:gaussian_inequality}}
 \end{figure}
 
 
 
-\subsection{Constrained Space with Zero Measure}
+\subsubsection{Constrained Space with Zero Measure}
 \label{SEC:Zero_Measure_Methods}
 
 Now we consider when $\mathcal{D}$
-is a measure zero subset of $\mathcal{R}$, $\pi_{\mc R}(\mc D)=0$. This introduces complication for eliciting the constrained $\pi_{\mc D}(\theta \mid Y)$ corresponding to the unconstrained density $\pi_{\mc R}(\theta \mid Y) $, as the former is no longer a re-normalized density of the latter.  For example, the constrained space $\{\theta: \theta_1+\theta_2=1\}$ of two independent uniforms $\theta_1, \theta_2 \stackrel{iid}{\sim} \U(0,1)$ has exactly measure $0$;  however, one could consider a lower-dimensional measure of $\theta_1$ alone for deriving a valid constrained density, or imagine ``thickening'' the space to $\{\theta: \theta_1+\theta_2\in (1-\epsilon,1+\epsilon)\}$ to have a relaxed density corresponding to a two-dimensional measure. To build upon this intuition, we utilize a geometric measure theory concept known as Hausdorff measure for the former, and constraint relaxation methodology for the latter.
+is a measure zero subset of $\mathcal{R}$ with respect to $\mu_{\mc R}$. This introduces complication for associating the constrained $\pi_{\mc D}(\theta \mid Y)$ with an unconstrained density $\mathcal{L}(\theta;
+Y)\pi_{\mc R}(\theta ) $.  The former is no longer a re-normalized density of the latter.  As a motivating example, the constrained space $\{\theta: \theta_1+\theta_2=1\}$ of two independent uniforms $\theta_1, \theta_2 \stackrel{iid}{\sim} \U(0,1)$ has exactly measure $0$,  using $\pi_{\mc R}(\theta_1, \theta_2 )= 1$ can not lead to an appropriate constrained density. However, one could consider a lower-dimensional measure of $\theta_1$ alone for deriving a valid constrained density; on the other hand, one could imagine ``thickening'' the space to $\{\theta: \theta_1+\theta_2\in (1-\epsilon,1+\epsilon)\}$ for a positive $2$-dimensional measure, then derived a relaxed density. Building upon this intuition, we will formalize the constrained density via a geometric measure theory concept known as Hausdorff measure, and construct a relaxed density using the constraint relaxation methodology.
 
-In constructing a valid constrained density, we restrict
+For constructing a valid constrained density, we restrict
 ourselves to the cases where $\mathcal{D}$ can be represented implicitly
 as the unique solution set of a consistent system of equations $\{v_j(\theta) =
 0\}_{j=1}^s$, so that $\mathcal{D} =\{\theta \mid v_j(\theta) =0, \, j =
-1, \dots,s\}$ is a $(r-s)$-dimensional subspace of $\mc R$; $v_j(\theta)$ is part of the distance function $\|v_\mathcal{D}(\theta)\|=\sum_j \| v_j(\theta)\|$ as described above. 
+1, \dots,s\}$ is a $(r-s)$-dimensional subspace of $\mc R$. Obviously, this is equivalent to defining constrained space via distance $\|v_\mathcal{D}(\theta)\|=\sum_j \| v_j(\theta)\|=0$, with $ \| v_j(\theta)\|$ corresponding to the distance as described in Section 2.1, provided the space formed satisfy the $(r-s)$-dimensionality requirement.
 
-Recall that $\mathcal{R}$ have dimensionality $r$, while $\mathcal{D}$ has zero $r$-dimensional Lebesgue measure (that is, zero ``volume''), it has a positive
-$(r-s)$-dimensional ``surface area''. This is formally known as $(r-s)$-dimensional Hausdorff measure, denoted by $\bar{\mathcal{H}}^{(r-s)}$. Taking the Hausdorff measure of a Borel subset of $\mc D$ and normalized by $\bar{\mathcal{H}}^{(r-s)}(\mc D)$ yields a valid probability in the constrained space. More technical details will be provided in the theory section. The related density is a Hausdorff density
+Recalling that $\mathcal{R}$ have dimensionality $r$, while $\mathcal{D}$ has zero $r$-dimensional Lesbesgue measure (that is, zero ``volume''), it has a positive
+$(r-s)$-dimensional ``surface area''. This is formally known as $(r-s)$-dimensional Hausdorff measure, denoted by $\bar{\mathcal{H}}^{(r-s)}$. Taking the Hausdorff measure of a Borel subset of $\mc D$ and normalizing
+it by $\bar{\mathcal{H}}^{(r-s)}(\mc D)$ yields a valid probability in the constrained space. More technical details will be provided in the theory section. This
+sharply constrained density is a Hausdorff density
 
 
 $$\pi_{\mc D}(\theta \mid Y) = \dfrac{
@@ -414,43 +429,47 @@ d\bar{\mathcal{H}}^{(r-s)}(\theta)} \propto
 $$
 defined with respect to $\bar{\mathcal{H}}^{(r-s)}$, where $J(\nu_\mathcal{D}(\theta)) =
 \sqrt{(D\nu_\mathcal{D})'(D\nu_\mathcal{D})}$ is the Jacobian
-of $\nu_\mathcal{D}$, which we assume is positive.
+of $\nu_\mathcal{D}$, which we assume is positive. Sometimes it is possible to reparameterize $(r-s)-$ dimensional Hausdorff density (with $r$ parameters) and convert to a $(r-s)-$parameter Lesbesgue density, as more commonly seen in statistical literature; but such reparameterization may not exist.
 
+Similar to the positive case, for relaxation we now replace the indicator with an exponential function of $\|v(\theta)\|$, adding support for  $\|v(\theta)\|>0$.
+The difference is that the range of $v(\theta)$, $\mc X$ should be controled such that each subspace defined by $\{\theta:v_{\mc D}(\theta)=x\}$  has the same dimension $(r-s)$ as $\{\theta:v_{\mc D}(\theta)=0\}$  almost everywhere in $\mc X$.  For a Borel subset $\mc F \subset \mc R$, this would allow us to compute the ``surface area'' of each slice $\{\theta:v_{\mc D}(\theta)=x\}$, then compute the ``volume'' of the expanded support over $x\in \mc X$. As opposed to the measure in the  sharply constrained case, this
+leads to a more conventional Lesbesgue measure:
 
-Hausdorff measure has been a standard tool in geometric measure theory
-\citep{federer2014geometric}, however, it is not familiar to general statistics audience and the available distributions are quite scarce. In contrast, with a relaxed constraint, the associated density can be associated to simple Lesbesgue measure. We now describe this strategy.
-
-Recall the constrained space is defined by $\{\theta:\|v_{\mc D}(\theta)\|=0\}$. Similar to the previous section,  we replace the indicator with an exponential function of $\|v(\theta)\|$ defined over a range $\mc X$, $\exp(
--{\lambda^{-1}}\|v(\theta)\|) \mathbbm{1}_{\mc X}(v(\theta))$. 
-Again, this exponential function is part of a folded Laplace density, with respect to Lebesgue measure of random variable $x=\|v(\theta)\|$. Integrating this modifed density over a Borel subset $\mc F \subset \mc R$
 
 \begin{equation}
 \begin{aligned}
 \int_{\mc F} \tilde{\pi}_\lambda(\theta) d \mu(\theta)= & \frac{\int_{\mc X}
 \bigg[ \int_{ \{\theta:v(\theta)=x\}\cap \mc F }
-{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))\exp(-{\lambda^{-1}}\|v(\theta)\|
+{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))
 )}
-d\bar{\mathcal{H}}^{(r-s)}(\theta) \bigg] )dx
+d\bar{\mathcal{H}}^{(r-s)}(\theta) \bigg]  \exp(-{\lambda^{-1}}\|x\|)  dx
 }
 {\int_{\mc X}
 \bigg[ \int_{ \{\theta:v(\theta)=x\}\cap \mc F }
-{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))\exp(-{\lambda^{-1}}\|v(\theta)\|
+{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J^{-1}(\nu_\mathcal{D}(\theta))
 )}
-d\bar{\mathcal{H}}^{(r-s)}(\theta) \bigg] )dx
-} \\
+d\bar{\mathcal{H}}^{(r-s)}(\theta) \bigg]     \exp(-{\lambda^{-1}}\|x\|)    dx
+}.
+\end{aligned}
+\end{equation}
+
+Further, when $\mc X$ is the Lipschitz image of a bounded subset in $\mc R$, i.e. $r$-rectifiable, the double integral  can be further simplified to a single Lesbesgue integral \citep{federer2014geometric}.
+
+
+\begin{equation}
+\begin{aligned}
+\int_{\mc F} \tilde{\pi}_\lambda(\theta) d \mu(\theta) 
 = & \frac{\int_\mathcal{F} \mathcal{L}(\theta;Y)
 \pi_\mathcal{R}(\theta)\exp\bigg(-\frac{1}{\lambda}\|\nu_\mathcal{D}(\theta)\|\bigg)
 \mathbbm{1}_{\mc X}(v(\theta)) d\mu_\mathcal{R}(\theta)}
 {\int_\mathcal{R} \mathcal{L}(\theta;Y)
 \pi_\mathcal{R}(\theta)\exp\bigg(-\frac{1}{\lambda}\|\nu_\mathcal{D}(\theta)\|\bigg)
-\mathbbm{1}_{\mc X}(v(\theta)) d\mu_\mathcal{R}(\theta)}
+\mathbbm{1}_{\mc X}(v(\theta)) d\mu_\mathcal{R}(\theta)}.
 \end{aligned}
 \end{equation}
-where in the second step, the double integral involving Hausdorff measure is converted to a single Lebesgue integral, via  co-area formula \citep{federer2014geometric}.
-In order to make the co-area formula viable, the range of $v_{\mc D}(\theta)$, $\mc X$ is selected to ensure to the sets within are $r$-rectifiable, i.e. the Lipschitz image of a bounded subset in $\mc R$, and $\{\theta:v_{\mc D}(\theta)=x\}$ \ has dimension $(r-s)$ almost everywhere.
 
 Omitting the integral over
-$\mc F$, this simplifies to a relaxed density:
+$\mc F$, this reduces to a constraint relaxed density:
 \begin{equation}
 \begin{split}
 \label{EQ:relaxedDensityZeroMeasure}
@@ -459,37 +478,33 @@ $\mc F$, this simplifies to a relaxed density:
 \mathbbm{1}_{\mc X}(v(\theta)),
 \end{split}
 \end{equation}
-which is defined with respect to $\mu_{\mc R}$. Note the similarity to the relaxed density in the last section, except for the more restricted range of  $v_{\mc D}(\theta)$.
+which is defined with respect to $\mu_{\mc R}$. Note the remarkable similarity to the relaxed density in the positive measure case, except for a more restricted suitable range of  $v_{\mc D}(\theta)$.
 
-Compared to the positive measure case, the application of this methodology is less flexible, as it requires several conditions on $\mc D$, $v(\theta)$ and $\mc X$. Those details will be provided in the theory section. However, this still encompasses a wide range of constrained spaces, such as compact manifolds like Stiefel and simplex. Similar to the positive case, $\exp\bigg(-{\lambda^{-1}}\|\nu_\mathcal{D}(\theta)\|\bigg)$ converges
-pointwise to $\mathbbm{1}_\mathcal{D}(\theta).$ As $\lambda\to0^+,$ this
-multiplicative factor is concentrating the probability to a small layer
-around the constrained space. 
+For this relaxation, we again address the two important questions regarding its relationship to sharply constrained density and its limitations. First, the relaxed density no longer converges pointwise to the sharply constrained one, as they correspond to two different types of measure. Nevertheless, as $\lambda\to 0$, the relaxed measure concentrates to an arbitrarily small layer around the constrained space. Second, there are several limitations imposed on $\mc D$, $v(\theta)$ and $\mc X$, such as the dimensionality and rectifiability. However, this still include a large variety of constrained spaces, such as compact manifolds embedded in Euclidean space via Lipschitz functions (e.g. orthonormal space).
+ More details will be discussed in the theory section. 
 
-\textbf{Example: Sampling near a curved torus}
+\textbf{Example: Support expansion near a curved torus}
 
 
 For now, we consider a curved torus
 
 $$\mc D= \big\{\theta: (\theta_1,\theta_2,\theta_3) = \big(
-(1+ 0.5 \cos\alpha_1) \cos\alpha_2, (1+ 0.5\cos\alpha_1) \sin\alpha_2,0.5 \sin\alpha_1\big), (\alpha_1,\alpha_2)\in [0,2\pi)^2 \big\}.$$
+(1+ 0.5 \cos\alpha_1) \cos\alpha_2, (1+ 0.5\cos\alpha_1) \sin\alpha_2,0.5 \sin\alpha_1\big), (\alpha_1,\alpha_2)\in [0,2\pi)^2 \big\}.$$ 
 
-As can be observed from the alternative $(\alpha_1,\alpha_2)$ parameterization, the intrinsic dimension is $2$ hence
- the Lesbesgue measure $\mu_{\mc R}(\mc D)=0$, with  $R$ compact $3$-dimensional Euclidean subspace. \cite{diaconis2013manifold} previously considered a uniform Hausdorff measure $\pi_{\mc D}(\theta) \propto 1$ over the compact manifold and utilized the transformed density over $(\alpha_1,\alpha_2)$
-for sampling.
+As the intrinsic dimension is $2$ hence
+ the $3$-dimensional Lesbesgue measure $\mu_{\mc R}(\mc D)=0$, with  $\mc R$ a compact $3$-dimensional Euclidean subspace. \cite{diaconis2013manifold} previously considered a uniform Hausdorff density $\pi_{\mc D }(\theta \mid Y) \propto 1$ over this compact manifold and utilized the transformed Lesbesgue density based on $(\alpha_1,\alpha_2)$ for sampling within the manifold.
 
-We now consider a constraint relaxation strategy for
-a distribution near the curve torus.
-Using type-I distance to $\mc D$, we define
-$$v(\theta) =\|v(\theta)\|=\underset{\alpha\in  (\alpha_1,\alpha_2)\in [0,2\pi)^2}{\inf} \| (\theta_1-(1+ 0.5\cos\alpha_1) \cos\alpha_2 ,\theta_2 -  (1+ 0.5\cos\alpha_1) \sin\alpha_2,\theta_3
-- 0.5\sin\alpha_1)\|_2$$
-we construct a relaxed density:
+We now consider a different task by considering a relaxed distribution near the manifold. It is intuitive to consider type-I distance to $\mc D$, with
 
+$$v(\theta) =\|v(\theta)\|=\underset{  (\alpha_1,\alpha_2)\in [0,2\pi)^2}{\inf} \| (\theta_1-(1+ 0.5\cos\alpha_1) \cos\alpha_2 ,\theta_2 -  (1+ 0.5\cos\alpha_1) \sin\alpha_2,\theta_3
+- 0.5\sin\alpha_1)\|_2.$$
+
+We obtained a relaxed density:
 $$\tilde\pi_{\lambda}(\theta) \propto {J(v_\mathcal{D}(\theta))\exp(-\lambda^{-1}\|v(\theta)\|)}$$
-which is with respect to Lesbesgue measure. Note $v(\theta)$ and $J(v_\mathcal{D}(\theta))$ do not have closed-form,
-fortunately, they can be easily approximated by  automatic optimization and differentiation tools. Figure~\ref{fig:torus}
+which is with respect to $3$-dimensional Lesbesgue measure. Note $v(\theta)$ and $J(v_\mathcal{D}(\theta))$ do not have closed-form,
+fortunately, they can be numerically approximated by automatic optimization and differentiation tools. Figure~\ref{fig:torus}
 plots the random samples from constraint relaxed posteriors
-under two different values of $\lambda$. The samples
+under two different values of $\lambda$, corresponding to different degrees of relaxation. The samples
 were obtained using random walk Monte Carlo.
 
 
@@ -504,7 +519,7 @@ were obtained using random walk Monte Carlo.
  \caption{Constraint relaxed posterior with $\lambda
  = 0.1$}
 \end{subfigure}
- \caption{Random samples near a curved torus. Small $\lambda$ controls the samples to be very close to the manifold (upper panel), while large $\lambda$ allows more  relaxation from the constrained space (lower panel).
+ \caption{Support expansion near a curved torus. Small $\lambda$ controls the samples to be very close to the manifold (upper panel), while large $\lambda$ adds support farther away from the constrained space (lower panel). Both densities correspond to more conventional Lesbesgue measure, instead of Hausdorff measure.
  \label{fig:torus}}
 \end{figure}
 
@@ -526,7 +541,7 @@ as a tractable distance function exists such that $\mc D=\{\theta:
 
 We now focus on quantifying the difference between constrained and
 relaxed densities.  Both of these densities are absolutely continuous
-with respect to Lebesgue
+with respect to Lesbesgue
 measure on $\mathcal{R}$.  Thus, the expectation of $g$ with respect to
 constrained density is
 
@@ -627,7 +642,7 @@ $A\subset \bb R^r$. Fix $s \le r$. Then $$\mc H^{s}(A)=
 \text{diam}(S_i)\le \delta}, \text{diam}(S_i)=\sup_{x,y\in
 S}\|x-y\|\bigg\}$$.  \end{Hausdorff_def} We denote the normalized Hausdorff
 measure as $\bar{\mc H}^{s}(A) =\frac{\Gamma(\frac{1}{2})^{s}}{2^s
-\Gamma(\frac{s}{2}+1)} \mc H^{s}(A)$. When $s=r$, Lebesgue and normalized
+\Gamma(\frac{s}{2}+1)} \mc H^{s}(A)$. When $s=r$, Lesbesgue and normalized
 Hausdorff measures coincide  $\mu_{\mathbb{R}^m}(A)= \bar{\mc H}^{s}(A)$
 \citep{evans2015measure}.  Additionally, for a subset $\mathcal{D}$, there
 exists a unique, critical value $d$ such that
@@ -1313,9 +1328,9 @@ $$m_0 = \int_\mathcal{R} \frac{\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)}{J(\
 
 Secondly, we have the relaxed distribution
 $$\tilde{\pi}_\mathcal{D}(\theta) = \frac{1}{m_\lambda} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||\nu(\theta)||_1}{\lambda}\bigg)$$
-where the normalizing constant is calculated w.r.t. Lebesgue measure on $\mathcal{R}$, denoted by $\mu_\mathcal{R}$,
+where the normalizing constant is calculated w.r.t. Lesbesgue measure on $\mathcal{R}$, denoted by $\mu_\mathcal{R}$,
 $$m_\lambda = \int_\mathcal{R}\mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||\nu(\theta)||_1}{\lambda}\bigg) d\mu_\mathcal{R}(\theta).$$
-%We use $\mu_\mathcal{R}$ to denote Lebesgue measure on $\mathcal{R}.$ This density defines a probability measure, $\tilde{\Pi}$, w.r.t. $\mu_\mathcal{R}$.  For a measurable set $\bb E$, 
+%We use $\mu_\mathcal{R}$ to denote Lesbesgue measure on $\mathcal{R}.$ This density defines a probability measure, $\tilde{\Pi}$, w.r.t. $\mu_\mathcal{R}$.  For a measurable set $\bb E$, 
 %$$\tilde{\Pi}(\bb E) = \int_\bb E \frac{g(\theta)}{m_\lambda} \mathcal{L}(\theta;Y)\pi_\mathcal{R}(\theta)\exp\bigg(-\frac{||v(\theta)||_1}{\lambda}\bigg)d\mu_\mathcal{R}(\theta).$$
 
 %\noindent \textbf{Definition of expectation of $g(\theta)$ w.r.t. constrained and relaxed measures}
